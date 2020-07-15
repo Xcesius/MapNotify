@@ -1,6 +1,8 @@
 # MapNotify
 Notifications about map mods, quantity and packsize.
 
+If you aren't using Ninja Pricer you should disable the extra vertical padding in settings.
+
 ![Image](https://i.imgur.com/sST1Zxi.png)
 
 # Includes
