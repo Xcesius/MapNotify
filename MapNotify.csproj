@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="MapNotify.cs" />
     <Compile Include="MapNotifySettings.cs" />
+    <Compile Include="MouseLite.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

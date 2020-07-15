@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using ImGuiNET;
 using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.Elements.InventoryElements;
+using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
@@ -78,7 +79,7 @@ namespace MapNotify
                             List<Warning> activeWarnings = new List<Warning>();
                             int packSize = 0;
                             int quantity = entity.GetComponent<Quality>()?.ItemQuality ?? 0;
-                            foreach (var mod in modsComponent.ItemMods)
+                            foreach (var mod in modsComponent.ItemMods.Where(x => !x.Group.Contains("MapAtlasInfluence") && !x.Name.Equals("InfectedMap")))
                             {
                                 quantity += mod.Value1;
                                 packSize += mod.Value3;
@@ -87,17 +88,23 @@ namespace MapNotify
                                 }
                             }
                             
-                            if(activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent) { 
-                            ImGui.BeginTooltip();
-                            if (Settings.ShowModCount) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{modsComponent.ItemMods.Count} Total Mods");
-                            if (Settings.ShowQuantityPercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quantity");
-                            if (Settings.ShowPackSizePercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{packSize}%% Pack Size");
-                            if (Settings.ShowModWarnings) foreach (Warning warning in activeWarnings) ImGui.TextColored(warning.Color, warning.Text);
-                            ImGui.EndTooltip();
+                            if(activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent) {
+                                nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
+                                if (Settings.PadForNinjaPricer) mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
+                                ImGui.SetNextWindowPos(mousePos, ImGuiCond.Always, nuVector2.Zero);
+                                var _opened = true;
+                                if (ImGui.Begin($"{Name}", ref _opened,
+                                    ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
+                                    ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoSavedSettings |
+                                    ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
+                                if (Settings.ShowModCount) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{modsComponent.ItemMods.Count} Total Mods");
+                                if (Settings.ShowQuantityPercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quantity");
+                                if (Settings.ShowPackSizePercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{packSize}%% Pack Size");
+                                if (Settings.ShowModWarnings) foreach (Warning warning in activeWarnings) ImGui.TextColored(warning.Color, warning.Text);
+                                ImGui.PushStyleColor(ImGuiCol.WindowBg, new System.Numerics.Vector4(0.256f, 0.256f, 0.256f, 1f));
+                                ImGui.End();
                             }
                         }
-
-                        
                     }
                 }
             }

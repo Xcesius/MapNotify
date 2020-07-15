@@ -12,5 +12,6 @@ namespace MapNotify
         public ToggleNode ShowQuantityPercent { get; set; } = new ToggleNode(true);
         public ToggleNode ShowPackSizePercent { get; set; } = new ToggleNode(true);
         public ToggleNode ShowModWarnings { get; set; } = new ToggleNode(true);
+        public ToggleNode PadForNinjaPricer { get; set; } = new ToggleNode(true);
     }
 }
