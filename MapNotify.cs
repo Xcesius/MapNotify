@@ -50,11 +50,43 @@ namespace MapNotify
 
         public Dictionary<string, Warning> LoadConfig(string path)
         {
+            if (!File.Exists(path)) CreateConfig(path);
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
                 var preloadAlerConfigLine = new Warning { Text = line[1], Color = HexToVector4(line[2]) };
                 return preloadAlerConfigLine;
             });
+        }
+
+        public void CreateConfig(string path)
+        {
+            #region Create Default Config
+            new FileInfo(path).Directory.Create();
+            string outFile =  
+@"#Mod Contains;Name in tooltip;RGBA colour code
+# REFLECT
+ElementalReflect;Elemental Reflect;FF0000FF
+PhysicalReflect;Physical Reflect;FF0000FF
+# NO REGEN
+NoLifeESRegen;No Regen;FF007FFF
+# CURSES AND EE
+MapPlayerCurseEnfeeble;Enfeeble;FF00FFFF
+MapPlayerCurseElementalWeak;Elemental Weakness;FF00FFFF
+MapPlayerCurseVuln;Vulnerability;FF00FFFF
+MapPlayerCurseTemp;Temporal Chains;FF00FFFF
+MapPlayerElementalEquilibrium;Elemental Equilibrium;FF00FFFF
+# BOSSES
+MapTwoBosses;Twinned;00FF00FF
+MapDangerousBoss;Boss Damage & Speed;00FF00FF
+MapMassiveBoss;Boss AoE & Life;00FF00FF
+# MONSTERS
+MapMonsterColdDamage;Extra Phys as Cold;7F00FFFF
+MapMonsterFireDamage;Extra Phys as Fire;7F00FFFF
+MapMonsterLightningDamage;Extra Phys as Lightning;7F00FFFF
+MapMonsterLife;More Monster Life;7F00FFFF
+MapMonsterFast;Monster Speed;7F00FFFF";
+            File.WriteAllText(path, outFile);
+            #endregion
         }
         Dictionary<string, Warning> WarningDictionary = new Dictionary<string, Warning>();
         
