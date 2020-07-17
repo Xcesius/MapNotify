@@ -1,7 +1,10 @@
 # MapNotify
-Notifications about map mods, quantity and packsize.
+Notifications about map mods, quantity, packsize and other useful information for immediate parsing
 
 ![Image](https://i.imgur.com/sST1Zxi.png)
+
+![Image](https://i.imgur.com/4GY3sNf.png)
+
 
 # Includes
 **Mods Count:** as it sounds.
