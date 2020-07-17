@@ -116,14 +116,12 @@ MapMonsterFast;Monster Speed;7F00FFFF";
                 
                 var serverData = GameController.Game.IngameState.ServerData;
                 var bonusComp = serverData.BonusCompletedAreas;
-                // var awakeComp = serverData.AwakenedAreas;
+                //var awakeComp = serverData.AwakenedAreas;
                 var comp = serverData.CompletedAreas;
                 
                 var modsComponent = entity.GetComponent<Mods>() ?? null;
                 if (Settings.AlwaysShowTooltip || modsComponent != null && modsComponent.ItemRarity != ItemRarity.Normal && modsComponent.ItemMods.Count() > 0)
                 {
-
-                    LogMessage("ModsCheck");
                     List<Warning> activeWarnings = new List<Warning>();
                     nuVector4 nameCol = GetRarityColor(entity.GetComponent<Mods>().ItemRarity);
                     var mapComponent = entity.GetComponent<ExileCore.PoEMemory.Components.Map>();
