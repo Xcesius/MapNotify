@@ -20,10 +20,12 @@ namespace MapNotify
 {
     public class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
+        private RectangleF windowArea;
         public override bool Initialise()
         {
             base.Initialise();
             Name = "Map Mod Notifications";
+            windowArea = GameController.Window.GetWindowRectangle();
             WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
             return true;
         }
@@ -88,8 +90,119 @@ MapMonsterFast;Monster Speed;7F00FFFF";
             File.WriteAllText(path, outFile);
             #endregion
         }
+
+        public nuVector4 GetRarityColor(ItemRarity rarity)
+        {
+            switch (rarity)
+            {
+                case ItemRarity.Rare:
+                    return new nuVector4(0.99f, 0.99f, 0.46f, 1f);
+                case ItemRarity.Magic:
+                    return new nuVector4(0.52f, 0.52f, 0.99f, 1f);
+                case ItemRarity.Unique:
+                    return new nuVector4(0.68f, 0.37f, 0.11f, 1f);
+                default:
+                    return new nuVector4(1F, 1F, 1F, 1F);
+            }
+        }
+
         Dictionary<string, Warning> WarningDictionary = new Dictionary<string, Warning>();
-        
+        public int mPad;
+        public void RenderItem(Entity entity, byte mode)
+        {
+            if (entity.Address != 0 && entity.IsValid)
+            {
+                if (!entity.HasComponent<ExileCore.PoEMemory.Components.Map>()) return;
+                
+                var serverData = GameController.Game.IngameState.ServerData;
+                var bonusComp = serverData.BonusCompletedAreas;
+                // var awakeComp = serverData.AwakenedAreas;
+                var comp = serverData.CompletedAreas;
+                
+                var modsComponent = entity.GetComponent<Mods>() ?? null;
+                if (Settings.AlwaysShowTooltip || modsComponent != null && modsComponent.ItemRarity != ItemRarity.Normal && modsComponent.ItemMods.Count() > 0)
+                {
+
+                    LogMessage("ModsCheck");
+                    List<Warning> activeWarnings = new List<Warning>();
+                    nuVector4 nameCol = GetRarityColor(entity.GetComponent<Mods>().ItemRarity);
+                    var mapComponent = entity.GetComponent<ExileCore.PoEMemory.Components.Map>();
+                    int packSize = 0;
+                    int quantity = entity.GetComponent<Quality>()?.ItemQuality ?? 0;
+                    if(modsComponent != null && modsComponent.ItemRarity != ItemRarity.Unique)
+                        foreach (var mod in modsComponent.ItemMods.Where(x =>
+                                                            !x.Group.Contains("MapAtlasInfluence")
+                                                            && !x.Group.Contains("MapElderContainsBoss")
+                                                            && !x.Name.Equals("InfectedMap")))
+                        {
+                            quantity += mod.Value1;
+                            packSize += mod.Value3;
+                            if (WarningDictionary.Where(x => mod.Name.Contains(x.Key)).Any())
+                            {
+                                activeWarnings.Add(WarningDictionary.Where(x => mod.Name.Contains(x.Key)).FirstOrDefault().Value);
+                            }
+                        }
+
+                    if (Settings.AlwaysShowTooltip || activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent)
+                    {
+                        // Get mouse position
+                        nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
+                        if (Settings.PadForNinjaPricer) mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
+                        // Parsing inventory, don't use mousePos
+                        if(mode == 1) {
+                            var framePos = GameController.Game.IngameState.UIHover.Parent.Parent.GetClientRect().TopRight;
+                            mousePos.X = framePos.X;
+                            mousePos.Y = framePos.Y - 50 + mPad;
+                        }
+                        var _opened = true;
+                        if (ImGui.Begin($"{entity.Address}", ref _opened,
+                            ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
+                            ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
+                            if (!Settings.ShowCompletion) ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name}");
+                            else
+                            {
+                                ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name}");
+                                /*if (!awakeComp.Contains(mapComponent.Area))
+                                {
+                                    ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
+                                }*/
+                                if (!bonusComp.Contains(mapComponent.Area))
+                                {
+                                    ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
+                                }
+                                if (!comp.Contains(mapComponent.Area))
+                                {
+                                    ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
+                                }
+                            }
+                        // Count Mods
+                        if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{modsComponent.ItemMods.Count} Total Mods");
+                        // Quantiy and Pack Size
+                        if(Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quant, {packSize}%% Pack Size");
+                        else if (Settings.ShowQuantityPercent && quantity != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quantity");
+                        else if (Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{packSize}%% Pack Size");
+                        // Mod Warnings
+                        if (Settings.ShowModWarnings) foreach (Warning warning in activeWarnings) ImGui.TextColored(warning.Color, warning.Text);
+                        // Color background
+                        ImGui.PushStyleColor(ImGuiCol.WindowBg, new System.Numerics.Vector4(0.256f, 0.256f, 0.256f, 1f));
+                        // Detect and adjust for edges
+                        var size = ImGui.GetWindowSize();
+                        var pos = ImGui.GetWindowPos();
+                        if ((mousePos.X + size.X) > windowArea.Width)
+                        {
+                            ImGui.Text($"Overflow by {(mousePos.X + size.X) - windowArea.Width}");
+                            ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);
+                        }
+                        else ImGui.SetWindowPos(mousePos, ImGuiCond.Always);
+
+                        // padding when parsing an inventory
+                        if(mode == 1) mPad += (int)size.Y + 2;
+                        ImGui.End();
+                    }
+                }
+            }
+        }
+
         public override void Render()
         {
             if (!Settings.Enable) return;
@@ -97,47 +210,27 @@ MapMonsterFast;Monster Speed;7F00FFFF";
             if (GameController.Game.IngameState.UIHover.IsVisible)
             {
                 var itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType ?? null;
-                if (itemType != null && itemType != ToolTipType.ItemInChat)
+                // render normal items
+                if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
-                    var inventoryItemIcon = uiHover.AsObject<NormalInventoryItem>();
-                    var tooltip = inventoryItemIcon.Tooltip;
-                    var entity = inventoryItemIcon.Item;
-                    if (tooltip != null && entity.Address != 0 && entity.IsValid)
-                    {
-                        if (!entity.HasComponent<ExileCore.PoEMemory.Components.Map>()) return;
-                        var modsComponent = entity.GetComponent<Mods>() ?? null;
-                        if (modsComponent != null && modsComponent.ItemRarity != ItemRarity.Unique && modsComponent.ItemMods.Count() > 0)
+                    var hoverItem = uiHover.AsObject<NormalInventoryItem>();
+                    if(hoverItem.Tooltip.IsValid)
+                        RenderItem(uiHover.AsObject<NormalInventoryItem>().Item, 0);
+                }
+                // render NPC inventory if relevant
+                else if (itemType != null && itemType == ToolTipType.None)
+                {
+                    var ingameState = GameController.Game.IngameState;
+                    var serverData = ingameState.ServerData;
+                    var npcInv = serverData.NPCInventories;
+                    if (npcInv == null || npcInv.Count == 0) return;
+                    foreach (var inv in npcInv)
+                        if (uiHover.Parent.ChildCount == inv.Inventory.Items.Count)
                         {
-                            List<Warning> activeWarnings = new List<Warning>();
-                            int packSize = 0;
-                            int quantity = entity.GetComponent<Quality>()?.ItemQuality ?? 0;
-                            foreach (var mod in modsComponent.ItemMods.Where(x => !x.Group.Contains("MapAtlasInfluence") && !x.Name.Equals("InfectedMap")))
-                            {
-                                quantity += mod.Value1;
-                                packSize += mod.Value3;
-                                if (WarningDictionary.Where(x => mod.Name.Contains(x.Key)).Any()) {
-                                    activeWarnings.Add(WarningDictionary.Where(x => mod.Name.Contains(x.Key)).FirstOrDefault().Value);
-                                }
-                            }
-                            
-                            if(activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent) {
-                                nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
-                                if (Settings.PadForNinjaPricer) mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
-                                ImGui.SetNextWindowPos(mousePos, ImGuiCond.Always, nuVector2.Zero);
-                                var _opened = true;
-                                if (ImGui.Begin($"{Name}", ref _opened,
-                                    ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
-                                    ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoBringToFrontOnFocus | ImGuiWindowFlags.NoFocusOnAppearing | ImGuiWindowFlags.NoSavedSettings |
-                                    ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
-                                if (Settings.ShowModCount) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{modsComponent.ItemMods.Count} Total Mods");
-                                if (Settings.ShowQuantityPercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quantity");
-                                if (Settings.ShowPackSizePercent) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{packSize}%% Pack Size");
-                                if (Settings.ShowModWarnings) foreach (Warning warning in activeWarnings) ImGui.TextColored(warning.Color, warning.Text);
-                                ImGui.PushStyleColor(ImGuiCol.WindowBg, new System.Numerics.Vector4(0.256f, 0.256f, 0.256f, 1f));
-                                ImGui.End();
-                            }
+                            mPad = 0;
+                            foreach (var item in inv.Inventory.InventorySlotItems)
+                                RenderItem(item.Item, 1);
                         }
-                    }
                 }
             }
         }
