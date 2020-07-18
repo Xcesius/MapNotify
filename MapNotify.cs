@@ -1,15 +1,11 @@
 ﻿using ExileCore;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.MemoryObjects;
-using ExileCore.Shared.AtlasHelper;
 using ExileCore.Shared.Enums;
-using ExileCore.Shared.Helpers;
 using SharpDX;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using ImGuiNET;
 using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.Elements.InventoryElements;
@@ -47,7 +43,7 @@ namespace MapNotify
 
             uint.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out var abgr);
             Color color = Color.FromAbgr(abgr);
-            return new nuVector4(color.R, color.G, color.B, color.A);
+            return new nuVector4((color.R / (float)255), color.G / (float)255, color.B / (float)255, color.A / (float)255);
         }
 
         public Dictionary<string, Warning> LoadConfig(string path)
@@ -64,7 +60,7 @@ namespace MapNotify
         {
             #region Create Default Config
             new FileInfo(path).Directory.Create();
-            string outFile =  
+            string outFile =
 @"#Mod Contains;Name in tooltip;RGBA colour code
 # REFLECT
 ElementalReflect;Elemental Reflect;FF0000FF
@@ -82,11 +78,13 @@ MapTwoBosses;Twinned;00FF00FF
 MapDangerousBoss;Boss Damage & Speed;00FF00FF
 MapMassiveBoss;Boss AoE & Life;00FF00FF
 # MONSTERS
-MapMonsterColdDamage;Extra Phys as Cold;7F00FFFF
-MapMonsterFireDamage;Extra Phys as Fire;7F00FFFF
-MapMonsterLightningDamage;Extra Phys as Lightning;7F00FFFF
-MapMonsterLife;More Monster Life;7F00FFFF
-MapMonsterFast;Monster Speed;7F00FFFF";
+MapMonsterColdDamage;Extra Phys as Cold;FF007FFF
+MapMonsterFireDamage;Extra Phys as Fire;FF007FFF
+MapMonsterLightningDamage;Extra Phys as Lightning;FF007FFF
+MapMonsterLife;More Monster Life;FF007FFF
+MapMonsterFast;Monster Speed;FF007FFF
+# OTHER
+MapBeyondLeague;Beyond;FF7F00FF";
             File.WriteAllText(path, outFile);
             #endregion
         }
@@ -174,13 +172,17 @@ MapMonsterFast;Monster Speed;7F00FFFF";
                                 }
                             }
                         // Count Mods
-                        if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{modsComponent.ItemMods.Count} Total Mods");
+                        if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0) 
+                            if(entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{modsComponent.ItemMods.Count} Total Mods");
+                            else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{modsComponent.ItemMods.Count} Total Mods");
                         // Quantiy and Pack Size
-                        if(Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quant, {packSize}%% Pack Size");
-                        else if (Settings.ShowQuantityPercent && quantity != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{quantity}%% Quantity");
-                        else if (Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1, 1, 1, 1), $"{packSize}%% Pack Size");
+                        if(Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{quantity}%% Quant, {packSize}%% Pack Size");
+                        else if (Settings.ShowQuantityPercent && quantity != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{quantity}%% Quantity");
+                        else if (Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
                         // Mod Warnings
-                        if (Settings.ShowModWarnings) foreach (Warning warning in activeWarnings) ImGui.TextColored(warning.Color, warning.Text);
+                        if (Settings.ShowModWarnings)
+                            foreach (Warning warning in activeWarnings.OrderBy(x => x.Color.ToString()).ToList())
+                                ImGui.TextColored(warning.Color, warning.Text);
                         // Color background
                         ImGui.PushStyleColor(ImGuiCol.WindowBg, new System.Numerics.Vector4(0.256f, 0.256f, 0.256f, 1f));
                         // Detect and adjust for edges
