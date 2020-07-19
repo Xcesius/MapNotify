@@ -154,6 +154,7 @@ MapBeyondLeague;Beyond;FF7F00FF";
                         if (ImGui.Begin($"{entity.Address}", ref _opened,
                             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                             ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
+                        if(mode == 1 || Settings.ShowMapName)
                             if (!Settings.ShowCompletion) ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name}");
                             else
                             {
