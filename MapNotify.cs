@@ -190,10 +190,7 @@ MapBeyondLeague;Beyond;FF7F00FF";
                         var size = ImGui.GetWindowSize();
                         var pos = ImGui.GetWindowPos();
                         if ((mousePos.X + size.X) > windowArea.Width)
-                        {
-                            ImGui.Text($"Overflow by {(mousePos.X + size.X) - windowArea.Width}");
                             ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);
-                        }
                         else ImGui.SetWindowPos(mousePos, ImGuiCond.Always);
 
                         // padding when parsing an inventory
