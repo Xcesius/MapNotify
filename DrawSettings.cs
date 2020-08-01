@@ -76,27 +76,31 @@ namespace MapNotify
         }
         public override void DrawSettings()
         {
+            Settings.AlwaysShowTooltip.Value = Checkbox("Show Tooltip Even Without Warnings", Settings.AlwaysShowTooltip);
             Settings.ShowMapName.Value = Checkbox("Show Map Name", Settings.ShowMapName);
+            Settings.ShowCompletion.Value = Checkbox("Show Completion Status", Settings.ShowCompletion);
+            if (Settings.ShowCompletion) Settings.ShowMapName.Value = true;
+            ImGui.SameLine(); HelpMarker("Requires map names.\nDisplays a red letter for each missing completion.\nA for Awakened Completion\nB for Bonus Completion\nC for Completion.");
+            Settings.HorizontalLines.Value = Checkbox("Show Horizontal Lines", Settings.HorizontalLines);
+            ImGui.SameLine();HelpMarker("Add a Horizontal Line above actual mod information.");
             Settings.ShowModCount.Value = Checkbox("Show Number of Mods on Map", Settings.ShowModCount);
             Settings.ShowModWarnings.Value = Checkbox("Show Mod Warnings", Settings.ShowModWarnings);
             ImGui.SameLine(); HelpMarker("Configured in 'ModWarnings.txt' in the plugin folder, created if missing.");
             if(ImGui.Button("Reload ModWarnings.txt")) WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
-            Settings.ShowPackSizePercent.Value = Checkbox("Show Pack Size %%", Settings.ShowPackSizePercent);
-            Settings.ShowQuantityPercent.Value = Checkbox("Show Item Quantity %%", Settings.ShowQuantityPercent);
+            Settings.ShowPackSizePercent.Value = Checkbox("Show Pack Size %", Settings.ShowPackSizePercent);
+            Settings.ShowQuantityPercent.Value = Checkbox("Show Item Quantity %", Settings.ShowQuantityPercent);
             Settings.ColourQuantityPercent.Value = Checkbox("Warn Below Quantity Percentage", Settings.ColourQuantityPercent);
             Settings.ColourQuantity.Value = IntSlider("##ColourQuantity", Settings.ColourQuantity);
             ImGui.SameLine(); HelpMarker("The colour of the quantity text will be red below this amount and green above it.");
-            Settings.AlwaysShowTooltip.Value = Checkbox("Show Tooltip Even Without Warnings", Settings.AlwaysShowTooltip);
             ImGui.SameLine();HelpMarker("This will show a tooltip even if there are no mods to warn you about on the map.\nThis means you will always be able to see tier, completion, quantity, mod count, etc.");
             Settings.PadForNinjaPricer.Value = Checkbox("Pad for Ninja Pricer", Settings.PadForNinjaPricer);
             ImGui.SameLine(); HelpMarker("This will move the tooltip down vertically to allow room for the Ninja Pricer tooltip to be rendered. Only needed with that plugin active.");
-            Settings.HorizontalLines.Value = Checkbox("Show Horizontal Lines", Settings.HorizontalLines);
-            Settings.ShowCompletion.Value = Checkbox("Show Completion Status", Settings.ShowCompletion); 
-            ImGui.SameLine(); HelpMarker("Displays a red letter for each missing completion.\nA for Awakened Completion\nB for Bonus Completion\nC for Completion.");
-
             ImGui.Spacing();
-            if(debug = Checkbox("Debug Features",debug))
+            debug = Checkbox("Debug Features", debug);
+            ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
+            if (debug)
             {
+                
                 DebugHover();
                 ImGui.Text("Last Hovered item's mods:");
                 if(hoverMods.Count > 0)
@@ -105,7 +109,6 @@ namespace MapNotify
                     ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), mod);
                 }
             }
-            HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
         }
     }
 }

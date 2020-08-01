@@ -240,7 +240,7 @@ MapBurningGround;Burning Ground;CCCC00FF";
                             ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
                         
                         // Separator
-                        if(Settings.HorizontalLines && modsComponent.ItemMods.Count != 0) ImGui.Separator();
+                        if(Settings.HorizontalLines && modsComponent.ItemMods.Count != 0 && (Settings.ShowModCount || Settings.ShowModWarnings)) ImGui.Separator();
                         // Count Mods
                         if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0)
                             if (entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{modsComponent.ItemMods.Count} Mods");
