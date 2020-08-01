@@ -14,15 +14,17 @@ using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
 {
-    public class MapNotify : BaseSettingsPlugin<MapNotifySettings>
+    public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
         private RectangleF windowArea;
+        public static IngameState ingameState;
         public override bool Initialise()
         {
             base.Initialise();
             Name = "Map Mod Notifications";
             windowArea = GameController.Window.GetWindowRectangle();
             WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
+            ingameState = GameController.Game.IngameState; 
             return true;
         }
         public class Warning
@@ -65,8 +67,11 @@ namespace MapNotify
 # REFLECT
 ElementalReflect;Elemental Reflect;FF0000FF
 PhysicalReflect;Physical Reflect;FF0000FF
-# NO REGEN
+# REGEN
 NoLifeESRegen;No Regen;FF007FFF
+MapPlayerReducedRegen;60%% Less Regen;FF007FFF
+# MAX RES
+MapPlayerMaxResists;Max Res Down;FF007FFF
 # CURSES AND EE
 MapPlayerCurseEnfeeble;Enfeeble;FF00FFFF
 MapPlayerCurseElementalWeak;Elemental Weakness;FF00FFFF
@@ -84,7 +89,14 @@ MapMonsterLightningDamage;Extra Phys as Lightning;FF007FFF
 MapMonsterLife;More Monster Life;FF007FFF
 MapMonsterFast;Monster Speed;FF007FFF
 # OTHER
-MapBeyondLeague;Beyond;FF7F00FF";
+MapBeyondLeague;Beyond;FF7F00FF
+#MapBloodlinesModOnMagicsMapWorld;Bloodlines;FF7F00FF
+#MapNemesis;Nemesis;FF7F00FF
+# GROUND
+MapDesecratedGround;Desecrated Ground;CCCC00FF
+MapShockedGround;Shocked Ground;CCCC00FF
+MapChilledGround;Chilled Ground;CCCC00FF
+MapBurningGround;Burning Ground;CCCC00FF";
             File.WriteAllText(path, outFile);
             #endregion
         }
@@ -104,6 +116,34 @@ MapBeyondLeague;Beyond;FF7F00FF";
             }
         }
 
+        public Dictionary<int, string> ZanaMods = new Dictionary<int, string>()
+        {
+            {1, "Slay Corrupted Boss" },
+            {2, "Slay Rogue Exiles" },
+            {3, "Find Map Item" },
+            {4, "Find Unique Item" },
+            {5, "Find Divination Card" },
+            {6, "Find Vaal Fragment" },
+            {8, "Complete Lab Trial" },
+            {9, "Complete Abyss" },
+            {10, "Slay Corrupted Monsters" },
+            {11, "Slay Corrupted Monsters" },
+            {12, "Slay Corrupted Monsters" },
+            {20, "Find Lodestones" },
+            {21, "Complete Map" },
+            {22, "Slay Beyond Boss" },
+            {23, "Slay Warband" },
+            {24, "Slay Essence" },
+            {25, "Slay Invasion Boss" },
+            {26, "Slay Harbingers" },
+            {27, "Open Unique Strongbox" },
+            {28, "Open Breaches" },
+            {29, "Complete Map" },
+            {30, "Defeat Map Boss" },
+            {31, "Defeat Elder Guardian" },
+            {33, "Complete Legion Monolith" },
+        };
+
         Dictionary<string, Warning> WarningDictionary = new Dictionary<string, Warning>();
         public int mPad;
         public void RenderItem(Entity entity, byte mode)
@@ -112,9 +152,9 @@ MapBeyondLeague;Beyond;FF7F00FF";
             {
                 if (!entity.HasComponent<ExileCore.PoEMemory.Components.Map>()) return;
                 
-                var serverData = GameController.Game.IngameState.ServerData;
+                var serverData = ingameState.ServerData;
                 var bonusComp = serverData.BonusCompletedAreas;
-                //var awakeComp = serverData.AwakenedAreas;
+                var awakeComp = serverData.AwakenedAreas;
                 var comp = serverData.CompletedAreas;
                 
                 var modsComponent = entity.GetComponent<Mods>() ?? null;
@@ -129,14 +169,14 @@ MapBeyondLeague;Beyond;FF7F00FF";
                         foreach (var mod in modsComponent.ItemMods.Where(x =>
                                                             !x.Group.Contains("MapAtlasInfluence")
                                                             && !x.Group.Contains("MapElderContainsBoss")
-                                                            && !x.Name.Equals("InfectedMap")))
+                                                            && !x.Name.Equals("InfectedMap")
+                                                            && !x.Name.Equals("MapZanaSubAreaMissionDetails")
+                                                           ))
                         {
                             quantity += mod.Value1;
                             packSize += mod.Value3;
                             if (WarningDictionary.Where(x => mod.Name.Contains(x.Key)).Any())
-                            {
                                 activeWarnings.Add(WarningDictionary.Where(x => mod.Name.Contains(x.Key)).FirstOrDefault().Value);
-                            }
                         }
 
                     if (Settings.AlwaysShowTooltip || activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent)
@@ -146,7 +186,7 @@ MapBeyondLeague;Beyond;FF7F00FF";
                         if (Settings.PadForNinjaPricer) mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
                         // Parsing inventory, don't use mousePos
                         if(mode == 1) {
-                            var framePos = GameController.Game.IngameState.UIHover.Parent.Parent.GetClientRect().TopRight;
+                            var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
                             mousePos.X = framePos.X;
                             mousePos.Y = framePos.Y - 50 + mPad;
                         }
@@ -155,14 +195,14 @@ MapBeyondLeague;Beyond;FF7F00FF";
                             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                             ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                         if(mode == 1 || Settings.ShowMapName)
-                            if (!Settings.ShowCompletion) ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name}");
+                            if (!Settings.ShowCompletion) ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map","")}");
                             else
                             {
-                                ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name}");
-                                /*if (!awakeComp.Contains(mapComponent.Area))
+                                ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map","")}");
+                                if (!awakeComp.Contains(mapComponent.Area))
                                 {
                                     ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
-                                }*/
+                                }
                                 if (!bonusComp.Contains(mapComponent.Area))
                                 {
                                     ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
@@ -171,15 +211,40 @@ MapBeyondLeague;Beyond;FF7F00FF";
                                 {
                                     ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
                                 }
-                            }
+                                    ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
+                                    
+                                }
+                        if (mode == 1)
+                        {
+                            if(ZanaMods.TryGetValue(modsComponent.ItemMods.FirstOrDefault(x => x.Name == "MapZanaSubAreaMissionDetails").Value2, out string modName))
+                                if(modName.Contains("Guardian"))
+                                    ImGui.TextColored(new nuVector4(0.5f, 1f, 0.45f, 1f), $"{modName}");
+                                else
+                                    ImGui.TextColored(new nuVector4(0.9f, 0.85f, 0.65f, 1f), $"{modName}");
+                            else 
+                                ImGui.TextColored(new nuVector4(0.9f, 0.85f, 0.65f, 1f), $"Unknown Zana Mission: {modsComponent.ItemMods.FirstOrDefault(x => x.Name == "MapZanaSubAreaMissionDetails").Value2}");
+                        }
+                        // Quantity and Pack Size
+                        nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
+                        if (Settings.ColourQuantityPercent)
+                            if (quantity < Settings.ColourQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f); 
+                            else qCol = new nuVector4(0.4f, 1f, 0.4f, 1f);
+                        if (Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0)
+                        {
+                            ImGui.TextColored(qCol, $"{quantity}%% Quant");
+                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
+                        }
+                        else if (Settings.ShowQuantityPercent && quantity != 0)
+                            ImGui.TextColored(qCol, $"{quantity}%% Quantity");
+                        else if (Settings.ShowPackSizePercent && packSize != 0)
+                            ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
+                        
+                        // Separator
+                        if(Settings.HorizontalLines && modsComponent.ItemMods.Count != 0) ImGui.Separator();
                         // Count Mods
-                        if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0) 
-                            if(entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{modsComponent.ItemMods.Count} Total Mods");
-                            else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{modsComponent.ItemMods.Count} Total Mods");
-                        // Quantiy and Pack Size
-                        if(Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{quantity}%% Quant, {packSize}%% Pack Size");
-                        else if (Settings.ShowQuantityPercent && quantity != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{quantity}%% Quantity");
-                        else if (Settings.ShowPackSizePercent && packSize != 0) ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
+                        if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0)
+                            if (entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{modsComponent.ItemMods.Count} Mods");
+                            else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{modsComponent.ItemMods.Count} Mods");
                         // Mod Warnings
                         if (Settings.ShowModWarnings)
                             foreach (Warning warning in activeWarnings.OrderBy(x => x.Color.ToString()).ToList())
@@ -191,7 +256,7 @@ MapBeyondLeague;Beyond;FF7F00FF";
                         var pos = ImGui.GetWindowPos();
                         if ((mousePos.X + size.X) > windowArea.Width)
                         {
-                            ImGui.Text($"Overflow by {(mousePos.X + size.X) - windowArea.Width}");
+                            //ImGui.Text($"Overflow by {(mousePos.X + size.X) - windowArea.Width}");
                             ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);
                         }
                         else ImGui.SetWindowPos(mousePos, ImGuiCond.Always);
@@ -207,8 +272,8 @@ MapBeyondLeague;Beyond;FF7F00FF";
         public override void Render()
         {
             if (!Settings.Enable) return;
-            var uiHover = GameController.Game.IngameState.UIHover;
-            if (GameController.Game.IngameState.UIHover.IsVisible)
+            var uiHover = ingameState.UIHover;
+            if (ingameState.UIHover.IsVisible)
             {
                 var itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType ?? null;
                 // render normal items
@@ -221,7 +286,6 @@ MapBeyondLeague;Beyond;FF7F00FF";
                 // render NPC inventory if relevant
                 else if (itemType != null && itemType == ToolTipType.None)
                 {
-                    var ingameState = GameController.Game.IngameState;
                     var serverData = ingameState.ServerData;
                     var npcInv = serverData.NPCInventories;
                     if (npcInv == null || npcInv.Count == 0) return;

@@ -102,6 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawSettings.cs" />
     <Compile Include="MapNotify.cs" />
     <Compile Include="MapNotifySettings.cs" />
     <Compile Include="MouseLite.cs" />
