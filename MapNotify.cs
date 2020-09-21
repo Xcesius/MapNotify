@@ -24,7 +24,7 @@ namespace MapNotify
             Name = "Map Mod Notifications";
             windowArea = GameController.Window.GetWindowRectangle();
             WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
-            ingameState = GameController.Game.IngameState; 
+            ingameState = GameController.Game.IngameState;
             return true;
         }
         public class Warning
@@ -35,8 +35,8 @@ namespace MapNotify
 
         public IEnumerable<string[]> GenDictionary(string path)
         {
-            return File.ReadAllLines(path).Where(line => !string.IsNullOrWhiteSpace(line) 
-            && line.IndexOf(';') >= 0 
+            return File.ReadAllLines(path).Where(line => !string.IsNullOrWhiteSpace(line)
+            && line.IndexOf(';') >= 0
             && !line.StartsWith("#")).Select(line => line.Split(new[] { ';' }, 3).Select(parts => parts.Trim()).ToArray());
         }
 
@@ -213,6 +213,7 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
             {
                 var className = GameController.Files.BaseItemTypes.Translate(entity.Path).ClassName;
                 if (!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && !className.Contains("HeistContract")) return;
+                if (className.Contains("HeistContract") && entity.GetComponent<Mods>().ItemRarity == ItemRarity.Normal) return;
 
                 var serverData = ingameState.ServerData;
                 var bonusComp = serverData.BonusCompletedAreas;
@@ -258,7 +259,8 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
                             ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                             ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                         {
-                            if (!className.Contains("HeistContract")) { 
+                            if (!className.Contains("HeistContract"))
+                            {
                                 if (mode == 1 || Settings.ShowMapName)
                                 {
                                     if (!Settings.ShowCompletion)
@@ -358,7 +360,7 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
-                    if(hoverItem.Tooltip.IsValid)
+                    if (hoverItem.Tooltip.IsValid)
                         RenderItem(uiHover.AsObject<NormalInventoryItem>().Item, 0);
                 }
                 // render NPC inventory if relevant

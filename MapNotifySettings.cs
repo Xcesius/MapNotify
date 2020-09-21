@@ -21,6 +21,8 @@ namespace MapNotify
             HorizontalLines = new ToggleNode(true);
             PadForNinjaPricer = new ToggleNode(true);
             AlwaysShowTooltip = new ToggleNode(true);
+            ShowForZanaMaps = new ToggleNode(true);
+            ShowLineForZanaMaps = new ToggleNode(true);
         }
         public ToggleNode Enable { get; set; }
         public ToggleNode ShowMapName { get; set; }
@@ -34,5 +36,7 @@ namespace MapNotify
         public ToggleNode HorizontalLines { get; set; }
         public ToggleNode PadForNinjaPricer { get; set; }
         public ToggleNode AlwaysShowTooltip { get; set; }
+        public ToggleNode ShowForZanaMaps { get; set; }
+        public ToggleNode ShowLineForZanaMaps { get; set; }
     }
 }

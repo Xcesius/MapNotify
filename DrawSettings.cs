@@ -77,6 +77,9 @@ namespace MapNotify
         public override void DrawSettings()
         {
             Settings.AlwaysShowTooltip.Value = Checkbox("Show Tooltip Even Without Warnings", Settings.AlwaysShowTooltip);
+            ImGui.SameLine(); HelpMarker("This will show a tooltip even if there are no mods to warn you about on the map.\nThis means you will always be able to see tier, completion, quantity, mod count, etc.");
+            Settings.ShowForZanaMaps.Value = Checkbox("Display for Zana Missions", Settings.ShowForZanaMaps);
+            Settings.ShowLineForZanaMaps.Value = Checkbox("Display Horizontal Line in Zana Missions Info", Settings.ShowLineForZanaMaps);
             Settings.ShowMapName.Value = Checkbox("Show Map Name", Settings.ShowMapName);
             Settings.ShowCompletion.Value = Checkbox("Show Completion Status", Settings.ShowCompletion);
             if (Settings.ShowCompletion) Settings.ShowMapName.Value = true;
@@ -92,7 +95,6 @@ namespace MapNotify
             Settings.ColourQuantityPercent.Value = Checkbox("Warn Below Quantity Percentage", Settings.ColourQuantityPercent);
             Settings.ColourQuantity.Value = IntSlider("##ColourQuantity", Settings.ColourQuantity);
             ImGui.SameLine(); HelpMarker("The colour of the quantity text will be red below this amount and green above it.");
-            ImGui.SameLine();HelpMarker("This will show a tooltip even if there are no mods to warn you about on the map.\nThis means you will always be able to see tier, completion, quantity, mod count, etc.");
             Settings.PadForNinjaPricer.Value = Checkbox("Pad for Ninja Pricer", Settings.PadForNinjaPricer);
             ImGui.SameLine(); HelpMarker("This will move the tooltip down vertically to allow room for the Ninja Pricer tooltip to be rendered. Only needed with that plugin active.");
             ImGui.Spacing();
@@ -100,7 +102,6 @@ namespace MapNotify
             ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
             if (debug)
             {
-                
                 DebugHover();
                 ImGui.Text("Last Hovered item's mods:");
                 if(hoverMods.Count > 0)
