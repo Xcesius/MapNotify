@@ -200,7 +200,7 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
             {29, "Complete Map" },
             {30, "Defeat Map Boss" },
             {31, "Defeat Elder Guardian" },
-            {31, "Defeat Shaper Guardian" },
+            {32, "Defeat Shaper Guardian" },
             {33, "Complete Legion Monolith" },
         };
 
