@@ -18,6 +18,7 @@ namespace MapNotify
     {
         private RectangleF windowArea;
         public static IngameState ingameState;
+        public static TheGame theGame;
         public override bool Initialise()
         {
             base.Initialise();
@@ -25,6 +26,7 @@ namespace MapNotify
             windowArea = GameController.Window.GetWindowRectangle();
             WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
             ingameState = GameController.Game.IngameState;
+            theGame = GameController.Game;
             return true;
         }
         public class Warning
@@ -202,6 +204,9 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
             {31, "Defeat Elder Guardian" },
             {32, "Defeat Shaper Guardian" },
             {33, "Complete Legion Monolith" },
+            {34, "Complete The Harvest" },
+            {35, "Complete The Blight Encounter" },
+            {38, "Complete The Metamorph Encounter" },
         };
 
         Dictionary<string, Warning> WarningDictionary = new Dictionary<string, Warning>();
@@ -216,9 +221,10 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
                 if (className.Contains("HeistContract") && entity.GetComponent<Mods>().ItemRarity == ItemRarity.Normal) return;
 
                 var serverData = ingameState.ServerData;
-                var bonusComp = serverData.BonusCompletedAreas;
-                var awakeComp = serverData.AwakenedAreas;
-                var comp = serverData.CompletedAreas;
+                var Awakened = AwakenedAreas;
+                var Bonus = BonusAreas;
+                var Complete = CompletedAreas;
+                var Maven = MavenAreas;
 
                 var modsComponent = entity.GetComponent<Mods>() ?? null;
                 if (Settings.AlwaysShowTooltip || modsComponent != null && modsComponent.ItemRarity != ItemRarity.Normal && modsComponent.ItemMods.Count() > 0)
@@ -268,17 +274,21 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
                                     else
                                     {
                                         ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map", "")}");
-                                        if (!awakeComp.Contains(mapComponent.Area))
+                                        if (!Awakened.Contains(mapComponent.Area))
                                         {
                                             ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                         }
-                                        if (!bonusComp.Contains(mapComponent.Area))
+                                        if (!Bonus.Contains(mapComponent.Area))
                                         {
                                             ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
                                         }
-                                        if (!comp.Contains(mapComponent.Area))
+                                        if (!CompletedAreas.Contains(mapComponent.Area))
                                         {
                                             ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
+                                        }
+                                        if (MavenAreas.Contains(mapComponent.Area))
+                                        {
+                                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.7f, 0f, 0.66f, 1f), $"M");
                                         }
                                         ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
                                     }
