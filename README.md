@@ -1,5 +1,6 @@
 # MapNotify
 Notifications about map mods, quantity, packsize and other useful information for immediate parsing
+Also covers Heists and Watchstones.
 
 ![Image](https://i.imgur.com/sST1Zxi.png)
 
