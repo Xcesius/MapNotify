@@ -11,367 +11,171 @@ using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
+using System.Threading.Tasks;
 
 namespace MapNotify
 {
     public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
         private RectangleF windowArea;
+        public static GameController gameController;
         public static IngameState ingameState;
-        public static TheGame theGame;
+        public static Dictionary<string, StyledText> WarningDictionary;
+        
         public override bool Initialise()
         {
             base.Initialise();
             Name = "Map Mod Notifications";
             windowArea = GameController.Window.GetWindowRectangle();
-            WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
+            WarningDictionary = LoadConfigs();
+            gameController = GameController;
             ingameState = GameController.Game.IngameState;
-            theGame = GameController.Game;
             return true;
         }
-        public class Warning
-        {
-            public string Text { get; set; }
-            public nuVector4 Color { get; set; }
-        }
 
-        public IEnumerable<string[]> GenDictionary(string path)
-        {
-            return File.ReadAllLines(path).Where(line => !string.IsNullOrWhiteSpace(line)
-            && line.IndexOf(';') >= 0
-            && !line.StartsWith("#")).Select(line => line.Split(new[] { ';' }, 3).Select(parts => parts.Trim()).ToArray());
-        }
-
-        public nuVector4 HexToVector4(string value)
-        {
-
-            uint.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out var abgr);
-            Color color = Color.FromAbgr(abgr);
-            return new nuVector4((color.R / (float)255), color.G / (float)255, color.B / (float)255, color.A / (float)255);
-        }
-
-        public Dictionary<string, Warning> LoadConfig(string path)
-        {
-            if (!File.Exists(path)) CreateConfig(path);
-            return GenDictionary(path).ToDictionary(line => line[0], line =>
-            {
-                var preloadAlerConfigLine = new Warning { Text = line[1], Color = HexToVector4(line[2]) };
-                return preloadAlerConfigLine;
-            });
-        }
-
-        public void CreateConfig(string path)
-        {
-            #region Create Default Config
-            new FileInfo(path).Directory.Create();
-            string outFile =
-@"#Mod Contains;Name in tooltip;RGBA colour code
-# REFLECT
-ElementalReflect;Elemental Reflect;FF0000FF
-PhysicalReflect;Physical Reflect;FF0000FF
-# REGEN
-NoLifeESRegen;No Regen;FF007FFF
-MapPlayerReducedRegen;60%% Less Regen;FF007FFF
-# MAX RES
-MapPlayerMaxResists;Max Res Down;FF007FFF
-# CURSES AND EE
-MapPlayerCurseEnfeeble;Enfeeble;FF00FFFF
-MapPlayerCurseElementalWeak;Elemental Weakness;FF00FFFF
-MapPlayerCurseVuln;Vulnerability;FF00FFFF
-MapPlayerCurseTemp;Temporal Chains;FF00FFFF
-MapPlayerElementalEquilibrium;Elemental Equilibrium;FF00FFFF
-# BOSSES
-MapTwoBosses;Twinned;00FF00FF
-MapDangerousBoss;Boss Damage & Speed;00FF00FF
-MapMassiveBoss;Boss AoE & Life;00FF00FF
-# MONSTERS
-MapMonsterColdDamage;Extra Phys as Cold;FF007FFF
-MapMonsterFireDamage;Extra Phys as Fire;FF007FFF
-MapMonsterLightningDamage;Extra Phys as Lightning;FF007FFF
-MapMonsterLife;More Monster Life;FF007FFF
-MapMonsterFast;Monster Speed;FF007FFF
-# OTHER
-MapBeyondLeague;Beyond;FF7F00FF
-#MapBloodlinesModOnMagicsMapWorld;Bloodlines;FF7F00FF
-#MapNemesis;Nemesis;FF7F00FF
-# GROUND
-MapDesecratedGround;Desecrated Ground;CCCC00FF
-MapShockedGround;Shocked Ground;CCCC00FF
-MapChilledGround;Chilled Ground;CCCC00FF
-MapBurningGround;Burning Ground;CCCC00FF
-# CONTRACT MODS
-HeistContractNemesisModOnRares;Nemesis;FF7F00FF
-HeistContractMonsterPhysicalResistance;Monster Physical Resistance;FF007FFF
-HeistContractMonsterCannotBeStunned;Monsters cannot be Stunned;FF007FFF
-HeistContractMonsterLife;Monster Life;FF007FFF
-HeistContractMonsterDamage;Monster damage;FF007FFF
-HeistContractMonsterFast;Monster Speed;FF007FFF
-HeistContractMonsterPhysicalReflection;Physical Reflect;FF0000FF
-HeistContractMonsterElementalReflection;Elemental Reflect;FF0000FF
-HeistContractMonsterMultipleProjectiles;Multiple Projectiles;FF007FFF
-HeistContractMonsterChain;Chaining;FF007FFF
-HeistContractPlayerManaReducedRegenAlertLevel;Less Mana Regen with Alert;FF007FFF
-HeistContractPlayerLifeReducedRegenAlertLevel;Less Life Regen with Alert;FF007FFF
-HeistContractPlayerEnergyShieldReducedRegenAlertLevel;Less ES Regen with Alert;FF007FFF
-HeistContractPlayerReducedRegen;Less Regen;FF007FFF
-HeistContractPlayerNoLifeESRegen_;No Regen;FF007FFF
-HeistContractPlayerElementalEquilibrium;Ele Equilibirum;FF00FFFF
-HeistContractPlayerMaxResists;Max Res Down;FF007FFF
-HeistContractPlayerMaxResistsAlertLevel;Max Res Down with Alert;FF007FFF
-HeistContractDesecratedGround;Desecrated Ground;CCCC00FF
-HeistContractBurningGround;Burning Ground;CCCC00FF
-HeistContractShockedGround;Shocked Ground;CCCC00FF
-HeistContractChilledGround;Chilled Ground;CCCC00FF
-HeistContractMonstersCurseEffectOnSelfFinal;Less Curse Effectiveness;FF007FFF
-HeistContractHexproof;Hexproof;FF007FFF
-HeistContractPoisoning;Monsters Poison on Hit;FF007FFF
-HeistContractMonstersAllResistances;Monster Res;FF007FFF
-HeistContractBloodlinesModOnMagics_;Bloodlines;FF7F00FF
-HeistContractMonstersAllDamageAlwaysIgnites_;All Hits Ignite;FF007FFF
-HeistContractMonsterAreaOfEffect;Monster AoE;FF007FFF
-HeistContractPlayerCurseElementalWeakness;Ele Weakness;FF00FFFF
-HeistContractPlayerCurseVulnerability;Vulnerability;FF00FFFF
-HeistContractPlayerCurseEnfeeblement;Enfeeblement;FF00FFFF
-HeistContractPlayerCurseTemporalChains;Temporal Chains;FF00FFFF
-HeistContractPlayersPointBlank;Player has Point Blank;FF00FFFF
-HeistContractPlayersBlockAndArmour;Less Armour and Blocking;FF007FFF
-HeistContractPlayerArmourAlertLevel;Less Armor with Alert;FF007FFF
-HeistContractMonsterAccuracyPlayersUnlockyDodge;Unlucky Dodging;FF007FFF
-HeistContractPlayerEvasionAlertLevel;Less Evasion with Alert;FF007FFF
-HeistContractPlayersAoERadius;Player Less AoE;FF007FFF
-HeistContractMonsterPatrolAdditionalElite;Elite Spawn Chance;FF007FFF
-HeistContractObjectiveSpeed;Reduced Job Speed;FF007FFF
-HeistContractMonsterRewardRoomDamage;Reward Room Damage;FF007FFF
-HeistContractSideAreaIncreasedMonsters;More Reward Room Monsters;FF007FFF
-HeistContractReinforcementsFast;Reinforcement Speed;FF007FFF
-HeistContractLockdownInstant;Lockdown is Instant;FF0000FF
-HeistContractTotalCost;Raised Heist Fee;FF0000FF
-HeistContractChestAlertLevel;High Alert from Chests;FF0000FF
-HeistContractMonsterAlertLevel;High Alert from Monsters;FF0000FF
-HeistContractNoGangCut;No Cut Taken;00FF00FF
-HeistContractNoTravelCost;No Travel Cost;00FF00FF
-HeistContractGainAlertLevelPassive;Alert Increases over Time;FF0000FF
-HeistContractGuardsLoseAlertLevel;Killing Lowers Alert;00FF00FF
-HeistContractPlayerFireResistAlertLevel;Less Player Fire Res with Alert;FF0000FF
-HeistContractPlayerColdResistAlertLevel;Less Player Cold Res with Alert;FF007FFF
-HeistContractPlayerLightningResistAlertLevel;Less Player Lightning Res with Alert;FF007FFF
-HeistContractMonsterFireDamage;Extra Fire Damage;FF007FFF
-HeistContractMonsterColdDamage;Extra Cold Damage;FF007FFF
-HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
-            File.WriteAllText(path, outFile);
-            #endregion
-        }
-
-        public nuVector4 GetRarityColor(ItemRarity rarity)
-        {
-            switch (rarity)
-            {
-                case ItemRarity.Rare:
-                    return new nuVector4(0.99f, 0.99f, 0.46f, 1f);
-                case ItemRarity.Magic:
-                    return new nuVector4(0.52f, 0.52f, 0.99f, 1f);
-                case ItemRarity.Unique:
-                    return new nuVector4(0.68f, 0.37f, 0.11f, 1f);
-                default:
-                    return new nuVector4(1F, 1F, 1F, 1F);
-            }
-        }
-
-        public Dictionary<int, string> ZanaMods = new Dictionary<int, string>()
-        {
-            {1, "Slay Corrupted Boss" },
-            {2, "Slay Rogue Exiles" },
-            {3, "Find Map Item" },
-            {4, "Find Unique Item" },
-            {5, "Find Divination Card" },
-            {6, "Find Vaal Fragment" },
-            {8, "Complete Lab Trial" },
-            {9, "Complete Abyss" },
-            {10, "Slay Corrupted Monsters" },
-            {11, "Slay Corrupted Monsters" },
-            {12, "Slay Corrupted Monsters" },
-            {20, "Find Lodestones" },
-            {21, "Complete Map" },
-            {22, "Slay Beyond Boss" },
-            {23, "Slay Warband" },
-            {24, "Slay Essence" },
-            {25, "Slay Invasion Boss" },
-            {26, "Slay Harbingers" },
-            {27, "Open Unique Strongbox" },
-            {28, "Open Breaches" },
-            {29, "Complete Map" },
-            {30, "Defeat Map Boss" },
-            {31, "Defeat Elder Guardian" },
-            {32, "Defeat Shaper Guardian" },
-            {33, "Complete Legion Monolith" },
-            {34, "Complete The Harvest" },
-            {35, "Complete The Blight Encounter" },
-            {38, "Complete The Metamorph Encounter" },
-        };
-
-        Dictionary<string, Warning> WarningDictionary = new Dictionary<string, Warning>();
         public int mPad;
-        public void RenderItem(Entity entity, byte mode)
+        public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory)
         {
-
+            var entity = Entity;
+            var item = Item;
             if (entity.Address != 0 && entity.IsValid)
             {
-                var className = GameController.Files.BaseItemTypes.Translate(entity.Path).ClassName;
-                if (!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && !className.Contains("HeistContract")) return;
-                if (className.Contains("HeistContract") && entity.GetComponent<Mods>().ItemRarity == ItemRarity.Normal) return;
-
-                var serverData = ingameState.ServerData;
-                var Awakened = AwakenedAreas;
-                var Bonus = BonusAreas;
-                var Complete = CompletedAreas;
-                var Maven = MavenAreas;
-
-                var modsComponent = entity.GetComponent<Mods>() ?? null;
-                if (Settings.AlwaysShowTooltip || modsComponent != null && modsComponent.ItemRarity != ItemRarity.Normal && modsComponent.ItemMods.Count() > 0)
+                // Class ID
+                var classID = gameController.Files.BaseItemTypes.Translate(entity.Path).ClassName;
+                // Not map, heist or watchstone or normal rarity heist
+                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && !classID.Contains("HeistContract") && !classID.Contains("AtlasRegionUpgradeItem")) || 
+                    classID.Contains("HeistContract") && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
+                
+                // Evaluate
+                var ItemDetails = new ItemDetails(Item, Entity);
+                if (Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
                 {
-                    List<Warning> activeWarnings = new List<Warning>();
-                    nuVector4 nameCol = GetRarityColor(entity.GetComponent<Mods>().ItemRarity);
-                    var mapComponent = entity.GetComponent<ExileCore.PoEMemory.Components.Map>() ?? null;
-                    int packSize = 0;
-                    int quantity = entity.GetComponent<Quality>()?.ItemQuality ?? 0;
-                    if (modsComponent != null && modsComponent.ItemRarity != ItemRarity.Unique)
-                        foreach (var mod in modsComponent.ItemMods.Where(x =>
-                                                            !x.Group.Contains("MapAtlasInfluence")
-                                                            && !x.Group.Contains("MapElderContainsBoss")
-                                                            && !x.Name.Equals("InfectedMap")
-                                                            && !x.Name.Equals("MapZanaSubAreaMissionDetails")
-                                                            ))
-                        {
-                            quantity += mod.Value1;
-                            packSize += mod.Value3;
-                            if (WarningDictionary.Where(x => mod.Name.Contains(x.Key)).Any())
-                                activeWarnings.Add(WarningDictionary.Where(x => mod.Name.Contains(x.Key)).FirstOrDefault().Value);
-                        }
+                    List<StyledText> activeStyledTexts = ItemDetails.ActiveWarnings;
+                    if (classID.Contains("AtlasRegionUpgradeItem") && activeStyledTexts.Count == 0) return;
 
-                    if (Settings.AlwaysShowTooltip || activeWarnings.Count > 0 || Settings.ShowModCount || Settings.ShowQuantityPercent || Settings.ShowPackSizePercent)
-                    {
-                        // Get mouse position
-                        nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
-                        if (Settings.PadForNinjaPricer) mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
+                    // Get mouse position
+                    Vector2 mousePos = new Vector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
+                    // Pad vertically as well if using ninja pricer tooltip
+                    if (Settings.PadForNinjaPricer && ItemDetails.NeedsPadding) 
+                        mousePos = new Vector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
                         // Parsing inventory, don't use mousePos
-                        if (mode == 1)
+                        if (isInventory)
                         {
                             var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
-                            mousePos.X = framePos.X;
-                            mousePos.Y = framePos.Y - 50 + mPad;
+                            mousePos = new Vector2(framePos.X, framePos.Y - 50 + mPad);
                         }
-                        var _opened = true;
-                        if (ImGui.Begin($"{entity.Address}", ref _opened,
-                            ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
-                            ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
+                    // create the imgui faux tooltip
+                    var _opened = true;
+                    if (ImGui.Begin($"{entity.Address}", ref _opened,
+                        ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
+                        ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
+                    {
+                        if (!classID.ToString().Contains("HeistContract") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
                         {
-                            if (!className.Contains("HeistContract"))
+                            // map only stuff, zana always needs to show name for ease
+                            if (isInventory || Settings.ShowMapName)
                             {
-                                if (mode == 1 || Settings.ShowMapName)
-                                {
-                                    if (!Settings.ShowCompletion)
-                                        ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map", "")}");
-                                    else
-                                    {
-                                        ImGui.TextColored(nameCol, $"[T{mapComponent.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map", "")}");
-                                        if (!Awakened.Contains(mapComponent.Area))
-                                        {
-                                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
-                                        }
-                                        if (!Bonus.Contains(mapComponent.Area))
-                                        {
-                                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
-                                        }
-                                        if (!CompletedAreas.Contains(mapComponent.Area))
-                                        {
-                                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
-                                        }
-                                        if (MavenAreas.Contains(mapComponent.Area))
-                                        {
-                                            ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.7f, 0f, 0.66f, 1f), $"M");
-                                        }
-                                        ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
-                                    }
-                                }
-                            }
-                            if (mode == 1)
-                            {
-                                if (ZanaMods.TryGetValue(modsComponent.ItemMods.FirstOrDefault(x => x.Name == "MapZanaSubAreaMissionDetails").Value2, out string modName))
-                                    if (modName.Contains("Guardian"))
-                                        ImGui.TextColored(new nuVector4(0.5f, 1f, 0.45f, 1f), $"{modName}");
-                                    else
-                                        ImGui.TextColored(new nuVector4(0.9f, 0.85f, 0.65f, 1f), $"{modName}");
+                                if (!Settings.ShowCompletion)
+                                    ImGui.TextColored(ItemDetails.ItemColour, $"[T{ItemDetails.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map", "")}");
                                 else
-                                    ImGui.TextColored(new nuVector4(0.9f, 0.85f, 0.65f, 1f), $"Unknown Zana Mission: {modsComponent.ItemMods.FirstOrDefault(x => x.Name == "MapZanaSubAreaMissionDetails").Value2}");
-                            }
-                            if (!className.Contains("HeistContract"))
-                            {
-                                // Quantity and Pack Size
-                                nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
-                                if (Settings.ColourQuantityPercent)
-                                    if (quantity < Settings.ColourQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
-                                    else qCol = new nuVector4(0.4f, 1f, 0.4f, 1f);
-                                if (Settings.ShowQuantityPercent && quantity != 0 && Settings.ShowPackSizePercent && packSize != 0)
                                 {
-                                    ImGui.TextColored(qCol, $"{quantity}%% Quant");
-                                    ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
-                                }
-                                else if (Settings.ShowQuantityPercent && quantity != 0)
-                                    ImGui.TextColored(qCol, $"{quantity}%% Quantity");
-                                else if (Settings.ShowPackSizePercent && packSize != 0)
-                                    ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{packSize}%% Pack Size");
-
-                                // Separator
-                                if (Settings.HorizontalLines && modsComponent.ItemMods.Count != 0 && (Settings.ShowModCount || Settings.ShowModWarnings))
-                                {
-                                    if (Settings.ShowLineForZanaMaps && mode == 1 || mode == 0)
-                                        ImGui.Separator();
+                                    ImGui.TextColored(ItemDetails.ItemColour, $"[T{ItemDetails.Tier}] {entity.GetComponent<Base>().Name.Replace(" Map", "")}");
+                                    if (!ItemDetails.Awakened)
+                                    {
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
+                                    }
+                                    if (!ItemDetails.Bonus)
+                                    {
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
+                                    }
+                                    if (!ItemDetails.Completed)
+                                    {
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
+                                    }
+                                    if (ItemDetails.Maven)
+                                    {
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.7f, 0f, 0.66f, 1f), $"M");
+                                    }
+                                    ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
                                 }
                             }
-                            // Count Mods
-                            if (Settings.ShowModCount && modsComponent.ItemMods.Count != 0)
-                                if (entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{modsComponent.ItemMods.Count} Mods");
-                                else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{modsComponent.ItemMods.Count} Mods");
-                            // Mod Warnings
-                            if (Settings.ShowModWarnings)
-                                foreach (Warning warning in activeWarnings.OrderBy(x => x.Color.ToString()).ToList())
-                                    ImGui.TextColored(warning.Color, warning.Text);
-                            // Color background
-                            ImGui.PushStyleColor(ImGuiCol.WindowBg, new System.Numerics.Vector4(0.256f, 0.256f, 0.256f, 1f));
-                            // Detect and adjust for edges
-                            var size = ImGui.GetWindowSize();
-                            var pos = ImGui.GetWindowPos();
-                            if ((mousePos.X + size.X) > windowArea.Width)
-                            {
-                                //ImGui.Text($"Overflow by {(mousePos.X + size.X) - windowArea.Width}");
-                                ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);
-                            }
-                            else ImGui.SetWindowPos(mousePos, ImGuiCond.Always);
-
-                            // padding when parsing an inventory
-                            if (mode == 1) mPad += (int)size.Y + 2;
-
                         }
-                        ImGui.End();
+                        // Zana Mod
+                        if (isInventory)
+                            ImGui.TextColored(SharpToNuVec4(ItemDetails.ZanaMod.Color), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
+
+                        // Quantity and Packsize for maps
+                        if (!classID.Contains("HeistContract") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                        {
+                            // Quantity and Pack Size
+                            nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
+                            if (Settings.ColourQuantityPercent)
+                                if (ItemDetails.Quantity < Settings.ColourQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
+                                else qCol = new nuVector4(0.4f, 1f, 0.4f, 1f);
+                            if (Settings.ShowQuantityPercent && ItemDetails.Quantity != 0 && Settings.ShowPackSizePercent && ItemDetails.PackSize != 0)
+                            {
+                                ImGui.TextColored(qCol, $"{ItemDetails.Quantity}%% Quant");
+                                ImGui.SameLine();
+                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.PackSize}%% Pack Size");
+                            }
+                            else if (Settings.ShowQuantityPercent && ItemDetails.Quantity != 0)
+                                ImGui.TextColored(qCol, $"{ItemDetails.Quantity}%% Quantity");
+                            else if (Settings.ShowPackSizePercent && ItemDetails.PackSize != 0)
+                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.PackSize}%% Pack Size");
+
+                            // Separator
+                            if (Settings.HorizontalLines && ItemDetails.ModCount != 0 && (Settings.ShowModCount || Settings.ShowModWarnings))
+                            {
+                                if (Settings.ShowLineForZanaMaps && isInventory || !isInventory)
+                                    ImGui.Separator();
+                            }
+                        }
+                        // Count Mods
+                        if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                            if (entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{ItemDetails.ModCount} Mods");
+                            else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.ModCount} Mods");
+
+                        // Mod StyledTexts
+                        if (Settings.ShowModWarnings)
+                            foreach (StyledText StyledText in activeStyledTexts.OrderBy(x => x.Color.ToString()).ToList())
+                                ImGui.TextColored(SharpToNuVec4(StyledText.Color), StyledText.Text);
+
+                        // Color background
+                        ImGui.PushStyleColor(ImGuiCol.WindowBg, 0xFF3F3F3F);
+
+                        // Detect and adjust for edges
+                        var size = ImGui.GetWindowSize();
+                        var pos = ImGui.GetWindowPos();
+                        if ((mousePos.X + size.X) > windowArea.Width)
+                        {
+                            ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);                        }
+                        else ImGui.SetWindowPos(SharpToNuVec2(mousePos), ImGuiCond.Always);
+
+                        // padding when parsing an inventory
+                        if (isInventory) mPad += (int)size.Y + 2;
+
                     }
+                    ImGui.End();
                 }
+                
             }
         }
 
-        public bool firstRun = true;
         public override void Render()
         {
             if (!Settings.Enable) return;
-            var uiHover = ingameState.UIHover;
-            if (ingameState.UIHover.IsVisible)
+            var uiHover = ingameState?.UIHover ?? null;
+            if (ingameState.UIHover?.IsVisible ?? false)
             {
                 var itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType ?? null;
-                // render normal items
+                // render hovered item
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
-                    if (hoverItem.Tooltip.IsValid)
-                        RenderItem(uiHover.AsObject<NormalInventoryItem>().Item, 0);
+                    if (hoverItem.Item?.Path != null && (hoverItem.Tooltip?.IsValid ?? false))
+                    {
+                        RenderItem(hoverItem, hoverItem.Item, false);
+                    }
                 }
                 // render NPC inventory if relevant
                 else if (Settings.ShowForZanaMaps && itemType != null && itemType == ToolTipType.None)
@@ -383,8 +187,8 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
                         if (uiHover.Parent.ChildCount == inv.Inventory.Items.Count)
                         {
                             mPad = 0;
-                            foreach (var item in inv.Inventory.InventorySlotItems)
-                                RenderItem(item.Item, 1);
+                            foreach (var item in inv.Inventory.Items)
+                                RenderItem(null, item, true);
                         }
                 }
             }

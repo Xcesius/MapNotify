@@ -9,6 +9,7 @@ using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
+using SharpDX;
 using nuVector4 = System.Numerics.Vector4;
 namespace MapNotify
 {
@@ -53,7 +54,7 @@ namespace MapNotify
             {
                 var modsComponent = entity.GetComponent<Mods>() ?? null;
                 if (modsComponent == null) hoverMods.Clear();
-                else if (modsComponent != null && modsComponent.ItemRarity != ExileCore.Shared.Enums.ItemRarity.Normal && modsComponent.ItemMods.Count() > 0) 
+                else if (modsComponent != null && /* modsComponent.ItemRarity != ExileCore.Shared.Enums.ItemRarity.Normal && */ modsComponent.ItemMods.Count() > 0) 
                 {
                     hoverMods.Clear();
                     //                                LogMessage("mods");
@@ -65,8 +66,8 @@ namespace MapNotify
                     }
                     foreach (var mod in itemMods)
                     {
-                        if (!hoverMods.Contains($"{mod.Name} : {mod.Value1}, {mod.Value2}, {mod.Value3}, {mod.Value4}")) 
-                            hoverMods.Add($"{mod.Name} : {mod.Value1}, {mod.Value2}, {mod.Value3}, {mod.Value4}");
+                        if (!hoverMods.Contains($"{mod.RawName} : {mod.Value1}, {mod.Value2}, {mod.Value3}, {mod.Value4}")) 
+                            hoverMods.Add($"{mod.RawName} : {mod.Value1}, {mod.Value2}, {mod.Value3}, {mod.Value4}");
                     }
                 }
             } else
@@ -89,7 +90,7 @@ namespace MapNotify
             Settings.ShowModCount.Value = Checkbox("Show Number of Mods on Map", Settings.ShowModCount);
             Settings.ShowModWarnings.Value = Checkbox("Show Mod Warnings", Settings.ShowModWarnings);
             ImGui.SameLine(); HelpMarker("Configured in 'ModWarnings.txt' in the plugin folder, created if missing.");
-            if(ImGui.Button("Reload ModWarnings.txt")) WarningDictionary = LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
+            if(ImGui.Button("Reload ModWarnings.txt")) WarningDictionary = LoadConfigs();
             Settings.ShowPackSizePercent.Value = Checkbox("Show Pack Size %", Settings.ShowPackSizePercent);
             Settings.ShowQuantityPercent.Value = Checkbox("Show Item Quantity %", Settings.ShowQuantityPercent);
             Settings.ColourQuantityPercent.Value = Checkbox("Warn Below Quantity Percentage", Settings.ColourQuantityPercent);
