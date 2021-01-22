@@ -43,8 +43,9 @@ namespace MapNotify
                 // Class ID
                 var classID = gameController.Files.BaseItemTypes.Translate(entity.Path).ClassName;
                 // Not map, heist or watchstone or normal rarity heist
-                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && !classID.Contains("HeistContract") && !classID.Contains("AtlasRegionUpgradeItem")) || 
-                    classID.Contains("HeistContract") && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
+                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>()
+                    && !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && !classID.Contains("AtlasRegionUpgradeItem")) || 
+                    (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint")) && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
                 
                 // Evaluate
                 var ItemDetails = new ItemDetails(Item, Entity);
@@ -70,7 +71,7 @@ namespace MapNotify
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                         ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                     {
-                        if (!classID.ToString().Contains("HeistContract") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                        if (!classID.ToString().Contains("HeistContract") && !classID.ToString().Contains("HeistBlueprint") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
                         {
                             // map only stuff, zana always needs to show name for ease
                             if (isInventory || Settings.ShowMapName)
@@ -105,7 +106,7 @@ namespace MapNotify
                             ImGui.TextColored(SharpToNuVec4(ItemDetails.ZanaMod.Color), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
 
                         // Quantity and Packsize for maps
-                        if (!classID.Contains("HeistContract") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                        if (!classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
                         {
                             // Quantity and Pack Size
                             nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);

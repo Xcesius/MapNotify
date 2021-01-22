@@ -154,7 +154,7 @@ namespace MapNotify
                 Quantity = quantity;
                 PackSize = packSize;
 
-                if (!ClassID.ToString().Contains("HeistContract") && !ClassID.ToString().Contains("AtlasRegionUpgradeItem"))
+                if (!ClassID.ToString().Contains("HeistContract") && !ClassID.ToString().Contains("HeistBlueprint") && !ClassID.ToString().Contains("AtlasRegionUpgradeItem"))
                 {
                     MapName = $"[T{mapComponent.Tier}] {Entity.GetComponent<Base>().Name.Replace(" Map", "")}";
                     Awakened = AwakenedAreas.Contains(mapComponent.Area) ? true : false;
