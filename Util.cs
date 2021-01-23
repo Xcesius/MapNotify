@@ -27,21 +27,13 @@ namespace MapNotify
             Color color = Color.FromAbgr(abgr);
             return new Vector4((color.R / (float)255), color.G / (float)255, color.B / (float)255, color.A / (float)255);
         }
-        public Vector4 NuToSharpVec4(nuVector4 value)
+        public Vector4 NuToSharp(nuVector4 value)
         {
             return new Vector4(value.X, value.Y, value.Z, value.W);
         }
-        public nuVector4 SharpToNuVec4(Vector4 value)
+        public nuVector4 SharpToNu(Vector4 value)
         {
             return new nuVector4(value.X, value.Y, value.Z, value.W);
-        }
-        public Vector2 NuToSharpVec2(nuVector2 value)
-        {
-            return new Vector2(value.X, value.Y);
-        }
-        public nuVector2 SharpToNuVec2(Vector2 value)
-        {
-            return new nuVector2(value.X, value.Y);
         }
     }
 }

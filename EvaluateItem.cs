@@ -84,6 +84,7 @@ namespace MapNotify
             public StyledText ZanaMod { get; set; }
             public nuVector4 ItemColour { get; set; }
             public string MapName { get; set; }
+            public string MavenBosses { get; set; }
             public string ClassID { get; set; }
             public int PackSize { get; set; }
             public int Quantity { get; set; }
@@ -105,10 +106,11 @@ namespace MapNotify
                 int quantity = Entity.GetComponent<Quality>()?.ItemQuality ?? 0;
 
                 // get and evaluate mods
-                var mapComponent = Entity.GetComponent<ExileCore.PoEMemory.Components.Map>() ?? null;
+                var mapComponent = Entity.GetComponent<Map>() ?? null;
                 Tier = mapComponent?.Tier ?? -1;
                 NeedsPadding = Tier == -1 ? false : true;
-                
+
+
                 var modsComponent = Entity.GetComponent<Mods>() ?? null;
                 ModCount = modsComponent?.ItemMods.Count() ?? 0;
                 if (modsComponent != null && ModCount > 0)
@@ -140,8 +142,8 @@ namespace MapNotify
                     {
                         Vector4 textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
                         if (modName.Contains("Guardian")) textColor = new Vector4(0.5f, 1f, 0.45f, 1f);
-                        if (modName.Contains("Harvest")) textColor = new Vector4(0f, 0.7f, 1f, 1f);
-                        if (modName.Contains("Delirium")) textColor = new Vector4(0.7f, 0f, 1f, 1f);
+                        if (modName.Contains("Harvest")) textColor = new Vector4(0f, 1f, 1f, 1f);
+                        if (modName.Contains("Delirium")) textColor = new Vector4(1f, 0f, 1f, 1f);
                         ZanaMod = new StyledText() { Color = textColor, Text = modName };
                     } else
                     {
@@ -154,7 +156,10 @@ namespace MapNotify
                 Quantity = quantity;
                 PackSize = packSize;
 
-                if (!ClassID.ToString().Contains("HeistContract") && !ClassID.ToString().Contains("HeistBlueprint") && !ClassID.ToString().Contains("AtlasRegionUpgradeItem"))
+                if (!ClassID.ToString().Contains("HeistContract") && 
+                    !ClassID.ToString().Contains("HeistBlueprint") &&
+                    !ClassID.ToString().Contains("AtlasRegionUpgradeItem") &&
+                    !ClassID.ToString().Contains("QuestItem"))
                 {
                     MapName = $"[T{mapComponent.Tier}] {Entity.GetComponent<Base>().Name.Replace(" Map", "")}";
                     Awakened = AwakenedAreas.Contains(mapComponent.Area) ? true : false;
@@ -163,9 +168,28 @@ namespace MapNotify
                     Maven = MavenAreas.Contains(mapComponent.Area) ? true : false;
                 }
 
+                if (Entity.Path.Contains("MavenMap"))
+                {
+                    MapName = ItemName;
+                    MavenBosses = MavenBosses(Item);
+                }
+
                 // evaluate rarity for colouring item name
                 ItemColour = GetRarityColor(modsComponent?.ItemRarity ?? ItemRarity.Normal);
             }
+        }
+
+        public static string MavenBosses(NormalInventoryItem item)
+        {
+            Dictionary<string, string> MavenDict = new Dictionary<string, string>();
+            foreach (WorldArea worldArea in MavenAreas)
+            {
+                AreaRegion.TryGetValue(worldArea.Name, out string region);
+                if (MavenDict.ContainsKey(region)) MavenDict[region] += $", {worldArea.Name}";
+                else MavenDict[region] = $"{worldArea.Name}";
+            }
+            string activeRegion = RegionReadable.FirstOrDefault(x => item.Item.Path.Contains(x.Key)).Value;
+            return MavenDict[activeRegion] ?? $"No Maven Bosses Found ({item.Item.Path})";
         }
     }
 }

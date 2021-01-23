@@ -1,11 +1,17 @@
 ﻿using ExileCore;
+using ExileCore.PoEMemory;
+using ExileCore.PoEMemory.FilesInMemory;
 using ExileCore.PoEMemory.MemoryObjects;
+using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace MapNotify
 {
     public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
+
+        public static Dictionary<string, string> AreaRegion = new Dictionary<string, string>();
         public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + 0x8510);
         public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + 0x84D0);
         public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + 0x8490);
@@ -44,6 +50,44 @@ namespace MapNotify
             }
 
             return res;
+        }
+
+        public static Dictionary<string, string> RegionReadable = new Dictionary<string, string>()
+        {
+            { "OutsideTopLeft", "Haewark Hamlet" },
+            { "InsideTopLeft", "Tirn's End" },
+            { "InsideTopRight", "Lex Proxima" },
+            { "OutsideTopRight", "Lex Ejoris" },
+            { "OutsideBottomLeft", "New Vastir" },
+            { "InsideBottomLeft", "Glennach Cairns" },
+            { "InsideBottomRight", "Valdo's Rest" },
+            { "OutsideBottomRight", "Lira Arthain" },
+            { "???", "Unknown" },
+        };
+
+        public void BuildRegions()
+        {
+            foreach (var node in gameController.Files.AtlasNodes.EntriesList)//.Where(x => x.Area.Name.Contains("Channel")))
+            {
+                long regionAddr = ingameState.M.Read<long>(node.Address + 0x4D);
+                long regionNameAddr = ingameState.M.Read<long>(regionAddr);
+                string regionName = ingameState.M.ReadStringU(regionNameAddr);
+
+                if (RegionReadable.TryGetValue(regionName, out string regionReadable))
+                {
+                    AreaRegion.Add(node.Area.Name, regionReadable);
+                } else
+                {
+                    LogMessage($"Failed to get readable name for: {regionName}");
+
+                    Directory.CreateDirectory(Path.Combine(DirectoryFullName, "Dumps"));
+                    var path = Path.Combine(DirectoryFullName, "Dumps", $"{node.Area.Name}.txt");
+
+                    DebugWindow.LogMsg(path);
+
+                    File.WriteAllText(path, regionName);
+                }
+            }
         }
     }
 }
