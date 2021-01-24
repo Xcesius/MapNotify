@@ -1,17 +1,37 @@
 ﻿using ExileCore;
-using ExileCore.PoEMemory;
-using ExileCore.PoEMemory.FilesInMemory;
 using ExileCore.PoEMemory.MemoryObjects;
-using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace MapNotify
 {
     public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
 
-        public static Dictionary<string, string> AreaRegion = new Dictionary<string, string>();
+        public static Dictionary<string, string> AreaRegion = new Dictionary<string, string>()
+        {
+            {"The Purifier","The Twisted"},
+            {"The Constrictor","The Twisted"},
+            {"The Enslaver","The Twisted"},
+            {"The Eradicator","The Twisted"},
+            {"Uul-Netol's Domain","The Hidden"},
+            {"Xoph's Domain","The Hidden"},
+            {"Tul's Domain","The Hidden"},
+            {"Esh's Domain","The Hidden"},
+            {"Lair of the Hydra Map","The Formed"},
+            {"Maze of the Minotaur Map","The Formed"},
+            {"Forge of the Phoenix Map","The Formed"},
+            {"Pit of the Chimera Map","The Formed"},
+            {"Rewritten Distant Memory","The Forgotten"},
+            {"Augmented Distant Memory","The Forgotten"},
+            {"Altered Distant Memory","The Forgotten"},
+            {"Twisted Distant Memory","The Forgotten"},
+            {"Cortex","The Feared"},
+            {"Chayula's Domain","The Feared"},
+            {"The Alluring Abyss","The Feared"},
+            {"The Shaper's Realm","The Feared"},
+            {"Absence of Value and Meaning","The Feared"},
+        };
+        public static Dictionary<string, string> MavenDict = new Dictionary<string, string>();
         public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + 0x8510);
         public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + 0x84D0);
         public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + 0x8490);
@@ -79,13 +99,6 @@ namespace MapNotify
                 } else
                 {
                     LogMessage($"Failed to get readable name for: {regionName}");
-
-                    Directory.CreateDirectory(Path.Combine(DirectoryFullName, "Dumps"));
-                    var path = Path.Combine(DirectoryFullName, "Dumps", $"{node.Area.Name}.txt");
-
-                    DebugWindow.LogMsg(path);
-
-                    File.WriteAllText(path, regionName);
                 }
             }
         }

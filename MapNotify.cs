@@ -4,14 +4,12 @@ using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
 using SharpDX;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using ImGuiNET;
 using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
-using System.Threading.Tasks;
 
 namespace MapNotify
 {
@@ -53,8 +51,12 @@ namespace MapNotify
                 var ItemDetails = Entity.GetHudComponent<ItemDetails>() ?? new ItemDetails(Item, Entity);
                 if (Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
                 {
-                    // get alerts
-                    if (classID.Contains("AtlasRegionUpgradeItem") && ItemDetails.ActiveWarnings.Count == 0) return;
+                    // get alerts, watchstones and heists with no warned mods have no name to show
+                    if ((classID.Contains("AtlasRegionUpgradeItem") || 
+                        classID.Contains("HeistContract") ||
+                        classID.Contains("HeistBlueprint") ||
+                        classID.Contains("AtlasRegionUpgradeItem")) && 
+                        ItemDetails.ActiveWarnings.Count == 0) return;
 
                     // Get mouse position
                     nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
@@ -74,10 +76,10 @@ namespace MapNotify
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                         ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                     {
-                        if (!classID.ToString().Contains("HeistContract") && 
-                            !classID.ToString().Contains("HeistBlueprint") && 
-                            !classID.ToString().Contains("AtlasRegionUpgradeItem") &&
-                            !classID.ToString().Contains("QuestItem"))
+                        if (!classID.Contains("HeistContract") && 
+                            !classID.Contains("HeistBlueprint") && 
+                            !classID.Contains("AtlasRegionUpgradeItem") &&
+                            !classID.Contains("QuestItem") && !classID.Contains("MiscMapItem") )
                         {
                             // map only stuff, zana always needs to show name for ease
                             if (isInventory || Settings.ShowMapName)
@@ -107,7 +109,8 @@ namespace MapNotify
                                 }
                             }
                         }
-                        if (classID.Contains("QuestItem")){
+                        if (classID.Contains("QuestItem") || classID.Contains("MiscMapItem"))
+                        {
                             ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"{ItemDetails.MapName}");
                             ImGui.Text($"{ItemDetails.MavenBosses}");
                         }
@@ -116,7 +119,7 @@ namespace MapNotify
                             ImGui.TextColored(SharpToNu(ItemDetails.ZanaMod.Color), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
 
                         // Quantity and Packsize for maps
-                        if (!classID.Contains("HeistContract") && !classID.ToString().Contains("HeistBlueprint") && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                        if (!classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && !classID.Contains("AtlasRegionUpgradeItem"))
                         {
                             // Quantity and Pack Size
                             nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
@@ -135,14 +138,14 @@ namespace MapNotify
                                 ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.PackSize}%% Pack Size");
 
                             // Separator
-                            if (Settings.HorizontalLines && ItemDetails.ModCount != 0 && (Settings.ShowModCount || Settings.ShowModWarnings))
+                            if (Settings.HorizontalLines && ItemDetails.ActiveWarnings.Count > 0 && (Settings.ShowModCount || Settings.ShowModWarnings))
                             {
                                 if (Settings.ShowLineForZanaMaps && isInventory || !isInventory)
                                     ImGui.Separator();
                             }
                         }
                         // Count Mods
-                        if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.ToString().Contains("AtlasRegionUpgradeItem"))
+                        if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.Contains("AtlasRegionUpgradeItem"))
                             if (entity.GetComponent<Base>().isCorrupted) ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{ItemDetails.ModCount} Mods");
                             else ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.ModCount} Mods");
 
@@ -178,13 +181,14 @@ namespace MapNotify
         public override void Render()
         {
 
+
+
             if (!Settings.Enable) return;
             var uiHover = ingameState.UIHover;
             if (ingameState.UIHover?.IsVisible ?? false)
             {
                 var itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType ?? null;
                 // render hovered item
-                string dumpText = string.Empty;
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
@@ -193,7 +197,6 @@ namespace MapNotify
                         RenderItem(hoverItem, hoverItem.Item, false);
                     }
                 }
-
                 // render NPC inventory if relevant
                 else if (Settings.ShowForZanaMaps && itemType != null && itemType == ToolTipType.None)
                 {

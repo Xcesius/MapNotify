@@ -156,10 +156,11 @@ namespace MapNotify
                 Quantity = quantity;
                 PackSize = packSize;
 
-                if (!ClassID.ToString().Contains("HeistContract") && 
-                    !ClassID.ToString().Contains("HeistBlueprint") &&
-                    !ClassID.ToString().Contains("AtlasRegionUpgradeItem") &&
-                    !ClassID.ToString().Contains("QuestItem"))
+                if (!ClassID.Contains("HeistContract") && 
+                    !ClassID.Contains("HeistBlueprint") &&
+                    !ClassID.Contains("AtlasRegionUpgradeItem") &&
+                    !ClassID.Contains("QuestItem") &&
+                    !ClassID.Contains("MiscMapItem"))
                 {
                     MapName = $"[T{mapComponent.Tier}] {Entity.GetComponent<Base>().Name.Replace(" Map", "")}";
                     Awakened = AwakenedAreas.Contains(mapComponent.Area) ? true : false;
@@ -181,15 +182,37 @@ namespace MapNotify
 
         public static string MavenBosses(NormalInventoryItem item)
         {
-            Dictionary<string, string> MavenDict = new Dictionary<string, string>();
+            MavenDict = new Dictionary<string, string>();
+            string activeRegion = string.Empty;
             foreach (WorldArea worldArea in MavenAreas)
             {
-                AreaRegion.TryGetValue(worldArea.Name, out string region);
-                if (MavenDict.ContainsKey(region)) MavenDict[region] += $", {worldArea.Name}";
-                else MavenDict[region] = $"{worldArea.Name}";
+                if (AreaRegion.TryGetValue(worldArea.Name, out string region))
+                {
+                    if (MavenDict.ContainsKey(region)) MavenDict[region] += $", {worldArea.Name}";
+                    else MavenDict[region] = $"{worldArea.Name}";
+                } else
+                {
+                    if (MavenDict.ContainsKey("Uncharted")) MavenDict["Uncharted"] += $", {worldArea.Name}";
+                    else MavenDict["Uncharted"] = $"{worldArea.Name}";
+                }
             }
-            string activeRegion = RegionReadable.FirstOrDefault(x => item.Item.Path.Contains(x.Key)).Value;
-            return MavenDict[activeRegion] ?? $"No Maven Bosses Found ({item.Item.Path})";
+
+            if (!item.Item.Path.Contains("MavenMapVoid"))
+                activeRegion = RegionReadable.FirstOrDefault(x => item.Item.Path.Contains(x.Key)).Value;
+            else if (item.Item.Path.Contains("MavenMapVoid5"))
+                activeRegion = "The Feared";
+            else if (item.Item.Path.Contains("MavenMapVoid4"))
+                activeRegion = "The Hidden";
+            else if (item.Item.Path.Contains("MavenMapVoid3"))
+                activeRegion = "The Forgotten";
+            else if (item.Item.Path.Contains("MavenMapVoid2"))
+                activeRegion = "The Twisted";
+            else if (item.Item.Path.Contains("MavenMapVoid1"))
+                activeRegion = "The Formed";
+            else return $"Could not detect a region for {item.Item.Path}";
+
+            if (MavenDict.TryGetValue(activeRegion, out string returnText)) return returnText;
+            else return $"You have killed no bosses towards {activeRegion}";
         }
     }
 }

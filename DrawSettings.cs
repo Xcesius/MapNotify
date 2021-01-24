@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
 using SharpDX;
+using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
+
 namespace MapNotify
 {
     partial class MapNotify
     {
         public bool debug;
+        public bool maven;
         public static List<string> hoverMods = new List<string>();
         public static void HelpMarker(string desc)
         {
@@ -54,10 +53,9 @@ namespace MapNotify
             {
                 var modsComponent = entity.GetComponent<Mods>() ?? null;
                 if (modsComponent == null) hoverMods.Clear();
-                else if (modsComponent != null && /* modsComponent.ItemRarity != ExileCore.Shared.Enums.ItemRarity.Normal && */ modsComponent.ItemMods.Count() > 0) 
+                else if (modsComponent != null && modsComponent.ItemMods.Count() > 0) 
                 {
                     hoverMods.Clear();
-                    //                                LogMessage("mods");
                     List<ItemMod> itemMods = modsComponent?.ItemMods ?? null;
                     if (itemMods == null || itemMods.Count == 0)
                     {
@@ -103,13 +101,31 @@ namespace MapNotify
             ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
             if (debug)
             {
+                maven = Checkbox("Maven Debug", maven);
+                if (maven)
+                {
+                    ImGui.Text("Maven Witnessed:");
+                    foreach (var map in MavenAreas)
+                    {
+                        ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
+                    }
+                    ImGui.Text("Maven Regions:");
+                    foreach (var region in MavenDict)
+                    {
+
+                        ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{region.Key}");
+                        ImGui.SameLine();
+                        ImGui.TextColored(new nuVector4(1.2F, 0.5F, 0.5F, 1F), $"{region.Value}");
+                    }
+                }
                 DebugHover();
                 ImGui.Text("Last Hovered item's mods:");
-                if(hoverMods.Count > 0)
-                foreach (var mod in hoverMods)
-                {
-                    ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), mod);
-                }
+                if (hoverMods.Count > 0)
+                    foreach (var mod in hoverMods)
+                    {
+                        ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), mod);
+                    }
+
             }
         }
     }
