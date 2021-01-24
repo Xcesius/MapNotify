@@ -1,6 +1,8 @@
 # MapNotify
 Notifications about map mods, quantity, packsize and other useful information for immediate parsing
+
 Also covers Heists, Watchstones and Maven Invitations, including instantly displaying which monsters you have killed for the uncharted realms series.
+
 Primarily targetted at TehCheat's non-public HUD but should work on Queuete's as long as the offsets are up to date as it uses no esoteric features. A build but no source is provided for Qvin's HUD also.
 
 ![Image](https://i.imgur.com/sST1Zxi.png)
