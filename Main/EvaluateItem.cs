@@ -84,6 +84,7 @@ namespace MapNotify
             public StyledText ZanaMod { get; set; }
             public nuVector4 ItemColour { get; set; }
             public string MapName { get; set; }
+            public string MapRegion { get; set; }
             public string MavenBosses { get; set; }
             public string ClassID { get; set; }
             public int PackSize { get; set; }
@@ -162,11 +163,17 @@ namespace MapNotify
                     !ClassID.Contains("QuestItem") &&
                     !ClassID.Contains("MiscMapItem"))
                 {
-                    MapName = $"[T{mapComponent.Tier}] {Entity.GetComponent<Base>().Name.Replace(" Map", "")}";
+                    string mapTrim = Entity.GetComponent<Base>().Name.Replace(" Map", "");
+                    MapName = $"[T{mapComponent.Tier}] {mapTrim}";
                     Awakened = AwakenedAreas.Contains(mapComponent.Area) ? true : false;
                     Bonus = BonusAreas.Contains(mapComponent.Area) ? true : false;
                     Completed = CompletedAreas.Contains(mapComponent.Area) ? true : false;
                     Maven = MavenAreas.Contains(mapComponent.Area) ? true : false;
+
+                    if (AreaRegion.TryGetValue(mapTrim, out string region))
+                        MapRegion = region;
+                    else
+                        MapRegion = "Unknown Region";
                 }
 
                 if (Entity.Path.Contains("MavenMap"))

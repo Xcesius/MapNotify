@@ -36,7 +36,7 @@ namespace MapNotify
         public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + 0x84D0);
         public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + 0x8490);
         public static List<WorldArea> MavenAreas => GetAreas(ingameState.ServerData.Address + 0x8450);
-
+        
         private static List<WorldArea> GetAreas(long address)
         {
             if (address == 0)
@@ -87,19 +87,14 @@ namespace MapNotify
 
         public void BuildRegions()
         {
-            foreach (var node in gameController.Files.AtlasNodes.EntriesList)//.Where(x => x.Area.Name.Contains("Channel")))
+            foreach (var node in gameController.Files.AtlasNodes.EntriesList)
             {
                 long regionAddr = ingameState.M.Read<long>(node.Address + 0x4D);
-                long regionNameAddr = ingameState.M.Read<long>(regionAddr);
-                string regionName = ingameState.M.ReadStringU(regionNameAddr);
-
-                if (RegionReadable.TryGetValue(regionName, out string regionReadable))
-                {
-                    AreaRegion.Add(node.Area.Name, regionReadable);
-                } else
-                {
-                    LogMessage($"Failed to get readable name for: {regionName}");
-                }
+                //long regionNameAddr = ingameState.M.Read<long>(regionAddr);
+                //string regionName = ingameState.M.ReadStringU(regionNameAddr);
+                long regionReadableAddr = ingameState.M.Read<long>(regionAddr + 0x08);
+                string regionReadable = ingameState.M.ReadStringU(regionReadableAddr);
+                AreaRegion.Add(node.Area.Name, regionReadable);
             }
         }
     }

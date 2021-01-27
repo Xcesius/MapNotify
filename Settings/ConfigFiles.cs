@@ -7,6 +7,16 @@ namespace MapNotify
 {
     public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
+
+        public void ResetConfigs()
+        {
+            LogMessage("Deleting existing config files...");
+            File.Delete(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
+            File.Delete(Path.Combine(DirectoryFullName, "SextantWarnings.txt"));
+            File.Delete(Path.Combine(DirectoryFullName, "HeistWarnings.txt"));
+            File.Delete(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt"));
+            WarningDictionary = LoadConfigs();
+        }
         public Dictionary<string, StyledText> LoadConfigs()
         {
             Dictionary<string, StyledText> FullDict = new Dictionary<string, StyledText>();
@@ -14,6 +24,7 @@ namespace MapNotify
             LoadConfig(Path.Combine(DirectoryFullName, "SextantWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LoadConfig(Path.Combine(DirectoryFullName, "HeistWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LoadConfig(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
+            LogMessage("Loaded config files...");
             return FullDict;
         }
         public Dictionary<string, StyledText> LoadConfig(string path)
@@ -51,6 +62,8 @@ namespace MapNotify
 # REFLECT
 ElementalReflect;Elemental Reflect;FF0000FF
 PhysicalReflect;Physical Reflect;FF0000FF
+# LEECH
+MapMonsterLifeLeechImmunity;Cannot Leech Life or Mana;FF0000FF
 # REGEN
 NoLifeESRegen;No Regen;FF007FFF
 MapPlayerReducedRegen;60%% Less Regen;FF007FFF
@@ -82,6 +95,7 @@ MapShockedGround;Shocked Ground;CCCC00FF
 MapChilledGround;Chilled Ground;CCCC00FF
 MapBurningGround;Burning Ground;CCCC00FF";
             File.WriteAllText(path, outFile);
+            LogMessage("Created ModWarnings.txt...");
             #endregion
         }
 
@@ -150,6 +164,7 @@ HeistContractMonsterFireDamage;Extra Fire Damage;FF007FFF
 HeistContractMonsterColdDamage;Extra Cold Damage;FF007FFF
 HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
             File.WriteAllText(path, outFile);
+            LogMessage("Created HeistWarnings.txt...");
             #endregion
         }
         public void CreateWatchstonesConfig(string path)
@@ -574,6 +589,7 @@ WatchstoneAtlasBaseChance3_;T1 Unique Bosses Additional Atlas Base Type;00FF00FF
 # WatchstoneMapBossSilverCoinChance2;T2 map_boss_chance_to_drop_additional_silver_coin_permillage;00FF00FF# Unique Bosses have (16 - 20)% chance to drop an additional Silver Coin
 # WatchstoneMapBossSilverCoinChance3___;T1 map_boss_chance_to_drop_additional_silver_coin_permillage;00FF00FF# Unique Bosses have (21 - 25)% chance to drop an additional Silver Coin";
             File.WriteAllText(path, outFile);
+            LogMessage("Created WatchstoneWarnings.txt...");
             #endregion
         }
         public void CreateSextantConfig(string path)
@@ -688,6 +704,7 @@ MapAtlasContainsAdditionalRandomBoss;Invasion Boss;FF0000FF
 MapAtlasMapQualityBonusAlsoAppliesToRarity;Quality also applies to Rarity;FF0000FF
 MapAtlasMapsHave20PercentQuality;Maps have 20% Quality;FF0000FF";
             File.WriteAllText(path, outFile);
+            LogMessage("Created SextantWarnings.txt...");
             #endregion
         }
     }

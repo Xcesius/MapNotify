@@ -102,15 +102,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Areas.cs" />
-    <Compile Include="Configs.cs" />
-    <Compile Include="DrawSettings.cs" />
-    <Compile Include="EvaluateItem.cs" />
-    <Compile Include="MapNotify.cs" />
-    <Compile Include="MapNotifySettings.cs" />
-    <Compile Include="MouseLite.cs" />
+    <Compile Include="Main\Areas.cs" />
+    <Compile Include="Main\Atlas.cs" />
+    <Compile Include="Main\EvaluateItem.cs" />
+    <Compile Include="Main\MapNotify.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Settings\ConfigFiles.cs" />
+    <Compile Include="Settings\DrawSettings.cs" />
+    <Compile Include="Settings\MapNotifySettings.cs" />
+    <Compile Include="Util\MouseLite.cs" />
+    <Compile Include="Util\Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
