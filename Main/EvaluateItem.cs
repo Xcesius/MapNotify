@@ -287,7 +287,7 @@ namespace MapNotify
                     ItemName == "Pit of the Chimera Map")
                 {
                     mavenDetails.MavenRegion = "The Formed";
-                    mavenDetails.MavenArea = ItemName;
+                    mavenDetails.MavenArea = ItemName.Replace(" Map", "");
                 }
                 else if (ItemName == "Rewritten Distant Memory" ||
                     ItemName == "Augmented Distant Memory" ||

@@ -18,10 +18,10 @@ namespace MapNotify
             {"Xoph's Domain","The Hidden"},
             {"Tul's Domain","The Hidden"},
             {"Esh's Domain","The Hidden"},
-            {"Lair of the Hydra Map","The Formed"},
-            {"Maze of the Minotaur Map","The Formed"},
-            {"Forge of the Phoenix Map","The Formed"},
-            {"Pit of the Chimera Map","The Formed"},
+            {"Lair of the Hydra","The Formed"},
+            {"Maze of the Minotaur","The Formed"},
+            {"Forge of the Phoenix","The Formed"},
+            {"Pit of the Chimera","The Formed"},
             {"Rewritten Distant Memory","The Forgotten"},
             {"Augmented Distant Memory","The Forgotten"},
             {"Altered Distant Memory","The Forgotten"},
@@ -48,10 +48,10 @@ namespace MapNotify
                 "Esh's Domain" }
             },
             { "The Formed",  new List<string>(){
-                "Lair of the Hydra Map",
-                "Maze of the Minotaur Map",
-                "Forge of the Phoenix Map",
-                "Pit of the Chimera Map" }
+                "Lair of the Hydra",
+                "Maze of the Minotaur",
+                "Forge of the Phoenix",
+                "Pit of the Chimera" }
             },
             { "The Forgotten",  new List<string>(){
                 "Rewritten Distant Memory",

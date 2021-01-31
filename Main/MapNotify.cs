@@ -149,13 +149,13 @@ namespace MapNotify
                                 if(boss.Complete)
                                     ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
                                 else
-                                    ImGui.Text($"{boss.Boss}");
+                                    ImGui.TextColored(new nuVector4(1f, 0.8f, 0.8f, 1f), $"{boss.Boss}");
                         } else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
                             foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
                                 if (boss.Complete)
                                     ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
                                 else
-                                    ImGui.Text($"{boss.Boss}");
+                                    ImGui.TextColored(new nuVector4(1f, 0.8f, 0.8f, 1f), $"{boss.Boss}");
 
                         // Zana Mod
                         if (isInventory)
@@ -223,7 +223,7 @@ namespace MapNotify
         {
             if (!Settings.Enable) return;
 
-            if (ingameState.IngameUi.AtlasPanel.IsVisible)
+            if (ingameState.IngameUi.Atlas.IsVisible)
                 AtlasRender();
 
             var uiHover = ingameState.UIHover;
