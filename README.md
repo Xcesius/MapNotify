@@ -3,7 +3,9 @@ Notifications about map mods, quantity, packsize and other useful information fo
 
 Also covers Heists, Watchstones and Maven Invitations, including instantly displaying which monsters you have killed for the uncharted realms series.
 
-Primarily targetted at TehCheat's non-public HUD but should work on Queuete's as long as the offsets are up to date as it uses no esoteric features. A build but no source is provided for Qvin's HUD also.
+Holding alt over an elder guardian map will also display that information.
+
+Primarily targetted at TehCheat's non-public HUD but should work on Queuete's as long as the offsets are up to date as it uses no esoteric features. A build but no source is provided sporadically for Qvin's HUD also, you can shout at me in a discord if you can see me and want a build.
 
 ![Image](https://i.imgur.com/sST1Zxi.png)
 
