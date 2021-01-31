@@ -124,17 +124,17 @@ namespace MapNotify
                 Settings.PadForAltPricer.Value = Checkbox("Pad for Personal Pricer", Settings.PadForAltPricer);
                 ImGui.SameLine(); HelpMarker("It's unlikely you'll need this.");
                 ImGui.Spacing();
-
+                               
                 debug = Checkbox("Debug Features", debug);
-                if (debug)
-                {
-                    //whatever
-                }
-
-                    debug = Checkbox("Debug Features", debug);
                 ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
                 if (debug)
                 {
+                    foreach (var region in RegionArea)
+                    {
+                        ImGui.Text($"{region.Key} ----");
+                        foreach (string name in region.Value)
+                            ImGui.Text(name);
+                    }
                     maven = Checkbox("Maven Debug", maven);
                     if (maven)
                     {

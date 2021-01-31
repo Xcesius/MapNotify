@@ -7,6 +7,7 @@ namespace MapNotify
     public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
 
+        public static Dictionary<string, string> MavenDict = new Dictionary<string, string>();
         public static Dictionary<string, string> AreaRegion = new Dictionary<string, string>()
         {
             {"The Purifier","The Twisted"},
@@ -31,7 +32,42 @@ namespace MapNotify
             {"The Shaper's Realm","The Feared"},
             {"Absence of Value and Meaning","The Feared"},
         };
-        public static Dictionary<string, string> MavenDict = new Dictionary<string, string>();
+
+        public static Dictionary<string, List<string>> RegionArea = new Dictionary<string, List<string>>()
+        {
+            { "The Twisted",  new List<string>(){ 
+                "The Purifier",
+                "The Constrictor",
+                "The Enslaver",
+                "The Eradicator" }
+            },
+            { "The Hidden",  new List<string>(){
+                "Uul-Netol's Domain",
+                "Xoph's Domain",
+                "Tul's Domain",
+                "Esh's Domain" }
+            },
+            { "The Formed",  new List<string>(){
+                "Lair of the Hydra Map",
+                "Maze of the Minotaur Map",
+                "Forge of the Phoenix Map",
+                "Pit of the Chimera Map" }
+            },
+            { "The Forgotten",  new List<string>(){
+                "Rewritten Distant Memory",
+                "Augmented Distant Memory",
+                "Altered Distant Memory",
+                "Twisted Distant Memory" }
+            },
+            { "The Feared",  new List<string>(){
+                "Cortex",
+                "Chayula's Domain",
+                "The Alluring Abyss",
+                "Absence of Value and Meaning",
+                "The Shaper's Realm" }
+            },
+        };
+
         public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + 0x8510);
         public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + 0x84D0);
         public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + 0x8490);
@@ -90,11 +126,18 @@ namespace MapNotify
             foreach (var node in gameController.Files.AtlasNodes.EntriesList)
             {
                 long regionAddr = ingameState.M.Read<long>(node.Address + 0x4D);
-                //long regionNameAddr = ingameState.M.Read<long>(regionAddr);
-                //string regionName = ingameState.M.ReadStringU(regionNameAddr);
-                long regionReadableAddr = ingameState.M.Read<long>(regionAddr + 0x08);
-                string regionReadable = ingameState.M.ReadStringU(regionReadableAddr);
-                AreaRegion.Add(node.Area.Name, regionReadable);
+                long regionNameAddr = ingameState.M.Read<long>(regionAddr);
+                string regionName = ingameState.M.ReadStringU(regionNameAddr);
+                //long regionReadableAddr = ingameState.M.Read<long>(regionAddr + 0x08);
+                //string regionReadable = ingameState.M.ReadStringU(regionReadableAddr);
+                if (RegionReadable.TryGetValue(regionName, out string regionReadable))
+                {
+                    AreaRegion.Add(node.Area.Name, regionReadable);
+                }
+                else
+                {
+                    LogMessage($"Failed to get readable name for: {regionName}");
+                }
             }
         }
     }

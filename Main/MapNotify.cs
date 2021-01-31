@@ -1,13 +1,13 @@
 ﻿using ExileCore;
 using ExileCore.PoEMemory.Components;
-using ExileCore.PoEMemory.Elements;
-using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
-using ImGuiNET;
 using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
+using ImGuiNET;
+using ExileCore.PoEMemory.Elements;
+using ExileCore.PoEMemory.Elements.InventoryElements;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
@@ -19,7 +19,7 @@ namespace MapNotify
         private static GameController gameController;
         private static IngameState ingameState;
         public static Dictionary<string, StyledText> WarningDictionary;
-        
+
         public override bool Initialise()
         {
             base.Initialise();
@@ -40,58 +40,52 @@ namespace MapNotify
             if (entity.Address != 0 && entity.IsValid)
             {
                 // Base and Class ID
-                var baseType = gameController.Files.BaseItemTypes.Translate(entity.Path);
-                var classID = baseType.ClassName;
+                var baseType = gameController.Files.BaseItemTypes.Translate(entity.Path) ?? null;
+                var classID = baseType.ClassName ?? string.Empty;
                 // Not map, heist or watchstone or normal rarity heist
-                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && 
-                    !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && 
+                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && !classID.Equals(string.Empty) &&
+                    !item.Item.Path.Contains("BreachFragment") &&
+                    !item.Item.Path.Contains("CurrencyElderFragment") &&
+                    !item.Item.Path.Contains("ShaperFragment") &&
+                    !item.Item.Path.Contains("VaalFragment2_") &&
+                    !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") &&
                     !classID.Contains("AtlasRegionUpgradeItem")) && 
-                    !entity.Path.Contains("MavenMap") || 
+                    !entity.Path.Contains("MavenMap") ||
                     (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint")) && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
-               
+
                 if (!Settings.ShowForHeist && (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint"))) return;
                 if (!Settings.ShowForWatchstones && classID.Contains("AtlasRegionUpgradeItem")) return;
                 if (!Settings.ShowForInvitations && (classID.Contains("MavenMap") || classID.Contains("MiscMapItem"))) return;
 
-                bool showMapProperties = !classID.Contains("HeistContract") &&
-                            !classID.Contains("HeistBlueprint") &&
-                            !classID.Contains("AtlasRegionUpgradeItem") &&
-                            !classID.Contains("QuestItem") && !classID.Contains("MiscMapItem") &&
-                            !entity.Path.Contains("BreachFragment") && 
-                            !entity.Path.Contains("ShaperFragment") && 
-                            !entity.Path.Contains("VaalFragment2_") && 
-                            !entity.Path.Contains("CurrencyElderFragment") ? true : false;
-
                 // Evaluate
+                
                 var ItemDetails = Entity.GetHudComponent<ItemDetails>() ?? new ItemDetails(Item, Entity);
-                LogMessage("started");
-                if (Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
+                if (ItemDetails != null && Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
                 {
                     // get alerts, watchstones and heists with no warned mods have no name to show
-                    if ((classID.Contains("AtlasRegionUpgradeItem") || 
+                    if ((classID.Contains("AtlasRegionUpgradeItem") ||
                         classID.Contains("HeistContract") ||
-                        classID.Contains("HeistBlueprint")) && 
+                        classID.Contains("HeistBlueprint")) &&
                         ItemDetails.ActiveWarnings.Count == 0) return;
-
                     // Get mouse position
                     nuVector2 mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
                     // Pad vertically as well if using ninja pricer tooltip
-                    if (Settings.PadForNinjaPricer && ItemDetails.NeedsPadding) 
+                    if (Settings.PadForNinjaPricer && ItemDetails.NeedsPadding)
                         mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
-                        // Parsing inventory, don't use mousePos
-                        if (isInventory)
-                        {
-                            var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
-                            mousePos = new nuVector2(framePos.X, framePos.Y - 50 + mPad);
-                        }
-                    if (Settings.PadForAltPricer && ItemDetails.NeedsPadding) 
+                    // Parsing inventory, don't use mousePos
+                    if (isInventory)
+                    {
+                        var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
+                        mousePos = new nuVector2(framePos.X, framePos.Y - 50 + mPad);
+                    }
+                    if (Settings.PadForAltPricer && ItemDetails.NeedsPadding)
                         mousePos = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 30);
-                        // Parsing inventory, don't use mousePos
-                        if (isInventory)
-                        {
-                            var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
-                            mousePos = new nuVector2(framePos.X, framePos.Y - 50 + mPad);
-                        }
+                    // Parsing inventory, don't use mousePos
+                    if (isInventory)
+                    {
+                        var framePos = ingameState.UIHover.Parent.Parent.GetClientRect().TopRight;
+                        mousePos = new nuVector2(framePos.X, framePos.Y - 50 + mPad);
+                    }
 
                     // create the imgui faux tooltip
                     var _opened = true;
@@ -101,7 +95,12 @@ namespace MapNotify
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                         ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                     {
-                        if (showMapProperties)
+                        if (!classID.Contains("HeistContract") &&
+                            !classID.Contains("MapFragment") &&
+                            !classID.Contains("HeistBlueprint") &&
+                            !classID.Contains("AtlasRegionUpgradeItem") &&
+                            !classID.Contains("QuestItem") && !classID.Contains("MiscMapItem"))
+                        {
                             // map only stuff, zana always needs to show name for ease
                             if (isInventory || Settings.ShowMapName)
                             {
@@ -122,13 +121,13 @@ namespace MapNotify
                                     {
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
                                     }
-                                    if (ItemDetails.Maven)
+                                    if (ItemDetails.MavenDetails.MavenCompletion)
                                     {
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"M");
                                     }
-                                    if (ItemDetails.MavenUncharted)
+                                    if (ItemDetails.MavenDetails.MavenUncharted)
                                     {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0f, 0.9f, 0.77f, 1f), $"U");
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.0f, 0.9f, 0.77f, 1f), $"U");
                                     }
                                     ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
                                 }
@@ -140,11 +139,24 @@ namespace MapNotify
                                     ImGui.TextColored(regionColor, $"{ItemDetails.MapRegion}");
                                 }
                             }
-                        if (classID.Contains("QuestItem") || classID.Contains("MiscMapItem"))
+                        }
+
+                        // Maven boss list
+                        if (classID.Contains("QuestItem") || classID.Contains("MiscMapItem") || classID.Contains("MapFragment"))
                         {
                             ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"{ItemDetails.MapName}");
-                            ImGui.Text($"{ItemDetails.MavenBosses}");
-                        }
+                            foreach(var boss in ItemDetails.MavenDetails.MavenBosses)
+                                if(boss.Complete)
+                                    ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
+                                else
+                                    ImGui.Text($"{boss.Boss}");
+                        } else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
+                            foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
+                                if (boss.Complete)
+                                    ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
+                                else
+                                    ImGui.Text($"{boss.Boss}");
+
                         // Zana Mod
                         if (isInventory)
                             ImGui.TextColored(SharpToNu(ItemDetails.ZanaMod.Color), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
@@ -155,9 +167,9 @@ namespace MapNotify
                             // Quantity and Pack Size
                             nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
                             if (Settings.ColourQuantityPercent)
-                                if 
+                                if
                                     (ItemDetails.Quantity < Settings.ColourQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
-                                else 
+                                else
                                     qCol = new nuVector4(0.4f, 1f, 0.4f, 1f);
                             if (Settings.ShowQuantityPercent && ItemDetails.Quantity != 0 && Settings.ShowPackSizePercent && ItemDetails.PackSize != 0)
                             {
@@ -181,7 +193,7 @@ namespace MapNotify
                         if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.Contains("AtlasRegionUpgradeItem"))
                             if (entity.GetComponent<Base>().isCorrupted)
                                 ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{ItemDetails.ModCount} Mods");
-                            else 
+                            else
                                 ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.ModCount} Mods");
 
                         // Mod StyledTexts
@@ -195,7 +207,7 @@ namespace MapNotify
                         var pos = ImGui.GetWindowPos();
                         if ((mousePos.X + size.X) > windowArea.Width)
                             ImGui.SetWindowPos(new nuVector2(mousePos.X - ((mousePos.X + size.X) - windowArea.Width) - 4, mousePos.Y + 24), ImGuiCond.Always);
-                        else 
+                        else
                             ImGui.SetWindowPos(mousePos, ImGuiCond.Always);
 
                         // padding when parsing an inventory
@@ -206,12 +218,12 @@ namespace MapNotify
                 }
             }
         }
-        
+
         public override void Render()
         {
             if (!Settings.Enable) return;
 
-            if (ingameState.IngameUi.Atlas.IsVisible)
+            if (ingameState.IngameUi.AtlasPanel.IsVisible)
                 AtlasRender();
 
             var uiHover = ingameState.UIHover;
@@ -228,8 +240,7 @@ namespace MapNotify
                 // render NPC inventory if relevant
                 else if (Settings.ShowForZanaMaps && itemType != null && itemType == ToolTipType.None)
                 {
-                    var serverData = ingameState.ServerData;
-                    var npcInv = serverData.NPCInventories ?? null;
+                    var npcInv = ingameState.ServerData.NPCInventories ?? null;
                     if (npcInv == null || npcInv.Count == 0) return;
                     foreach (var inv in npcInv)
                         if (uiHover.Parent.ChildCount == inv.Inventory.Items.Count)
