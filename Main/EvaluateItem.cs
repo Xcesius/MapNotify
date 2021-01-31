@@ -229,6 +229,7 @@ namespace MapNotify
                 {
                     mavenDetails.MavenInvitation = true;
                     MapName = ItemName;
+                    mavenDetails.MavenRegion = RegionReadable.FirstOrDefault(x => Item.Item.Path.Contains(x.Key)).Value ?? "Uncharted";
                 }
                 if (ClassID.Contains("MapFragment"))
                 {
@@ -297,10 +298,11 @@ namespace MapNotify
                     mavenDetails.MavenRegion = "The Forgotten";
                     mavenDetails.MavenArea = ItemName;
                 }
+
                 if (mavenDetails.MavenInvitation || mavenDetails.MavenArea != string.Empty)
                 {
                     mavenDetails.MavenUncharted = MavenAreas.Any(x => x.Name == mavenDetails.MavenArea) ? true : false;
-                    mavenDetails.MavenBosses = MavenBosses(Item.Item.Path, mavenDetails.MavenArea, mavenDetails.MavenRegion);
+                    mavenDetails.MavenBosses = MavenBosses(Item.Item.Path, mavenDetails.MavenRegion);
                 }
                 #endregion
                 MavenDetails = mavenDetails;
@@ -308,10 +310,10 @@ namespace MapNotify
                 ItemColour = GetRarityColor(modsComponent?.ItemRarity ?? ItemRarity.Normal);
             }
         }
-        public static List<(string, bool)> MavenBosses(string path, string area, string region)//NormalInventoryItem item)
+        public static List<(string, bool)> MavenBosses(string path, string region)//NormalInventoryItem item)
         {
             List<(string, bool)> MavenBosses = new List<(string, bool)>();
-            string activeRegion = string.Empty;
+            string activeRegion = region;
 
             Dictionary<string, List<string>> MavenRegionCompletion = new Dictionary<string, List<string>>();
             foreach (WorldArea worldArea in MavenAreas)
@@ -327,9 +329,7 @@ namespace MapNotify
                     MavenRegionCompletion[regionName].Add(worldArea.Name);
             }
 
-            if (!path.Contains("MavenMapVoid"))
-                activeRegion = region;//RegionReadable.FirstOrDefault(x => item.Item.Path.Contains(x.Key)).Value;
-            else if (path.Contains("MavenMapVoid5"))
+            if (path.Contains("MavenMapVoid5"))
                 activeRegion = "The Feared";
             else if (path.Contains("MavenMapVoid4"))
                 activeRegion = "The Hidden";
@@ -355,7 +355,7 @@ namespace MapNotify
                 }
             else 
                 foreach (string cArea in MavenRegionCompletion[activeRegion])
-                    MavenBosses.Add((cArea, false));
+                    MavenBosses.Add((cArea, true));
 
             return MavenBosses;
         }
