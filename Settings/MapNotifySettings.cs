@@ -27,7 +27,6 @@ namespace MapNotify
             ShowForWatchstones = new ToggleNode(true);
             ShowForHeist = new ToggleNode(true);
             ShowForInvitations = new ToggleNode(true);
-
         }
         public bool TargettingHaewarkHamlet = false;
         public bool TargettingTirnsEnd = false;

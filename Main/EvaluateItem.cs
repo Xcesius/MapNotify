@@ -85,7 +85,6 @@ namespace MapNotify
             public nuVector4 ItemColour { get; set; }
             public string MapName { get; set; }
             public string MapRegion { get; set; }
-            public string MavenBosses { get; set; }
             public string ClassID { get; set; }
             public int PackSize { get; set; }
             public int Quantity { get; set; }
@@ -95,6 +94,8 @@ namespace MapNotify
             public bool Awakened { get; set; }
             public bool Completed { get; set; }
             public bool Maven { get; set; }
+            public bool MavenUncharted { get; set; }
+            public string MavenBosses { get; set; }
             public int Tier { get; set; }
 
             public void Update()
@@ -121,11 +122,35 @@ namespace MapNotify
                     {
                         foreach (var mod in modsComponent.ItemMods.Where(x =>
                                                             !x.Group.Contains("MapAtlasInfluence")
-                                                            && !x.Group.Contains("MapElderContainsBoss")
                                                             && !x.RawName.Equals("InfectedMap")
+                                                            && !x.RawName.Equals("MapForceCorruptedSideArea")
+                                                            && !x.RawName.Equals("MapGainsRandomZanaMod")
+                                                            && !x.RawName.StartsWith("MapDoesntConsumeSextantCharge")
+                                                            && !x.RawName.StartsWith("MapEnchant")
+                                                            && !x.RawName.Equals("MapBossSurroundedByTormentedSpirits")
                                                             && !x.RawName.Equals("MapZanaSubAreaMissionDetails")
                                                             ))
                         {
+                            // handle maven stuff for elder
+                            if (mod.Group.Contains("MapElderContainsBoss"))
+                            {
+                                switch (mod.Value1)
+                                {
+                                    case 1:
+                                        if(MavenAreas.Any(x => x.Name == "The Enslaver")) MavenUncharted = true;
+                                        break;
+                                    case 2:
+                                        if (MavenAreas.Any(x => x.Name == "The Eradicator")) MavenUncharted = true;
+                                        break;
+                                    case 3:
+                                        if (MavenAreas.Any(x => x.Name == "The Constrictor")) MavenUncharted = true;
+                                        break;
+                                    case 4:
+                                        if (MavenAreas.Any(x => x.Name == "The Purifier")) MavenUncharted = true;
+                                        break;
+                                }
+                                continue;
+                            }
                             quantity += mod.Value1;
                             packSize += mod.Value3;
                             if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
@@ -181,6 +206,26 @@ namespace MapNotify
                     MapName = ItemName;
                     MavenBosses = MavenBosses(Item);
                 }
+
+                // The Hidden
+                if (Entity.Path.Contains("BreachFragmentPhysical") && MavenAreas.Any(x => x.Name == "Uul-Netol's Domain"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("BreachFragmentCold") && MavenAreas.Any(x => x.Name == "Tul's Domain"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("BreachFragmentFire") && MavenAreas.Any(x => x.Name == "Xoph's Domain"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("BreachFragmentLightning") && MavenAreas.Any(x => x.Name == "Esh's Domain"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("BreachFragmentChaos") && MavenAreas.Any(x => x.Name == "Chayula's Domain"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("CurrencyElderFragment") && MavenAreas.Any(x => x.Name == "Absence of Value and Meaning"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("ShaperFragment") && MavenAreas.Any(x => x.Name == "The Shaper's Realm"))
+                    MavenUncharted = true;
+                else if (Entity.Path.Contains("VaalFragment2_") && MavenAreas.Any(x => x.Name == "The Alluring Abyss"))
+                    MavenUncharted = true;
+                // should just be real maps with proper areas, to test later
+                // Cortex, Distant Memories, Shaper Guardians
 
                 // evaluate rarity for colouring item name
                 ItemColour = GetRarityColor(modsComponent?.ItemRarity ?? ItemRarity.Normal);

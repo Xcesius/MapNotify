@@ -1,13 +1,13 @@
 ﻿using ExileCore;
 using ExileCore.PoEMemory.Components;
+using ExileCore.PoEMemory.Elements;
+using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
+using ImGuiNET;
 using SharpDX;
 using System.Collections.Generic;
 using System.Linq;
-using ImGuiNET;
-using ExileCore.PoEMemory.Elements;
-using ExileCore.PoEMemory.Elements.InventoryElements;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
@@ -43,16 +43,28 @@ namespace MapNotify
                 var baseType = gameController.Files.BaseItemTypes.Translate(entity.Path);
                 var classID = baseType.ClassName;
                 // Not map, heist or watchstone or normal rarity heist
-                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() 
-                    && !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && !classID.Contains("AtlasRegionUpgradeItem")) && !entity.Path.Contains("MavenMap") || 
+                if ((!entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && 
+                    !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && 
+                    !classID.Contains("AtlasRegionUpgradeItem")) && 
+                    !entity.Path.Contains("MavenMap") || 
                     (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint")) && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
-
+               
                 if (!Settings.ShowForHeist && (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint"))) return;
                 if (!Settings.ShowForWatchstones && classID.Contains("AtlasRegionUpgradeItem")) return;
                 if (!Settings.ShowForInvitations && (classID.Contains("MavenMap") || classID.Contains("MiscMapItem"))) return;
 
+                bool showMapProperties = !classID.Contains("HeistContract") &&
+                            !classID.Contains("HeistBlueprint") &&
+                            !classID.Contains("AtlasRegionUpgradeItem") &&
+                            !classID.Contains("QuestItem") && !classID.Contains("MiscMapItem") &&
+                            !entity.Path.Contains("BreachFragment") && 
+                            !entity.Path.Contains("ShaperFragment") && 
+                            !entity.Path.Contains("VaalFragment2_") && 
+                            !entity.Path.Contains("CurrencyElderFragment") ? true : false;
+
                 // Evaluate
                 var ItemDetails = Entity.GetHudComponent<ItemDetails>() ?? new ItemDetails(Item, Entity);
+                LogMessage("started");
                 if (Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
                 {
                     // get alerts, watchstones and heists with no warned mods have no name to show
@@ -89,11 +101,7 @@ namespace MapNotify
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                         ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
                     {
-                        if (!classID.Contains("HeistContract") && 
-                            !classID.Contains("HeistBlueprint") && 
-                            !classID.Contains("AtlasRegionUpgradeItem") &&
-                            !classID.Contains("QuestItem") && !classID.Contains("MiscMapItem") )
-                        {
+                        if (showMapProperties)
                             // map only stuff, zana always needs to show name for ease
                             if (isInventory || Settings.ShowMapName)
                             {
@@ -118,6 +126,10 @@ namespace MapNotify
                                     {
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"M");
                                     }
+                                    if (ItemDetails.MavenUncharted)
+                                    {
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0f, 0.9f, 0.77f, 1f), $"U");
+                                    }
                                     ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
                                 }
                                 if (Settings.ShowMapRegion)
@@ -128,7 +140,6 @@ namespace MapNotify
                                     ImGui.TextColored(regionColor, $"{ItemDetails.MapRegion}");
                                 }
                             }
-                        }
                         if (classID.Contains("QuestItem") || classID.Contains("MiscMapItem"))
                         {
                             ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"{ItemDetails.MapName}");
@@ -192,7 +203,6 @@ namespace MapNotify
 
                     }
                     ImGui.End();
-                    ImGui.PopStyleColor((int)ImGuiCol.WindowBg);
                 }
             }
         }
@@ -218,7 +228,8 @@ namespace MapNotify
                 // render NPC inventory if relevant
                 else if (Settings.ShowForZanaMaps && itemType != null && itemType == ToolTipType.None)
                 {
-                    var npcInv = ingameState.ServerData.NPCInventories ?? null;
+                    var serverData = ingameState.ServerData;
+                    var npcInv = serverData.NPCInventories ?? null;
                     if (npcInv == null || npcInv.Count == 0) return;
                     foreach (var inv in npcInv)
                         if (uiHover.Parent.ChildCount == inv.Inventory.Items.Count)

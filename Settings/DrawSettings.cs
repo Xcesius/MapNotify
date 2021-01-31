@@ -126,6 +126,12 @@ namespace MapNotify
                 ImGui.Spacing();
 
                 debug = Checkbox("Debug Features", debug);
+                if (debug)
+                {
+                    //whatever
+                }
+
+                    debug = Checkbox("Debug Features", debug);
                 ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
                 if (debug)
                 {

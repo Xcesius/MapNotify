@@ -15,7 +15,7 @@ namespace MapNotify
                     ImGuiWindowFlags.NoScrollbar |
                     ImGuiWindowFlags.NoTitleBar |
                     ImGuiWindowFlags.NoFocusOnAppearing |
-                    ImGuiWindowFlags.NoResize |
+                    ImGuiWindowFlags.AlwaysAutoResize |
                     ImGuiWindowFlags.NoScrollWithMouse |
                     ImGuiWindowFlags.NoCollapse);
                 var pos = ImGui.GetWindowPos();
