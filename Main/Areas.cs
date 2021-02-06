@@ -33,6 +33,25 @@ namespace MapNotify
             {"Absence of Value and Meaning","The Feared"},
         };
 
+        public static List<string> LacksCompletionList = new List<string>()
+        {
+            {"Lair of the Hydra"},
+            {"Maze of the Minotaur"},
+            {"Forge of the Phoenix"},
+            {"Pit of the Chimera"},
+            {"Rewritten Distant Memory"},
+            {"Augmented Distant Memory"},
+            {"Altered Distant Memory"},
+            {"Twisted Distant Memory"},
+            {"Cortex"},
+            {"Replica Cortex"},
+            {"Hall of Grandmasters"},
+            {"Infused Beachhead"},
+            {"The Beachhead"},
+            {"Untainted Paradise"},
+        };
+
+
         public static Dictionary<string, List<string>> RegionArea = new Dictionary<string, List<string>>()
         {
             { "The Twisted",  new List<string>(){ 
