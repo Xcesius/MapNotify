@@ -28,6 +28,18 @@ namespace MapNotify
                     return new nuVector4(1F, 1F, 1F, 1F);
             }
         }
+        public enum ObjectiveType
+        {
+            None,
+            ElderGuardian,
+            ShaperGuardian,
+            Harvest,
+            Delirium,
+            Blighted,
+            Metamorph,
+            Legion,
+            BlightEncounter,
+        }
 
         public static Dictionary<int, string> ZanaMods = new Dictionary<int, string>()
         {
@@ -63,10 +75,24 @@ namespace MapNotify
             {38, "Metamorph Encounter" },
         };
 
+        public static readonly List<string> ModNameBlacklist = new List<string>(){
+            "AfflictionMapDeliriumStacks",
+            "AfflictionMapReward",
+            "InfectedMap",
+            "MapForceCorruptedSideArea",
+            "MapGainsRandomZanaMod",
+            "MapDoesntConsumeSextantCharge",
+            "MapEnchant",
+            "Enchantment",
+            "MapBossSurroundedByTormentedSpirits",
+            "MapZanaSubAreaMissionDetails",
+        };
+
         public class StyledText
         {
             public string Text { get; set; }
             public Vector4 Color { get; set; }
+            public bool Bricking { get; set; }
         }
 
         public class MavenDetails
@@ -101,8 +127,8 @@ namespace MapNotify
             public Entity Entity { get; }
             public List<StyledText> ActiveWarnings { get; set; }
             public StyledText ZanaMod { get; set; }
-            public bool ZanaBorder { get; set; }
-            public nuVector4 ItemColour { get; set; }
+            public ObjectiveType ZanaMissionType { get; set; }
+            public nuVector4 ItemColor { get; set; }
             public string MapName { get; set; }
             public string MapRegion { get; set; }
             public string ClassID { get; set; }
@@ -114,6 +140,8 @@ namespace MapNotify
             public bool Bonus { get; set; }
             public bool Awakened { get; set; }
             public bool Completed { get; set; }
+            public bool Bricked { get; set; }
+            public bool Corrupted { get; set; }
             public MavenDetails MavenDetails { get; set; }
             public int Tier { get; set; }
 
@@ -130,6 +158,9 @@ namespace MapNotify
                 var mapComponent = Entity.GetComponent<Map>() ?? null;
                 Tier = mapComponent?.Tier ?? -1;
                 NeedsPadding = Tier == -1 ? false : true;
+                ZanaMissionType = ObjectiveType.None;
+                Bricked = false;
+                Corrupted = Entity.GetComponent<Base>()?.isCorrupted ?? false;
 
                 var modsComponent = Entity.GetComponent<Mods>() ?? null;
                 ModCount = modsComponent?.ItemMods.Count() ?? 0;
@@ -139,20 +170,18 @@ namespace MapNotify
                     if (modsComponent != null && modsComponent.ItemRarity != ItemRarity.Unique)
                     {
                         foreach (var mod in modsComponent.ItemMods.Where(x =>
-                                                !x.Group.Contains("MapAtlasInfluence")
-                                                && !x.RawName.Equals("InfectedMap")
-                                                && !x.RawName.Equals("MapForceCorruptedSideArea")
-                                                && !x.RawName.Equals("MapGainsRandomZanaMod")
-                                                && !x.RawName.StartsWith("MapDoesntConsumeSextantCharge")
-                                                && !x.RawName.StartsWith("MapEnchant")
-                                                && !x.RawName.Contains("Enchantment")
-                                                && !x.RawName.Equals("MapBossSurroundedByTormentedSpirits")
-                                                && !x.RawName.Equals("MapZanaSubAreaMissionDetails")
-                                                ))
+                                                !x.Group.Contains("MapAtlasInfluence")))
                         {
+                            if(ModNameBlacklist.Any(m => mod.RawName.Contains(m)))
+                            {
+                                ModCount--;
+                                continue;
+                            }
+
                             #region Elder Guardian Maven Areas and Regions
                             if (mod.Group.Contains("MapElderContainsBoss"))
                             {
+                                ModCount--;
                                 switch (mod.Value1)
                                 {
                                     case 1:
@@ -178,7 +207,11 @@ namespace MapNotify
                             quantity += mod.Value1;
                             packSize += mod.Value3;
                             if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
-                                ActiveWarnings.Add(WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value);
+                            {
+                                StyledText warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
+                                if (warning.Bricking) Bricked = true;
+                                ActiveWarnings.Add(warning);
+                            }
                         }
                     }
 
@@ -191,28 +224,23 @@ namespace MapNotify
                     else if (ZanaMods.TryGetValue(modsComponent.ItemMods.
                         FirstOrDefault(x => x.RawName == "MapZanaSubAreaMissionDetails").Value2, out string modName))
                     {
-                        ZanaBorder = false;
                         Vector4 textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
-                        if (modName.Contains("Guardian"))
-                        {
-                            ZanaBorder = true;
-                            textColor = new Vector4(0.5f, 1f, 0.45f, 1f);
-                        }
+                        if (modName.Contains("Elder Guardian"))
+                            ZanaMissionType = ObjectiveType.ElderGuardian;
+                        else if (modName.Contains("Shaper Guardian"))
+                            ZanaMissionType = ObjectiveType.ShaperGuardian;
                         else if (modName.Contains("Harvest"))
-                        {
-                            ZanaBorder = true; 
-                            textColor = new Vector4(0f, 1f, 1f, 1f);
-                        }
+                            ZanaMissionType = ObjectiveType.Harvest;
                         else if (modName.Contains("Delirium"))
-                        {
-                            ZanaBorder = true;
-                            textColor = new Vector4(1f, 0f, 1f, 1f);
-                        }
+                            ZanaMissionType = ObjectiveType.Delirium;
                         else if (modName.Contains("Blighted Map"))
-                        {
-                            ZanaBorder = true; 
-                            textColor = new Vector4(0.2f, 1f, 0.2f, 1f);
-                        }
+                            ZanaMissionType = ObjectiveType.Blighted;
+                        else if (modName.Contains("Blight Encounter"))
+                            ZanaMissionType = ObjectiveType.BlightEncounter;
+                        else if (modName.Contains("Legion"))
+                            ZanaMissionType = ObjectiveType.Legion;
+                        else if (modName.Contains("Metamorph"))
+                            ZanaMissionType = ObjectiveType.Metamorph;
                         ZanaMod = new StyledText() { Color = textColor, Text = modName };
                     }
                     else
@@ -268,7 +296,7 @@ namespace MapNotify
                 }
 
                 #region Maven Regions & Areas
-                if (Entity.Path.Contains("BreachFragmentPhysical") && MavenAreas.Any(x => x.Name == "Uul-Netol's Domain"))
+                if (Entity.Path.Contains("BreachFragmentPhysical"))
                 {
                     mavenDetails.MavenRegion = "The Hidden";
                     mavenDetails.MavenArea = "Uul-Netol's Domain";
@@ -342,7 +370,7 @@ namespace MapNotify
                     LacksCompletion = true;
 
                 // evaluate rarity for colouring item name
-                ItemColour = GetRarityColor(modsComponent?.ItemRarity ?? ItemRarity.Normal);
+                ItemColor = GetRarityColor(modsComponent?.ItemRarity ?? ItemRarity.Normal);
             }
         }
         public static List<(string, bool)> MavenBosses(string path, string region)//NormalInventoryItem item)

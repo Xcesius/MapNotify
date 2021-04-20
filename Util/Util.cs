@@ -27,5 +27,13 @@ namespace MapNotify
         {
             return new nuVector4(value.X, value.Y, value.Z, value.W);
         }
+        public uint ColorToUint(nuVector4 value)
+        {
+            int rVal = (int)(value.X * 255f);
+            rVal |= (int)(value.Y * 255f) << 8;
+            rVal |= (int)(value.Z * 255f) << 16;
+            rVal |= (int)(value.W * 255f) << 24;
+            return (uint)rVal;
+        }
     }
 }

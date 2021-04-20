@@ -6,13 +6,17 @@ using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
-using System.Numerics;
+using SharpDX;
+using nuVector2 = System.Numerics.Vector2;
+using nuVector4 = System.Numerics.Vector4;
+
 namespace MapNotify
 {
     partial class MapNotify
     {
         public bool debug;
         public bool maven;
+        public bool comp;
         public static List<string> hoverMods = new List<string>();
         public static void HelpMarker(string desc)
         {
@@ -30,6 +34,13 @@ namespace MapNotify
         {
             var refValue = setting.Value;
             ImGui.SliderInt(labelString, ref refValue, setting.Min, setting.Max);
+            return refValue;
+        }
+
+        public static nuVector4 ColorButton(string labelString, nuVector4 setting)
+        {
+            var refValue = setting;
+            ImGui.ColorEdit4(labelString, ref refValue);
             return refValue;
         }
 
@@ -76,7 +87,7 @@ namespace MapNotify
         {
             ImGui.Text("Plugin by Lachrymatory. https://github.com/Lachrymatory/MapNotify/");
             ImGui.Text("Please give suggestions, report issues, etc. below:");
-            if (ImGui.Button("Lachrymatory's GitHub Repo.")) 
+            if (ImGui.Button("Lachrymatory's GitHub")) 
                 System.Diagnostics.Process.Start("https://github.com/Lachrymatory/MapNotify/");
             ImGui.Separator();
 
@@ -92,9 +103,13 @@ namespace MapNotify
                 Settings.ShowForWatchstones.Value = Checkbox("Display for Watchstones", Settings.ShowForWatchstones);
                 Settings.ShowForHeist.Value = Checkbox("Display for Contracts and Blueprints", Settings.ShowForHeist);
                 Settings.ShowForInvitations.Value = Checkbox("Display for Maven Invitations", Settings.ShowForInvitations);
+                Settings.AlwaysShowCompletionBorder.Value = Checkbox("Style tooltip border on incomplete maps", Settings.AlwaysShowCompletionBorder);
+                Settings.BoxForBricked.Value = Checkbox("Border on bricked maps in inventory", Settings.BoxForBricked);
+                ImGui.SameLine(); HelpMarker("Add ';true' after a line in the config files to mark it as a bricked mod.");
+
             }
 
-            if (ImGui.TreeNodeEx("Map Hover Settings", ImGuiTreeNodeFlags.CollapsingHeader))
+            if (ImGui.TreeNodeEx("Map Tooltip Settings", ImGuiTreeNodeFlags.CollapsingHeader))
             {
                 Settings.ShowMapName.Value = Checkbox("Show Map Name", Settings.ShowMapName);
                 Settings.ShowCompletion.Value = Checkbox("Show Completion Status", Settings.ShowCompletion);
@@ -109,9 +124,52 @@ namespace MapNotify
                 Settings.ShowModCount.Value = Checkbox("Show Number of Mods on Map", Settings.ShowModCount);
                 Settings.ShowPackSizePercent.Value = Checkbox("Show Pack Size %", Settings.ShowPackSizePercent);
                 Settings.ShowQuantityPercent.Value = Checkbox("Show Item Quantity %", Settings.ShowQuantityPercent);
-                Settings.ColourQuantityPercent.Value = Checkbox("Warn Below Quantity Percentage", Settings.ColourQuantityPercent);
-                Settings.ColourQuantity.Value = IntSlider("##ColourQuantity", Settings.ColourQuantity);
+                Settings.ColorQuantityPercent.Value = Checkbox("Warn Below Quantity Percentage", Settings.ColorQuantityPercent);
+                Settings.ColorQuantity.Value = IntSlider("##ColorQuantity", Settings.ColorQuantity);
                 ImGui.SameLine(); HelpMarker("The colour of the quantity text will be red below this amount and green above it.");
+                Settings.NonUnchartedList.Value = Checkbox("Display Maven Boss List for non-uncharted regions", Settings.NonUnchartedList);
+                ImGui.SameLine(); HelpMarker("This will show (up to) all 10 bosses you have slain in a normal region as a full list.\nDisplays a count for normal regions otherwise.");
+            }
+            if (ImGui.TreeNodeEx("Borders and Colours", ImGuiTreeNodeFlags.CollapsingHeader))
+            {
+
+                Settings.BorderThickness.Value = IntSlider("Border Thickness##BorderThickness", Settings.BorderThickness);
+                Settings.BorderThickness.Value = IntSlider("Completion Border Thickness##BorderThickness", Settings.BorderThickness);
+
+                Settings.DefaultBorderTextColor = ColorButton("Text colour for maps with borders", Settings.DefaultBorderTextColor);
+                Settings.StyleTextForBorder.Value = Checkbox("Use border colour for text colour", Settings.StyleTextForBorder);
+                ImGui.SameLine(); HelpMarker("i.e. if you have Harvest in green, 'Harvest' will be written in green in the tooltip.");
+
+                Settings.ElderGuardianBorder.Value = Checkbox("##elder", Settings.ElderGuardianBorder); ImGui.SameLine();
+                Settings.ElderGuardian = ColorButton("Elder Guardian", Settings.ElderGuardian);
+
+                Settings.ShaperGuardianBorder.Value = Checkbox("##shaper", Settings.ShaperGuardianBorder); ImGui.SameLine();
+                Settings.ShaperGuardian = ColorButton("Shaper Guardian", Settings.ShaperGuardian);
+
+                Settings.HarvestBorder.Value = Checkbox("##harvest", Settings.HarvestBorder); ImGui.SameLine();
+                Settings.Harvest = ColorButton("Harvest", Settings.Harvest);
+
+                Settings.DeliriumBorder.Value = Checkbox("##delirium", Settings.DeliriumBorder); ImGui.SameLine();
+                Settings.Delirium = ColorButton("Delirium", Settings.Delirium);
+
+                Settings.BlightedBorder.Value = Checkbox("##blighted", Settings.BlightedBorder); ImGui.SameLine();
+                Settings.Blighted = ColorButton("Blighted Map", Settings.Blighted);
+
+                Settings.BlightEncounterBorder.Value = Checkbox("##blightenc", Settings.BlightEncounterBorder); ImGui.SameLine();
+                Settings.BlightEncounter = ColorButton("Blight in normal map", Settings.BlightEncounter);
+
+                Settings.MetamorphBorder.Value = Checkbox("##metamorph", Settings.MetamorphBorder); ImGui.SameLine();
+                Settings.Metamorph = ColorButton("Metamorph", Settings.Metamorph);
+
+                Settings.LegionBorder.Value = Checkbox("##legion", Settings.LegionBorder); ImGui.SameLine();
+                Settings.Legion = ColorButton("Legion Monolith", Settings.Legion);
+
+                Settings.CompletionBorder.Value = Checkbox("Show borders for lack of completion##completion", Settings.CompletionBorder); 
+                Settings.Incomplete = ColorButton("Incomplete", Settings.Incomplete);
+                Settings.BonusIncomplete = ColorButton("Bonus Incomplete", Settings.BonusIncomplete);
+                Settings.AwakenedIncomplete = ColorButton("Awakened Incomplete", Settings.AwakenedIncomplete);
+
+                Settings.Bricked = ColorButton("Bricked Map", Settings.Bricked);
             }
             
             if (ImGui.TreeNodeEx("Config Files and Other", ImGuiTreeNodeFlags.CollapsingHeader))
@@ -129,27 +187,36 @@ namespace MapNotify
                 ImGui.SameLine(); HelpMarker("Show mod names for quickly adding them to your ModWarnings.txt\nYou only need the start of a mod to match it, for example: 'MapBloodlinesModOnMagicsMapWorlds' would be matched with:\nMapBloodlines;Bloodlines;FF7F00FF");
                 if (debug)
                 {
-                    foreach (var region in RegionArea)
-                    {
-                        ImGui.Text($"{region.Key} ----");
-                        foreach (string name in region.Value)
-                            ImGui.Text(name);
-                    }
                     maven = Checkbox("Maven Debug", maven);
                     if (maven)
                     {
                         ImGui.Text("Maven Witnessed:");
                         foreach (var map in MavenAreas)
                         {
-                            ImGui.TextColored(new Vector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
+                            ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
                         }
                         ImGui.Text("Maven Regions:");
                         foreach (var region in MavenDict)
                         {
 
-                            ImGui.TextColored(new Vector4(0.5F, 0.5F, 1.2F, 1F), $"{region.Key}");
+                            ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{region.Key}");
                             ImGui.SameLine();
-                            ImGui.TextColored(new Vector4(1.2F, 0.5F, 0.5F, 1F), $"{region.Value}");
+                            ImGui.TextColored(new nuVector4(1.2F, 0.5F, 0.5F, 1F), $"{region.Value}");
+                        }
+                    }
+                    comp = Checkbox("Completion Debug", comp);
+                    
+                    if (comp)
+                    {
+                        ImGui.Text($"Bonus ({BonusAreas.Count}): ");
+                        foreach (var map in BonusAreas)
+                        {
+                            ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
+                        }
+                        ImGui.Text($"Completion ({CompletedAreas.Count}): ");
+                        foreach (var map in CompletedAreas)
+                        {
+                            ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
                         }
                     }
                     DebugHover();
@@ -157,7 +224,7 @@ namespace MapNotify
                     if (hoverMods.Count > 0)
                         foreach (var mod in hoverMods)
                         {
-                            ImGui.TextColored(new Vector4(0.5F, 0.5F, 1.2F, 1F), mod);
+                            ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), mod);
                         }
 
                 }

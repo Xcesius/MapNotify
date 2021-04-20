@@ -87,10 +87,11 @@ namespace MapNotify
             },
         };
 
-        public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + 0x8510);
-        public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + 0x84D0);
-        public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + 0x8490);
-        public static List<WorldArea> MavenAreas => GetAreas(ingameState.ServerData.Address + 0x8450);
+        public const long AreaStart = 0x86B0;
+        public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0xC0));
+        public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x80));
+        public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x40));
+        public static List<WorldArea> MavenAreas => GetAreas(ingameState.ServerData.Address + AreaStart);
         
         private static List<WorldArea> GetAreas(long address)
         {
@@ -108,7 +109,7 @@ namespace MapNotify
             for (var addr = ingameState.M.Read<long>(listStart); addr != listStart; addr = ingameState.M.Read<long>(addr))
             {
                 if (addr == 0) return res;
-                var byAddress = gameController.Files.WorldAreas.GetByAddress(ingameState.M.Read<long>(addr + 0x18));
+                var byAddress = gameController.Files.WorldAreas.GetByAddress(ingameState.M.Read<long>(addr + 0x10));
 
                 if (byAddress != null)
                     res.Add(byAddress);
@@ -144,7 +145,7 @@ namespace MapNotify
         {
             foreach (var node in gameController.Files.AtlasNodes.EntriesList)
             {
-                long regionAddr = ingameState.M.Read<long>(node.Address + 0x4D);
+                long regionAddr = ingameState.M.Read<long>(node.Address + 0x41);
                 long regionNameAddr = ingameState.M.Read<long>(regionAddr);
                 string regionName = ingameState.M.ReadStringU(regionNameAddr);
                 //long regionReadableAddr = ingameState.M.Read<long>(regionAddr + 0x08);

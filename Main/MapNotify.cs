@@ -35,6 +35,51 @@ namespace MapNotify
         public static nuVector2 boxSize;
         public static float maxSize;
         public static float rowSize;
+        public static int lastCol;
+
+        public nuVector4? GetObjectiveColor(ObjectiveType rarity)
+        {
+            switch (rarity)
+            {
+                case ObjectiveType.None:
+                    goto default;
+                case ObjectiveType.ElderGuardian:
+                    if (Settings.ElderGuardianBorder)
+                        return Settings.ElderGuardian;
+                    else goto default;
+                case ObjectiveType.ShaperGuardian:
+                    if (Settings.ShaperGuardianBorder)
+                        return Settings.ShaperGuardian;
+                    else goto default;
+                case ObjectiveType.Harvest:
+                    if (Settings.HarvestBorder)
+                        return Settings.Harvest;
+                    else goto default;
+                case ObjectiveType.Delirium:
+                    if (Settings.DeliriumBorder)
+                        return Settings.Delirium;
+                    else goto default;
+                case ObjectiveType.Blighted:
+                    if (Settings.BlightedBorder)
+                        return Settings.Blighted;
+                    else goto default;
+                case ObjectiveType.Metamorph:
+                    if (Settings.MetamorphBorder)
+                        return Settings.Metamorph;
+                    else goto default;
+                case ObjectiveType.Legion:
+                    if (Settings.LegionBorder)
+                        return Settings.Legion;
+                    else goto default;
+                case ObjectiveType.BlightEncounter:
+                    if (Settings.BlightEncounterBorder)
+                        return Settings.BlightEncounter;
+                    else goto default;
+                default:
+                    return null;
+            }
+        }
+
         public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
         {
             var entity = Entity;
@@ -60,7 +105,12 @@ namespace MapNotify
                 if (!Settings.ShowForInvitations && (classID.Contains("MavenMap") || classID.Contains("MiscMapItem"))) return;
 
                 // Evaluate
-                var ItemDetails = Entity.GetHudComponent<ItemDetails>() ?? new ItemDetails(Item, Entity);
+                var ItemDetails = Entity.GetHudComponent<ItemDetails>();
+                if(ItemDetails == null)
+                {
+                    ItemDetails = new ItemDetails(Item, Entity);
+                    Entity.SetHudComponent(ItemDetails);
+                }
                 if (ItemDetails != null && Settings.AlwaysShowTooltip || ItemDetails.ActiveWarnings.Count > 0)
                 {
                     // get alerts, watchstones and heists with no warned mods have no name to show
@@ -82,7 +132,7 @@ namespace MapNotify
                     if (isInventory)
                     {
                         // wrap on fourth
-                        if ((float)mapNum % (float)4 == (float)0)
+                        if (mapNum < lastCol) //((float)mapNum % (float)4 == (float)0)
                         {
                             boxSize = new nuVector2(0, 0);
                             rowSize += maxSize + 2;
@@ -114,10 +164,10 @@ namespace MapNotify
                             if (isInventory || Settings.ShowMapName)
                             {
                                 if (ItemDetails.LacksCompletion || !Settings.ShowCompletion)
-                                    ImGui.TextColored(ItemDetails.ItemColour, $"{ItemDetails.MapName}");
+                                    ImGui.TextColored(ItemDetails.ItemColor, $"{ItemDetails.MapName}");
                                 else
                                 {
-                                    ImGui.TextColored(ItemDetails.ItemColour, $"{ItemDetails.MapName}");
+                                    ImGui.TextColored(ItemDetails.ItemColor, $"{ItemDetails.MapName}");
                                     if (!ItemDetails.Awakened)
                                     {
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
@@ -154,11 +204,16 @@ namespace MapNotify
                         if (classID.Contains("QuestItem") || classID.Contains("MiscMapItem") || classID.Contains("MapFragment"))
                         {
                             ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"{ItemDetails.MapName}");
-                            foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
-                                if(boss.Complete)
-                                    ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
-                                else
-                                    ImGui.TextColored(new nuVector4(1f, 0.8f, 0.8f, 1f), $"{boss.Boss}");
+                            if (!Settings.NonUnchartedList && !Entity.Path.Contains("MavenMapVoid") && !Entity.Path.Contains("MapFragment"))
+                                ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{ItemDetails.MavenDetails.MavenBosses.Count} Bosses Witnessed");
+                            else
+                            {
+                                foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
+                                    if (boss.Complete)
+                                        ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
+                                    else
+                                        ImGui.TextColored(new nuVector4(1f, 0.8f, 0.8f, 1f), $"{boss.Boss}");
+                            }
                         } else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
                             foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
                                 if (boss.Complete)
@@ -169,8 +224,14 @@ namespace MapNotify
                         // Zana Mod
                         if (isInventory)
                         {
-                            ImGui.TextColored(SharpToNu(ItemDetails.ZanaMod.Color), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
-
+                            var bCol = GetObjectiveColor(ItemDetails.ZanaMissionType);
+                            if (bCol.HasValue)
+                                if (Settings.StyleTextForBorder)
+                                    ImGui.TextColored(bCol.Value, $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
+                                else
+                                    ImGui.TextColored(Settings.DefaultBorderTextColor, $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
+                            else
+                                ImGui.TextColored(new nuVector4(0.9f, 0.85f, 0.65f, 1f), $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
                         }
 
                         // Quantity and Packsize for maps
@@ -178,9 +239,9 @@ namespace MapNotify
                         {
                             // Quantity and Pack Size
                             nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
-                            if (Settings.ColourQuantityPercent)
+                            if (Settings.ColorQuantityPercent)
                                 if
-                                    (ItemDetails.Quantity < Settings.ColourQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
+                                    (ItemDetails.Quantity < Settings.ColorQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
                                 else
                                     qCol = new nuVector4(0.4f, 1f, 0.4f, 1f);
                             if (Settings.ShowQuantityPercent && ItemDetails.Quantity != 0 && Settings.ShowPackSizePercent && ItemDetails.PackSize != 0)
@@ -204,9 +265,9 @@ namespace MapNotify
                         // Count Mods
                         if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.Contains("AtlasRegionUpgradeItem"))
                             if (entity.GetComponent<Base>().isCorrupted)
-                                ImGui.TextColored(new nuVector4(1f, 0.33f, 0.33f, 1f), $"{ItemDetails.ModCount} Mods");
+                                ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"{(isInventory ? ItemDetails.ModCount-1 : ItemDetails.ModCount)} Mods, Corrupted");
                             else
-                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{ItemDetails.ModCount} Mods");
+                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{(isInventory ? ItemDetails.ModCount-1 : ItemDetails.ModCount)} Mods");
 
                         // Mod StyledTexts
                         if (Settings.ShowModWarnings)
@@ -215,7 +276,7 @@ namespace MapNotify
                         ImGui.EndGroup();
 
                         // border for most notable maps in inventory
-                        if (isInventory && ItemDetails.ZanaBorder)
+                        if (ItemDetails.Bricked || entity.HasComponent<ExileCore.PoEMemory.Components.Map>() && (isInventory || Settings.AlwaysShowCompletionBorder))
                         {
                             nuVector2 min = ImGui.GetItemRectMin();
                             min.X -= 8;
@@ -223,7 +284,21 @@ namespace MapNotify
                             nuVector2 max = ImGui.GetItemRectMax();
                             max.X += 8;
                             max.Y += 8;
-                            ImGui.GetForegroundDrawList().AddRect(min, max, 0xFF00CC00);
+                            var bcol = GetObjectiveColor(ItemDetails.ZanaMissionType);
+
+                            if (ItemDetails.Bricked)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.Bricked), 0f, 0, Settings.BorderThickness.Value);
+                            else if(ItemDetails.ZanaMissionType != ObjectiveType.None && bcol.HasValue)
+                                    ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(bcol.Value), 0f, 0, Settings.BorderThickness.Value);
+                            else if (Settings.CompletionBorder && !ItemDetails.Completed)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.Incomplete));
+                            else if (Settings.CompletionBorder && !ItemDetails.Bonus)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.BonusIncomplete));
+                            else if (Settings.CompletionBorder && !ItemDetails.Awakened)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.AwakenedIncomplete));
+                            else if (isInventory)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, 0xFF4A4A4A);
+
                         }
 
                         // Detect and adjust for edges
@@ -240,6 +315,7 @@ namespace MapNotify
                             boxSize.X += (int)size.X + 2;
                             if (maxSize < size.Y)
                                 maxSize = size.Y;
+                            lastCol = mapNum;
                         }
                     }
                     ImGui.End();
@@ -249,8 +325,6 @@ namespace MapNotify
         
         public override void Render()
         {
-            if (!Settings.Enable) return;
-
             if (ingameState.IngameUi.Atlas.IsVisible)
                 AtlasRender();
 
@@ -262,6 +336,32 @@ namespace MapNotify
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
+
+
+
+                    /*
+                    var baseComponent = hoverItem.Item.GetComponent<Mods>();
+                    
+                    for (int x = 0x4A6; x < 0x500; x += 1)
+                    {
+                        long corrupt = gameController.IngameState.M.Read<byte>(baseComponent.Address + x);
+                        if(corrupt < 2)
+                            LogMessage($"{x.ToString("X2")} : {corrupt.ToString("X2")}");
+                    }
+                    
+
+                    var baseComponent = hoverItem.Item.GetComponent<Mods>();
+                    var mem = gameController.IngameState.M;
+                    long first = mem.Read<long>(baseComponent.Address + 0x220);
+                    long last = mem.Read<long>(baseComponent.Address + 0x228);
+                    long end = mem.Read<long>(baseComponent.Address + 0x230);
+                    long count = mem.Read<long>(baseComponent.Address + 0x238);
+
+                    LogMessage($"{first.ToString("X8")} : {last.ToString("X8")} : {end.ToString("X8")} : {count.ToString("X8")}");
+                    //var stat = baseComponent.ReadObjectAt<Stats>((int)first);
+                    LogMessage($"{mem.ReadStringU(mem.Read<long>(first))}");
+    
+                    */
                     if (hoverItem.Item?.Path != null && (hoverItem.Tooltip?.IsValid ?? false))
                         RenderItem(hoverItem, hoverItem.Item);
                 }
@@ -276,13 +376,28 @@ namespace MapNotify
                             boxSize = new nuVector2(0f, 0f);
                             maxSize = 0;
                             rowSize = 0;
-                            int mapNum = 0;
-                            foreach (var item in inv.Inventory.InventorySlotItems.OrderBy(x => x.PosY).OrderBy(x => x.PosX))
+                            lastCol = 0;
+                            foreach (var item in inv.Inventory.Items.OrderBy(x => x.Pos.Y).OrderBy(x => x.Pos.X))
                             {
-                                RenderItem(null, item.Item, true, mapNum);
-                                mapNum++;
+                                RenderItem(null, item, true, (int)item.Pos.Y);
                             }
                         }
+                }
+            }
+
+            if (ingameState.IngameUi.InventoryPanel.IsVisible)
+            {
+                foreach(var item in ingameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory].VisibleInventoryItems)
+                {
+                    if (!item.Item.HasComponent<ExileCore.PoEMemory.Components.Map>())
+                        continue;                    
+                    var ItemDetails = item.Item.GetHudComponent<ItemDetails>() ?? null;
+                    if (ItemDetails == null)
+                    {
+                        ItemDetails = new ItemDetails(item, item.Item);
+                        item.Item.SetHudComponent(ItemDetails);
+                    }
+                    if (ItemDetails.Bricked) Graphics.DrawFrame(item.GetClientRect(), Color.Red, 2);
                 }
             }
         }

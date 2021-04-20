@@ -41,16 +41,20 @@ namespace MapNotify
 
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
-                var preloadAlerConfigLine = new StyledText { Text = line[1], Color = HexToSDXVector4(line[2]) };
+                bool bricking = false;
+                if (line.Length > 3)
+                    bool.TryParse(line[3] ?? null, out bricking);
+                var preloadAlerConfigLine = new StyledText { Text = line[1], Color = HexToSDXVector4(line[2]), Bricking = bricking };
                 return preloadAlerConfigLine;
             });
         }
 
         public IEnumerable<string[]> GenDictionary(string path)
         {
-            return File.ReadAllLines(path).Where(line => !string.IsNullOrWhiteSpace(line)
-            && line.IndexOf(';') >= 0
-            && !line.StartsWith("#")).Select(line => line.Split('#')[0].Split(new[] { ';' }, 3).Select(parts => parts.Trim()).ToArray());
+            return File.ReadAllLines(path).Where(line => !string.IsNullOrWhiteSpace(line) && 
+                line.IndexOf(';') >= 0 && !line.StartsWith("#"))
+                .Select(line => line.Split('#')[0].Split(';')
+                .Select(parts => parts.Trim()).ToArray());
         }
 
         public void CreateModConfig(string path)
