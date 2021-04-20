@@ -336,32 +336,6 @@ namespace MapNotify
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
-
-
-
-                    /*
-                    var baseComponent = hoverItem.Item.GetComponent<Mods>();
-                    
-                    for (int x = 0x4A6; x < 0x500; x += 1)
-                    {
-                        long corrupt = gameController.IngameState.M.Read<byte>(baseComponent.Address + x);
-                        if(corrupt < 2)
-                            LogMessage($"{x.ToString("X2")} : {corrupt.ToString("X2")}");
-                    }
-                    
-
-                    var baseComponent = hoverItem.Item.GetComponent<Mods>();
-                    var mem = gameController.IngameState.M;
-                    long first = mem.Read<long>(baseComponent.Address + 0x220);
-                    long last = mem.Read<long>(baseComponent.Address + 0x228);
-                    long end = mem.Read<long>(baseComponent.Address + 0x230);
-                    long count = mem.Read<long>(baseComponent.Address + 0x238);
-
-                    LogMessage($"{first.ToString("X8")} : {last.ToString("X8")} : {end.ToString("X8")} : {count.ToString("X8")}");
-                    //var stat = baseComponent.ReadObjectAt<Stats>((int)first);
-                    LogMessage($"{mem.ReadStringU(mem.Read<long>(first))}");
-    
-                    */
                     if (hoverItem.Item?.Path != null && (hoverItem.Tooltip?.IsValid ?? false))
                         RenderItem(hoverItem, hoverItem.Item);
                 }
@@ -371,15 +345,15 @@ namespace MapNotify
                     var npcInv = ingameState.ServerData.NPCInventories ?? null;
                     if (npcInv == null || npcInv.Count == 0) return;
                     foreach (var inv in npcInv)
-                        if (uiHover.Parent.ChildCount == inv.Inventory.Items.Count)
+                        if (uiHover.Parent.ChildCount == inv.Inventory.InventorySlotItems.Count)
                         {
                             boxSize = new nuVector2(0f, 0f);
                             maxSize = 0;
                             rowSize = 0;
                             lastCol = 0;
-                            foreach (var item in inv.Inventory.Items.OrderBy(x => x.Pos.Y).OrderBy(x => x.Pos.X))
+                            foreach (var item in inv.Inventory.InventorySlotItems.OrderBy(x => x.PosY).OrderBy(x => x.PosX))
                             {
-                                RenderItem(null, item, true, (int)item.Pos.Y);
+                                RenderItem(null, item.Item, true, (int)item.PosY);
                             }
                         }
                 }
