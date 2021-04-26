@@ -87,7 +87,7 @@ namespace MapNotify
             },
         };
 
-        public const long AreaStart = 0x86B0;
+        public const long AreaStart = 0x86A0;
         public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0xC0));
         public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x80));
         public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x40));
