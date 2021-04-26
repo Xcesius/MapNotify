@@ -168,17 +168,19 @@ namespace MapNotify
                                 else
                                 {
                                     ImGui.TextColored(ItemDetails.ItemColor, $"{ItemDetails.MapName}");
-                                    if (!ItemDetails.Awakened)
+                                    if (!ItemDetails.Completed)
                                     {
+                                        ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                     }
-                                    if (!ItemDetails.Bonus)
+                                    else if (!ItemDetails.Bonus)
                                     {
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
                                     }
-                                    if (!ItemDetails.Completed)
+                                    else if (!ItemDetails.Awakened)
                                     {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
+                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                     }
                                     if (ItemDetails.MavenDetails.MavenCompletion)
                                     {
