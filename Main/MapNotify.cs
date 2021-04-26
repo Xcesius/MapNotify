@@ -174,21 +174,24 @@ namespace MapNotify
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                     }
-                                    else if (!ItemDetails.Bonus)
-                                    {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
-                                    }
-                                    else if (!ItemDetails.Awakened)
-                                    {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
+                                    else {
+                                        if (!ItemDetails.Bonus)
+                                        {
+                                            ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
+                                        }
+                                        if (!ItemDetails.Awakened)
+                                        {
+                                            if (!ItemDetails.Bonus) ImGui.SameLine();
+                                            ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
+                                        }
                                     }
                                     if (ItemDetails.MavenDetails.MavenCompletion)
                                     {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"M");
+                                        ImGui.TextColored(new nuVector4(0.9f, 0f, 0.77f, 1f), $"Witnessed");
                                     }
                                     if (ItemDetails.MavenDetails.MavenUncharted)
                                     {
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(0.0f, 0.9f, 0.77f, 1f), $"U");
+                                        ImGui.TextColored(new nuVector4(0.0f, 0.9f, 0.77f, 1f), $"Uncharted");
                                     }
                                     ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
                                 }
