@@ -265,7 +265,7 @@ namespace MapNotify
                     if (modsComponent.ItemRarity == ItemRarity.Unique)
                     {
                         // normal map at inner, 0x18, 0x18
-                        long mapUnique = gameController.IngameState.M.Read<long>(mapComponent.Address + 0x10, 0x18, 0x28);
+                        long mapUnique = gameController.IngameState.M.Read<long>(mapComponent.Address + 0x10, 0x10, 0x20);
                         area = gameController.Files.WorldAreas.GetByAddress(mapUnique) ?? area;
                         mapTrim = area.Name;
                     }
