@@ -341,7 +341,7 @@ namespace MapNotify
                 if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
                 {
                     var hoverItem = uiHover.AsObject<NormalInventoryItem>();
-                    if (hoverItem.Item?.Path != null && (hoverItem.Tooltip?.IsValid ?? false))
+                    if (hoverItem.Item?.Path != null/* && (hoverItem.Tooltip?.IsValid ?? false)*/) // TODO Reenable check when condition is fixed
                         RenderItem(hoverItem, hoverItem.Item);
                 }
                 // render NPC inventory if relevant
