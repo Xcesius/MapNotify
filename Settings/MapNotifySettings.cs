@@ -34,6 +34,8 @@ namespace MapNotify
             ShowForInvitations = new ToggleNode(true);
             NonUnchartedList = new ToggleNode(false);
             BoxForBricked = new ToggleNode(true);
+            BoxForMapWarnings = new ToggleNode(true);
+            BoxForMapBadWarnings = new ToggleNode(true);
 
             ElderGuardian = new Vector4(0.32f, 0.55f, 0.78f, 1f);
             ShaperGuardian = new Vector4(0.32f, 0.4f, 0.78f, 1f);
@@ -60,6 +62,7 @@ namespace MapNotify
             AwakenedIncomplete = new Vector4(1f, 0.9f, 0f, 0.3f);
 
             Bricked = new Vector4(1f, 0f, 0f, 1f);
+            MapBorderWarnings = new Vector4(1f, 0f, 0f, 1f);
         }
         public bool TargettingHaewarkHamlet = false;
         public bool TargettingTirnsEnd = false;
@@ -98,6 +101,8 @@ namespace MapNotify
         public ToggleNode ShowForInvitations { get; set; }
         public ToggleNode NonUnchartedList { get; set; }
         public ToggleNode BoxForBricked { get; set; }
+        public ToggleNode BoxForMapWarnings { get; set; }
+        public ToggleNode BoxForMapBadWarnings { get; set; }
         public Vector4 ElderGuardian { get; set; }
         public Vector4 ShaperGuardian { get; set; }
         public Vector4 Harvest { get; set; }
@@ -120,5 +125,6 @@ namespace MapNotify
         public Vector4 BonusIncomplete { get; set; }
         public Vector4 AwakenedIncomplete { get; set; }
         public Vector4 Bricked { get; set; }
+        public Vector4 MapBorderWarnings { get; set; }
     }
 }

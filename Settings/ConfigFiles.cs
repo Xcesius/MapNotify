@@ -12,10 +12,12 @@ namespace MapNotify
         {
             LogMessage("Deleting existing config files...");
             File.Delete(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
+            File.Delete(Path.Combine(DirectoryFullName, "BadModWarnings.txt"));
             File.Delete(Path.Combine(DirectoryFullName, "SextantWarnings.txt"));
             File.Delete(Path.Combine(DirectoryFullName, "HeistWarnings.txt"));
             File.Delete(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt"));
             WarningDictionary = LoadConfigs();
+            BadModsDictionary = LoadConfigBadMod();
         }
         public Dictionary<string, StyledText> LoadConfigs()
         {
@@ -26,6 +28,15 @@ namespace MapNotify
             LoadConfig(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LogMessage("Loaded config files...");
             return FullDict;
+        }
+
+
+        public Dictionary<string, StyledText> LoadConfigBadMod()
+        {
+            Dictionary<string, StyledText> FullDict1 = new Dictionary<string, StyledText>();
+            LoadConfigBad(Path.Combine(DirectoryFullName, "BadModWarnings.txt")).ToList().ForEach(x => FullDict1.Add(x.Key, x.Value));
+            LogMessage("Loading Bad Mods ..");
+            return FullDict1;
         }
         public Dictionary<string, StyledText> LoadConfig(string path)
         {
@@ -38,6 +49,22 @@ namespace MapNotify
                     CreateWatchstonesConfig(path);
                 else if (path.Contains("HeistWarnings"))
                     CreateHeistConfig(path);
+
+            return GenDictionary(path).ToDictionary(line => line[0], line =>
+            {
+                bool bricking = false;
+                if (line.Length > 3)
+                    bool.TryParse(line[3] ?? null, out bricking);
+                var preloadAlerConfigLine = new StyledText { Text = line[1], Color = HexToSDXVector4(line[2]), Bricking = bricking };
+                return preloadAlerConfigLine;
+            });
+        }
+
+        public Dictionary<string, StyledText> LoadConfigBad(string path)
+        {
+            if (!File.Exists(path))
+                if (path.Contains("ModWarnings"))
+                    CreateBadModConfig(path);
 
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
@@ -100,6 +127,52 @@ MapChilledGround;Chilled Ground;CCCC00FF
 MapBurningGround;Burning Ground;CCCC00FF";
             File.WriteAllText(path, outFile);
             LogMessage("Created ModWarnings.txt...");
+            #endregion
+        }
+
+        public void CreateBadModConfig(string path)
+        {
+            #region Create Default Map Bad Config
+            new FileInfo(path).Directory.Create();
+            string outFile =
+@"#Contains;Name in tooltip;RGBA colour code
+# REFLECT
+ElementalReflect;Elemental Reflect;FF0000FF
+PhysicalReflect;Physical Reflect;FF0000FF
+# LEECH
+MapMonsterLifeLeechImmunity;Cannot Leech Life or Mana;FF0000FF
+# REGEN
+NoLifeESRegen;No Regen;FF007FFF
+MapPlayerReducedRegen;60%% Less Regen;FF007FFF
+# MAX RES
+MapPlayerMaxResists;Max Res Down;FF007FFF
+# CURSES AND EE
+MapPlayerCurseEnfeeble;Enfeeble;FF00FFFF
+MapPlayerCurseElementalWeak;Elemental Weakness;FF00FFFF
+MapPlayerCurseVuln;Vulnerability;FF00FFFF
+MapPlayerCurseTemp;Temporal Chains;FF00FFFF
+MapPlayerElementalEquilibrium;Elemental Equilibrium;FF00FFFF
+# BOSSES
+MapTwoBosses;Twinned;00FF00FF
+MapDangerousBoss;Boss Damage & Speed;00FF00FF
+MapMassiveBoss;Boss AoE & Life;00FF00FF
+# MONSTERS
+MapMonsterColdDamage;Extra Phys as Cold;FF007FFF
+MapMonsterFireDamage;Extra Phys as Fire;FF007FFF
+MapMonsterLightningDamage;Extra Phys as Lightning;FF007FFF
+MapMonsterLife;More Monster Life;FF007FFF
+MapMonsterFast;Monster Speed;FF007FFF
+# OTHER
+MapBeyondLeague;Beyond;FF7F00FF
+#MapBloodlinesModOnMagicsMapWorld;Bloodlines;FF7F00FF
+#MapNemesis;Nemesis;FF7F00FF
+# GROUND
+MapDesecratedGround;Desecrated Ground;CCCC00FF
+MapShockedGround;Shocked Ground;CCCC00FF
+MapChilledGround;Chilled Ground;CCCC00FF
+MapBurningGround;Burning Ground;CCCC00FF";
+            File.WriteAllText(path, outFile);
+            LogMessage("Created BadModWarnings.txt...");
             #endregion
         }
 

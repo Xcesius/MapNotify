@@ -105,6 +105,8 @@ namespace MapNotify
                 Settings.ShowForInvitations.Value = Checkbox("Display for Maven Invitations", Settings.ShowForInvitations);
                 Settings.AlwaysShowCompletionBorder.Value = Checkbox("Style tooltip border on incomplete maps", Settings.AlwaysShowCompletionBorder);
                 Settings.BoxForBricked.Value = Checkbox("Border on bricked maps in inventory", Settings.BoxForBricked);
+                Settings.BoxForMapWarnings.Value = Checkbox("Border on Map Mod Warnings in inventory and Stash", Settings.BoxForMapWarnings);
+                Settings.BoxForMapBadWarnings.Value = Checkbox("Border on Bad Map Mods in inventory and Stash", Settings.BoxForMapBadWarnings);
                 ImGui.SameLine(); HelpMarker("Add ';true' after a line in the config files to mark it as a bricked mod.");
 
             }
@@ -170,6 +172,7 @@ namespace MapNotify
                 Settings.AwakenedIncomplete = ColorButton("Awakened Incomplete", Settings.AwakenedIncomplete);
 
                 Settings.Bricked = ColorButton("Bricked Map", Settings.Bricked);
+                Settings.MapBorderWarnings = ColorButton("Show MapWarningBorder", Settings.MapBorderWarnings);
             }
             
             if (ImGui.TreeNodeEx("Config Files and Other", ImGuiTreeNodeFlags.CollapsingHeader))

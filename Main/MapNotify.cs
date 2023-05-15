@@ -1,4 +1,5 @@
 ﻿using ExileCore;
+using ExileCore.Shared.Interfaces;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Enums;
@@ -10,6 +11,10 @@ using ExileCore.PoEMemory.Elements;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
+using ExileCore.PoEMemory;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
+using static MapNotify.MapNotify;
+using ExileCore.Shared.Helpers;
 
 namespace MapNotify
 {
@@ -19,6 +24,7 @@ namespace MapNotify
         private static GameController gameController;
         private static IngameState ingameState;
         public static Dictionary<string, StyledText> WarningDictionary;
+        public static Dictionary<string, StyledText> BadModsDictionary;
 
         public override bool Initialise()
         {
@@ -26,6 +32,7 @@ namespace MapNotify
             Name = "Map Mod Notifications";
             windowArea = GameController.Window.GetWindowRectangle();
             WarningDictionary = LoadConfigs();
+            BadModsDictionary = LoadConfigBadMod();
             gameController = GameController;
             ingameState = gameController.IngameState;
             BuildRegions();
@@ -96,7 +103,7 @@ namespace MapNotify
                     !entity.Path.Contains("ShaperFragment") &&
                     !entity.Path.Contains("VaalFragment2_") &&
                     !classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") &&
-                    !classID.Contains("AtlasRegionUpgradeItem")) && 
+                    !classID.Contains("AtlasRegionUpgradeItem")) &&
                     !entity.Path.Contains("MavenMap") ||
                     (classID.Contains("HeistContract") || classID.Contains("HeistBlueprint")) && entity.GetComponent<Mods>()?.ItemRarity == ItemRarity.Normal) return;
 
@@ -106,7 +113,7 @@ namespace MapNotify
 
                 // Evaluate
                 var ItemDetails = Entity.GetHudComponent<ItemDetails>();
-                if(ItemDetails == null)
+                if (ItemDetails == null)
                 {
                     ItemDetails = new ItemDetails(Item, Entity);
                     Entity.SetHudComponent(ItemDetails);
@@ -174,7 +181,8 @@ namespace MapNotify
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                     }
-                                    else {
+                                    else
+                                    {
                                         if (!ItemDetails.Bonus)
                                         {
                                             ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
@@ -219,7 +227,8 @@ namespace MapNotify
                                     else
                                         ImGui.TextColored(new nuVector4(1f, 0.8f, 0.8f, 1f), $"{boss.Boss}");
                             }
-                        } else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
+                        }
+                        else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
                             foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
                                 if (boss.Complete)
                                     ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
@@ -270,9 +279,9 @@ namespace MapNotify
                         // Count Mods
                         if (Settings.ShowModCount && ItemDetails.ModCount != 0 && !classID.Contains("AtlasRegionUpgradeItem"))
                             if (entity.GetComponent<Base>().isCorrupted)
-                                ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"{(isInventory ? ItemDetails.ModCount-1 : ItemDetails.ModCount)} Mods, Corrupted");
+                                ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"{(isInventory ? ItemDetails.ModCount - 1 : ItemDetails.ModCount)} Mods, Corrupted");
                             else
-                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{(isInventory ? ItemDetails.ModCount-1 : ItemDetails.ModCount)} Mods");
+                                ImGui.TextColored(new nuVector4(1f, 1f, 1f, 1f), $"{(isInventory ? ItemDetails.ModCount - 1 : ItemDetails.ModCount)} Mods");
 
                         // Mod StyledTexts
                         if (Settings.ShowModWarnings)
@@ -293,8 +302,8 @@ namespace MapNotify
 
                             if (ItemDetails.Bricked)
                                 ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.Bricked), 0f, 0, Settings.BorderThickness.Value);
-                            else if(ItemDetails.ZanaMissionType != ObjectiveType.None && bcol.HasValue)
-                                    ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(bcol.Value), 0f, 0, Settings.BorderThickness.Value);
+                            else if (ItemDetails.ZanaMissionType != ObjectiveType.None && bcol.HasValue)
+                                ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(bcol.Value), 0f, 0, Settings.BorderThickness.Value);
                             else if (Settings.CompletionBorder && !ItemDetails.Completed)
                                 ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.Incomplete));
                             else if (Settings.CompletionBorder && !ItemDetails.Bonus)
@@ -327,7 +336,7 @@ namespace MapNotify
                 }
             }
         }
-        
+
         public override void Render()
         {
             if (ingameState.IngameUi.Atlas.IsVisible)
@@ -366,19 +375,83 @@ namespace MapNotify
 
             if (ingameState.IngameUi.InventoryPanel.IsVisible)
             {
-                foreach(var item in ingameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory].VisibleInventoryItems)
+                foreach (var item in ingameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory].VisibleInventoryItems)
                 {
                     if (!item.Item.HasComponent<ExileCore.PoEMemory.Components.Map>())
-                        continue;                    
-                    var ItemDetails = item.Item.GetHudComponent<ItemDetails>() ?? null;
-                    if (ItemDetails == null)
+                        continue;
+                    // Get the item's details component or create a new one if it doesn't exist
+                    var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
+                    item.Item.SetHudComponent(itemDetails);
+
+                    // Checking if we have Warning Setting or Bad Mods
+                    if (Settings.BoxForMapWarnings)
                     {
-                        ItemDetails = new ItemDetails(item, item.Item);
-                        item.Item.SetHudComponent(ItemDetails);
+                        // Check if the item is "bricked" or has certain mods with warnings
+                        if ((itemDetails.Bricked || itemDetails.ModCount > 0) && item.Item.GetComponent<Mods>()?.ItemMods
+                            .Where(x => !x.Group.Contains("MapAtlasInfluence"))
+                            .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
+                        {
+                            // Draw a red frame around the item's bounding rectangle
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                        }
                     }
-                    if (ItemDetails.Bricked) Graphics.DrawFrame(item.GetClientRect(), Color.Red, 2);
+
+                    if (Settings.BoxForMapBadWarnings)
+                    {
+                        // Check if the item is "bricked" or has certain mods with warnings
+                        if ((itemDetails.Bricked || itemDetails.ModCount > 0) && item.Item.GetComponent<Mods>()?.ItemMods
+                            .Where(x => !x.Group.Contains("MapAtlasInfluence"))
+                            .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
+                        {
+                            // Draw a red frame around the item's bounding rectangle
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                        }
+                    }
                 }
             }
+
+            // Check if the stash interface is visible and there is a visible stash present
+            if (ingameState.IngameUi.StashElement.IsVisible && ingameState.IngameUi.StashElement.VisibleStash != null)
+            {
+                // Iterate through each item in the visible stash's inventory
+                foreach (var item in ingameState.IngameUi.StashElement.VisibleStash.VisibleInventoryItems)
+                {
+                    // Skip the item if it doesn't have a "Map" component
+                    if (!item.Item.HasComponent<ExileCore.PoEMemory.Components.Map>())
+                        continue;
+
+                    // Get the item's details component or create a new one if it doesn't exist
+                    var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
+                    item.Item.SetHudComponent(itemDetails);
+
+                    // Checking if we have Warning Setting or Bad Mods
+                    if(Settings.BoxForMapWarnings)
+                    {
+                        // Check if the item is "bricked" or has certain mods with warnings
+                        if ((itemDetails.Bricked || itemDetails.ModCount > 0) && item.Item.GetComponent<Mods>()?.ItemMods
+                            .Where(x => !x.Group.Contains("MapAtlasInfluence"))
+                            .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
+                        {
+                            // Draw a red frame around the item's bounding rectangle
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                        }
+                    }
+
+                    if (Settings.BoxForMapBadWarnings)
+                    {
+                        // Check if the item is "bricked" or has certain mods with warnings
+                        if ((itemDetails.Bricked || itemDetails.ModCount > 0) && item.Item.GetComponent<Mods>()?.ItemMods
+                            .Where(x => !x.Group.Contains("MapAtlasInfluence"))
+                            .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
+                        {
+                            // Draw a red frame around the item's bounding rectangle
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                        }
+                    }
+                }
+            }
+
+
         }
     }
 }

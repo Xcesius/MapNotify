@@ -5,7 +5,10 @@ using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.PoEMemory.Models;
 using ExileCore.Shared.Enums;
 using SharpDX;
+using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
@@ -113,6 +116,7 @@ namespace MapNotify
             public List<(string Boss, bool Complete)> MavenBosses { get; set; }
         }
 
+
         public class ItemDetails
         {
             public ItemDetails(NormalInventoryItem Item, Entity Entity)
@@ -120,12 +124,17 @@ namespace MapNotify
                 this.Item = Item;
                 this.Entity = Entity;
                 ActiveWarnings = new List<StyledText>();
+                ActiveBadMods = new List<StyledText>();
                 Update();
             }
 
+
+
             public NormalInventoryItem Item { get; }
+            public ServerInventory.InventSlotItem ItemS { get; }
             public Entity Entity { get; }
             public List<StyledText> ActiveWarnings { get; set; }
+            public List<StyledText> ActiveBadMods { get; set; }
             public StyledText ZanaMod { get; set; }
             public ObjectiveType ZanaMissionType { get; set; }
             public nuVector4 ItemColor { get; set; }
@@ -151,6 +160,7 @@ namespace MapNotify
                 string ItemName = BaseItem.BaseName;
                 ClassID = BaseItem.ClassName;
                 MavenDetails mavenDetails = new MavenDetails();
+                
 
                 int packSize = 0;
                 int quantity = Entity.GetComponent<Quality>()?.ItemQuality ?? 0;
@@ -206,11 +216,33 @@ namespace MapNotify
                             #endregion
                             quantity += mod.Value1;
                             packSize += mod.Value3;
-                            if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
+
+                                if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
                             {
                                 StyledText warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
-                                if (warning.Bricking) Bricked = true;
+                                if (warning.Bricking)
+                                {
+                                    Bricked = true;
+                                }
                                 ActiveWarnings.Add(warning);
+
+                               // if (mod.Name.Equals("warningmods"))
+                              //  {
+                               // }
+                            }
+
+                            if (BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
+                            {
+                                StyledText bad = BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
+                                if (bad.Bricking)
+                                {
+                                    Bricked = true;
+                                }
+                                ActiveBadMods.Add(bad);
+
+                                // if (mod.Name.Equals("warningmods"))
+                                //  {
+                                // }
                             }
                         }
                     }
