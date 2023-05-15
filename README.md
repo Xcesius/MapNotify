@@ -5,8 +5,6 @@ Also covers Heists, Watchstones and Maven Invitations, including instantly displ
 
 Holding alt over an elder guardian map will also display that information.
 
-Primarily targetted at TehCheat's non-public HUD but should work on Queuete's as long as the offsets are up to date as it uses no esoteric features.
-
 ![Image](https://i.imgur.com/sST1Zxi.png)
 
 ![Image](https://i.imgur.com/4GY3sNf.png)
