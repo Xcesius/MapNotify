@@ -10,7 +10,10 @@
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
   <ItemGroup>
+	<Compile Remove="Properties\**" />
+	<EmbeddedResource Remove="Properties\**" />
 	<None Remove="images\*.png" />
+	<None Remove="Properties\**" />
   </ItemGroup>
   <ItemGroup>
 	<Content Include="images\*.png">
@@ -31,10 +34,6 @@
     <Reference Include="GameOffsets">
       <HintPath>..\..\..\GameOffsets.dll</HintPath>
     </Reference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>
 	
