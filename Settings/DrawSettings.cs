@@ -83,12 +83,41 @@ namespace MapNotify
             }
         }
 
+        private string[] excludedFiles = new string[] { "HeistWarnings.txt", "ModWarnings.txt", "SextantWarnings.txt", "WatchstoneWarnings.txt" };
+
+        public string SelectFile()
+        {
+            // Get all .txt files in the directory
+            string[] files = Directory.GetFiles(ConfigDirectory, "*.txt");
+
+            // Filter out the excluded files
+            files = files.Where(f => !excludedFiles.Contains(Path.GetFileName(f))).ToArray();
+
+            // If BadModWarningsLoader.Value is null or empty, set it to the first file in the list
+            if (string.IsNullOrEmpty(Settings.BadModWarningsLoader.Value) && files.Length > 0)
+            {
+                Settings.BadModWarningsLoader.Value = files[0];
+            }
+
+            // Create a TreeNodeEx for each remaining file
+            foreach (string file in files)
+            {
+                if (ImGui.Selectable(file, Settings.BadModWarningsLoader.Value == file))
+                {
+                    Settings.BadModWarningsLoader.Value = file;
+                }
+            }
+
+            // Return the currently selected file
+            return Settings.BadModWarningsLoader.Value;
+        }
+
         public override void DrawSettings()
         {
-            ImGui.Text("Plugin by Lachrymatory. https://github.com/Lachrymatory/MapNotify/");
+            ImGui.Text("Plugin by Lachrymatory. -- Edited by Xcesius https://github.com/Xcesius/MapNotify/");
             ImGui.Text("Please give suggestions, report issues, etc. below:");
-            if (ImGui.Button("Lachrymatory's GitHub")) 
-                System.Diagnostics.Process.Start("https://github.com/Lachrymatory/MapNotify/");
+            if (ImGui.Button("Xcesius's GitHub")) 
+                System.Diagnostics.Process.Start("https://github.com/Xcesius/MapNotify/");
             ImGui.Separator();
 
 
@@ -107,7 +136,9 @@ namespace MapNotify
                 Settings.BoxForBricked.Value = Checkbox("Border on bricked maps in inventory", Settings.BoxForBricked);
                 Settings.BoxForMapWarnings.Value = Checkbox("Border on Map Mod Warnings in inventory and Stash", Settings.BoxForMapWarnings);
                 Settings.BoxForMapBadWarnings.Value = Checkbox("Border on Bad Map Mods in inventory and Stash", Settings.BoxForMapBadWarnings);
-                ImGui.SameLine(); HelpMarker("Add ';true' after a line in the config files to mark it as a bricked mod.");
+                SelectFile();
+                ImGui.Text($"Bad Mod Warnings File: {Settings.BadModWarningsLoader.Value}");
+               // ImGui.SameLine(); HelpMarker("Add ';true' after a line in the config files to mark it as a bricked mod.");
 
             }
 

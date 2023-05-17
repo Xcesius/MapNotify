@@ -1,4 +1,6 @@
 ﻿using ExileCore;
+using ImGuiNET;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,21 +13,22 @@ namespace MapNotify
         public void ResetConfigs()
         {
             LogMessage("Deleting existing config files...");
-            File.Delete(Path.Combine(DirectoryFullName, "ModWarnings.txt"));
-            File.Delete(Path.Combine(DirectoryFullName, "BadModWarnings.txt"));
-            File.Delete(Path.Combine(DirectoryFullName, "SextantWarnings.txt"));
-            File.Delete(Path.Combine(DirectoryFullName, "HeistWarnings.txt"));
-            File.Delete(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "ModWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "BadModWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "SextantWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "HeistWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "WatchstoneWarnings.txt"));
             WarningDictionary = LoadConfigs();
             BadModsDictionary = LoadConfigBadMod();
+
         }
         public Dictionary<string, StyledText> LoadConfigs()
         {
             Dictionary<string, StyledText> FullDict = new Dictionary<string, StyledText>();
-            LoadConfig(Path.Combine(DirectoryFullName, "ModWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
-            LoadConfig(Path.Combine(DirectoryFullName, "SextantWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
-            LoadConfig(Path.Combine(DirectoryFullName, "HeistWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
-            LoadConfig(Path.Combine(DirectoryFullName, "WatchstoneWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
+            LoadConfig(Path.Combine(ConfigDirectory, "ModWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
+            LoadConfig(Path.Combine(ConfigDirectory, "SextantWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
+            LoadConfig(Path.Combine(ConfigDirectory, "HeistWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
+            LoadConfig(Path.Combine(ConfigDirectory, "WatchstoneWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LogMessage("Loaded config files...");
             return FullDict;
         }
@@ -34,8 +37,18 @@ namespace MapNotify
         public Dictionary<string, StyledText> LoadConfigBadMod()
         {
             Dictionary<string, StyledText> FullDict1 = new Dictionary<string, StyledText>();
-            LoadConfigBad(Path.Combine(DirectoryFullName, "BadModWarnings.txt")).ToList().ForEach(x => FullDict1.Add(x.Key, x.Value));
-            LogMessage("Loading Bad Mods ..");
+            string selectedFile = SelectFile();
+            string CreateDefaultPath = Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt");
+
+                if (!File.Exists(CreateDefaultPath))
+                    if (CreateDefaultPath.Contains("DefaultBadMapMods"))
+                        CreateModConfig(CreateDefaultPath);
+
+            if (selectedFile != null)
+            {
+                LoadConfigBad(Path.Combine(ConfigDirectory, selectedFile)).ToList().ForEach(x => FullDict1.Add(x.Key, x.Value));
+                LogMessage("Loading Bad Mods ..");
+            }
             return FullDict1;
         }
         public Dictionary<string, StyledText> LoadConfig(string path)
@@ -62,10 +75,6 @@ namespace MapNotify
 
         public Dictionary<string, StyledText> LoadConfigBad(string path)
         {
-            if (!File.Exists(path))
-                if (path.Contains("ModWarnings"))
-                    CreateBadModConfig(path);
-
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
                 bool bricking = false;
@@ -172,7 +181,7 @@ MapShockedGround;Shocked Ground;CCCC00FF
 MapChilledGround;Chilled Ground;CCCC00FF
 MapBurningGround;Burning Ground;CCCC00FF";
             File.WriteAllText(path, outFile);
-            LogMessage("Created BadModWarnings.txt...");
+            LogMessage("Created BadModsWarningsDefault.txt...");
             #endregion
         }
 

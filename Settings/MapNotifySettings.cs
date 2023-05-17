@@ -36,6 +36,7 @@ namespace MapNotify
             BoxForBricked = new ToggleNode(true);
             BoxForMapWarnings = new ToggleNode(true);
             BoxForMapBadWarnings = new ToggleNode(true);
+            BadModWarningsLoader = new ListNode();
 
             ElderGuardian = new Vector4(0.32f, 0.55f, 0.78f, 1f);
             ShaperGuardian = new Vector4(0.32f, 0.4f, 0.78f, 1f);
@@ -103,6 +104,8 @@ namespace MapNotify
         public ToggleNode BoxForBricked { get; set; }
         public ToggleNode BoxForMapWarnings { get; set; }
         public ToggleNode BoxForMapBadWarnings { get; set; }
+
+        public ListNode BadModWarningsLoader { get; set; }
         public Vector4 ElderGuardian { get; set; }
         public Vector4 ShaperGuardian { get; set; }
         public Vector4 Harvest { get; set; }
