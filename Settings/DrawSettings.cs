@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ExileCore;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
@@ -12,7 +13,7 @@ using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
 {
-    partial class MapNotify
+    partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     {
         public bool debug;
         public bool maven;
@@ -50,6 +51,35 @@ namespace MapNotify
             return boolValue;
         }
 
+        private string[] excludedFiles = new string[] { "HeistWarnings.txt", "ModWarnings.txt", "SextantWarnings.txt", "WatchstoneWarnings.txt" };
+
+        public string SelectFile()
+        {
+            // Get all .txt files in the directory
+            string[] files = Directory.GetFiles(ConfigDirectory, "*.txt");
+
+            // Filter out the excluded files
+            files = files.Where(f => !excludedFiles.Contains(Path.GetFileName(f))).ToArray();
+
+            // If BadModWarningsLoader.Value is null or empty, set it to the first file in the list
+            if (string.IsNullOrEmpty(Settings.BadModWarningsLoader.Value) && files.Length > 0)
+            {
+                Settings.BadModWarningsLoader.Value = files[0];
+            }
+
+            // Create a TreeNodeEx for each remaining file
+            foreach (string file in files)
+            {
+                if (ImGui.Selectable(file, Settings.BadModWarningsLoader.Value == file))
+                {
+                    Settings.BadModWarningsLoader.Value = file;
+                }
+            }
+
+            // Return the currently selected file
+            return Settings.BadModWarningsLoader.Value;
+        }
+
         public static void DebugHover()
         {
             var uiHover = ingameState.UIHover ?? null;
@@ -81,35 +111,6 @@ namespace MapNotify
             {
                 hoverMods.Clear();
             }
-        }
-
-        private string[] excludedFiles = new string[] { "HeistWarnings.txt", "ModWarnings.txt", "SextantWarnings.txt", "WatchstoneWarnings.txt" };
-
-        public string SelectFile()
-        {
-            // Get all .txt files in the directory
-            string[] files = Directory.GetFiles(ConfigDirectory, "*.txt");
-
-            // Filter out the excluded files
-            files = files.Where(f => !excludedFiles.Contains(Path.GetFileName(f))).ToArray();
-
-            // If BadModWarningsLoader.Value is null or empty, set it to the first file in the list
-            if (string.IsNullOrEmpty(Settings.BadModWarningsLoader.Value) && files.Length > 0)
-            {
-                Settings.BadModWarningsLoader.Value = files[0];
-            }
-
-            // Create a TreeNodeEx for each remaining file
-            foreach (string file in files)
-            {
-                if (ImGui.Selectable(file, Settings.BadModWarningsLoader.Value == file))
-                {
-                    Settings.BadModWarningsLoader.Value = file;
-                }
-            }
-
-            // Return the currently selected file
-            return Settings.BadModWarningsLoader.Value;
         }
 
         public override void DrawSettings()

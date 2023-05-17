@@ -14,12 +14,12 @@ namespace MapNotify
         {
             LogMessage("Deleting existing config files...");
             File.Delete(Path.Combine(ConfigDirectory, "ModWarnings.txt"));
-            File.Delete(Path.Combine(ConfigDirectory, "BadModWarnings.txt"));
+            File.Delete(Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt"));
             File.Delete(Path.Combine(ConfigDirectory, "SextantWarnings.txt"));
             File.Delete(Path.Combine(ConfigDirectory, "HeistWarnings.txt"));
             File.Delete(Path.Combine(ConfigDirectory, "WatchstoneWarnings.txt"));
             WarningDictionary = LoadConfigs();
-            BadModsDictionary = LoadConfigBadMod();
+          //  BadModsDictionary = LoadConfigBadMod();
 
         }
         public Dictionary<string, StyledText> LoadConfigs()
@@ -37,20 +37,37 @@ namespace MapNotify
         public Dictionary<string, StyledText> LoadConfigBadMod()
         {
             Dictionary<string, StyledText> FullDict1 = new Dictionary<string, StyledText>();
-            string selectedFile = SelectFile();
-            string CreateDefaultPath = Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt");
+            string selectedFile = Settings.BadModWarningsLoader.Value;
 
-                if (!File.Exists(CreateDefaultPath))
-                    if (CreateDefaultPath.Contains("DefaultBadMapMods"))
-                        CreateModConfig(CreateDefaultPath);
-
-            if (selectedFile != null)
+            if (selectedFile != null && File.Exists(Path.Combine(ConfigDirectory, selectedFile)))
             {
-                LoadConfigBad(Path.Combine(ConfigDirectory, selectedFile)).ToList().ForEach(x => FullDict1.Add(x.Key, x.Value));
+                var entries = LoadConfigBad(Path.Combine(ConfigDirectory, selectedFile));
+                if (entries != null)
+                {
+                    foreach (var x in entries)
+                    {
+                        if (!FullDict1.ContainsKey(x.Key)) FullDict1.Add(x.Key, x.Value);
+                    }
+                }
                 LogMessage("Loading Bad Mods ..");
             }
+            else if (File.Exists(Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt")))
+            {
+                var entries = LoadConfigBad(Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt"));
+                if (entries != null)
+                {
+                    foreach (var x in entries)
+                    {
+                        if (!FullDict1.ContainsKey(x.Key)) FullDict1.Add(x.Key, x.Value);
+                    }
+                }
+                LogMessage("Loading Default Bad Mods ..");
+            }
+
             return FullDict1;
         }
+
+
         public Dictionary<string, StyledText> LoadConfig(string path)
         {
             if (!File.Exists(path))
@@ -75,6 +92,13 @@ namespace MapNotify
 
         public Dictionary<string, StyledText> LoadConfigBad(string path)
         {
+            string CreateDefaultPath1 = Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt");
+
+            if (!File.Exists(CreateDefaultPath1))
+                if (CreateDefaultPath1.Contains("DefaultBadMapMods"))
+                    CreateBadModConfig(CreateDefaultPath1);
+
+
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
                 bool bricking = false;

@@ -15,6 +15,7 @@ using ExileCore.PoEMemory;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Header;
 using static MapNotify.MapNotify;
 using ExileCore.Shared.Helpers;
+using System.IO;
 
 namespace MapNotify
 {
@@ -86,6 +87,7 @@ namespace MapNotify
                     return null;
             }
         }
+
 
         public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
         {
