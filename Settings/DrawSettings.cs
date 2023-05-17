@@ -67,12 +67,21 @@ namespace MapNotify
                 Settings.BadModWarningsLoader.Value = files[0];
             }
 
-            // Create a TreeNodeEx for each remaining file
             foreach (string file in files)
             {
                 if (ImGui.Selectable(file, Settings.BadModWarningsLoader.Value == file))
                 {
+                    var previousValue = Settings.BadModWarningsLoader.Value;
                     Settings.BadModWarningsLoader.Value = file;
+
+                    // If the value has changed, invoke the OnValueSelected action
+                    if (previousValue != Settings.BadModWarningsLoader.Value)
+                    {
+                        Settings.BadModWarningsLoader.OnValueSelected(Settings.BadModWarningsLoader.Value);
+
+                        // Update the BadModsDictionary
+                        BadModsDictionary = LoadConfigBadMod();
+                    }
                 }
             }
 
@@ -209,7 +218,7 @@ namespace MapNotify
             
             if (ImGui.TreeNodeEx("Config Files and Other", ImGuiTreeNodeFlags.CollapsingHeader))
             {
-                if (ImGui.Button("Reload Warnings Text Files")) WarningDictionary = LoadConfigs();
+                if (ImGui.Button("Reload Warnings Text Files")) { WarningDictionary = LoadConfigs(); BadModsDictionary = LoadConfigBadMod(); }
                 if (ImGui.Button("Recreate Default Warnings Text Files")) ResetConfigs();
                 ImGui.SameLine(); HelpMarker("This will irreversibly delete all your existing warnings config files!");
                 Settings.PadForNinjaPricer.Value = Checkbox("Pad for Ninja Pricer", Settings.PadForNinjaPricer);
