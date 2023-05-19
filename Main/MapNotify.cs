@@ -32,7 +32,7 @@ namespace MapNotify
             base.Initialise();
             Name = "Map Mod Notifications";
             windowArea = GameController.Window.GetWindowRectangle();
-            WarningDictionary = LoadConfigs();
+            WarningDictionary = LoadConfigs()   ;
             BadModsDictionary = LoadConfigBadMod();
             gameController = GameController;
             ingameState = gameController.IngameState;
@@ -91,6 +91,7 @@ namespace MapNotify
 
         public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
         {
+            var pushedColors = 0;
             var entity = Entity;
             var item = Item;
             if (entity.Address != 0 && entity.IsValid)
@@ -157,6 +158,7 @@ namespace MapNotify
                     // create the imgui faux tooltip
                     var _opened = true;
                     // Color background
+                    pushedColors += 1;
                     ImGui.PushStyleColor(ImGuiCol.WindowBg, 0xFF3F3F3F);
                     if (ImGui.Begin($"{entity.Address}", ref _opened,
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
@@ -204,6 +206,7 @@ namespace MapNotify
                                         ImGui.TextColored(new nuVector4(0.0f, 0.9f, 0.77f, 1f), $"Uncharted");
                                     }
                                     ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
+                                    pushedColors += 1;
                                 }
                                 if (Settings.ShowMapRegion)
                                 {
@@ -335,6 +338,7 @@ namespace MapNotify
                         }
                     }
                     ImGui.End();
+                    ImGui.PopStyleColor(pushedColors);
                 }
             }
         }

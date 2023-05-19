@@ -19,7 +19,7 @@ namespace MapNotify
             File.Delete(Path.Combine(ConfigDirectory, "HeistWarnings.txt"));
             File.Delete(Path.Combine(ConfigDirectory, "WatchstoneWarnings.txt"));
             WarningDictionary = LoadConfigs();
-          //  BadModsDictionary = LoadConfigBadMod();
+            BadModsDictionary = LoadConfigBadMod();
 
         }
         public Dictionary<string, StyledText> LoadConfigs()
