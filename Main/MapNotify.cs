@@ -89,10 +89,8 @@ namespace MapNotify
         }
 
 
-               public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
+        public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
         {
-            var pushedColors = 0;
-
             var entity = Entity;
             var item = Item;
             if (entity.Address != 0 && entity.IsValid)
@@ -158,10 +156,8 @@ namespace MapNotify
 
                     // create the imgui faux tooltip
                     var _opened = true;
-
                     // Color background
                     ImGui.PushStyleColor(ImGuiCol.WindowBg, 0xFF3F3F3F);
-                    pushedColors += 1;
                     if (ImGui.Begin($"{entity.Address}", ref _opened,
                         ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.AlwaysAutoResize | ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize |
                         ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoSavedSettings | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.NoNavInputs))
@@ -208,7 +204,6 @@ namespace MapNotify
                                         ImGui.TextColored(new nuVector4(0.0f, 0.9f, 0.77f, 1f), $"Uncharted");
                                     }
                                     ImGui.PushStyleColor(ImGuiCol.Separator, new nuVector4(1f, 1f, 1f, 0.2f));
-                                    pushedColors += 1;
                                 }
                                 if (Settings.ShowMapRegion)
                                 {
@@ -340,7 +335,6 @@ namespace MapNotify
                         }
                     }
                     ImGui.End();
-                    ImGui.PopStyleColor(pushedColors);
                 }
             }
         }
@@ -400,7 +394,7 @@ namespace MapNotify
                             .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
 
@@ -412,7 +406,7 @@ namespace MapNotify
                             .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
                 }
@@ -441,7 +435,7 @@ namespace MapNotify
                             .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
 
@@ -453,7 +447,7 @@ namespace MapNotify
                             .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), 2);
+                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
                 }

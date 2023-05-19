@@ -214,6 +214,8 @@ namespace MapNotify
 
                 Settings.Bricked = ColorButton("Bricked Map", Settings.Bricked);
                 Settings.MapBorderWarnings = ColorButton("Show MapWarningBorder", Settings.MapBorderWarnings);
+                Settings.MapBorderBad = ColorButton("Show BadMapBorder", Settings.MapBorderBad);
+                Settings.BorderThicknessMap.Value = IntSlider("Border Thickness for maps##BorderThickness Maps", Settings.BorderThicknessMap);
             }
             
             if (ImGui.TreeNodeEx("Config Files and Other", ImGuiTreeNodeFlags.CollapsingHeader))

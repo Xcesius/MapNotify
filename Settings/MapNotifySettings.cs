@@ -17,6 +17,7 @@ namespace MapNotify
             ColorQuantityPercent = new ToggleNode(true);
             ColorQuantity = new RangeNode<int>(100, 0, 220);
             BorderThickness = new RangeNode<int>(1, 1, 6);
+            BorderThicknessMap = new RangeNode<int>(2, 1, 6);
             ShowPackSizePercent = new ToggleNode(true);
             ShowModWarnings = new ToggleNode(true);
             ShowCompletion = new ToggleNode(true);
@@ -63,7 +64,8 @@ namespace MapNotify
             AwakenedIncomplete = new Vector4(1f, 0.9f, 0f, 0.3f);
 
             Bricked = new Vector4(1f, 0f, 0f, 1f);
-            MapBorderWarnings = new Vector4(1f, 0f, 0f, 1f);
+            MapBorderBad = new Vector4(1f, 0f, 0f, 1f);
+            MapBorderWarnings = new Vector4(0f, 1f, 0f, 1f);
         }
         public bool TargettingHaewarkHamlet = false;
         public bool TargettingTirnsEnd = false;
@@ -129,5 +131,8 @@ namespace MapNotify
         public Vector4 AwakenedIncomplete { get; set; }
         public Vector4 Bricked { get; set; }
         public Vector4 MapBorderWarnings { get; set; }
+
+        public Vector4 MapBorderBad { get; set; }
+        public RangeNode<int> BorderThicknessMap { get; set; }
     }
 }
