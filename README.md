@@ -28,3 +28,5 @@ Holding alt over an elder guardian map will also display that information.
 **Maven Bosses:** Lists what bosses are witnessed for quest and uncharted realms Maven Invitations. Also includes mod warnings for the latter type if you configure them in ModWarnings.txt.
 
 **Border on Maps:** Shows a border on map based on Warning or Bad Mods setting. If you are using Warning setting, modify ModWarnings.txt. If you are using Bad Mods only, use BadModWarnings.txt. Customizable Border Color, Border Thickness TBA.
+
+Find modifiers at https://www.poewiki.net/wiki/List_of_modifiers_for_maps_(high_tier)
