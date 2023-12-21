@@ -220,7 +220,7 @@ namespace MapNotify
                                 if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
                             {
                                 StyledText warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
-                                if (warning.Bricking)
+                                if (warning.Bricking || (Settings.ShowQuantityPercent && quantity <= Settings.MapQuantSetting) || (Settings.ShowPackSizePercent && packSize <= Settings.MapPackSetting))
                                 {
                                     Bricked = true;
                                 }
