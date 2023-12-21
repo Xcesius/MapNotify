@@ -164,6 +164,7 @@ namespace MapNotify
 
                 int packSize = 0;
                 int quantity = Entity.GetComponent<Quality>()?.ItemQuality ?? 0;
+                var settings = new MapNotifySettings();
                 // get and evaluate mods
                 var mapComponent = Entity.GetComponent<Map>() ?? null;
                 Tier = mapComponent?.Tier ?? -1;
@@ -220,7 +221,7 @@ namespace MapNotify
                                 if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
                             {
                                 StyledText warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
-                                if (warning.Bricking || (Settings.ShowQuantityPercent && quantity <= Settings.MapQuantSetting) || (Settings.ShowPackSizePercent && packSize <= Settings.MapPackSetting))
+                                if (warning.Bricking || (settings.ShowQuantityPercent && quantity <= settings.MapQuantSetting) || (settings.ShowPackSizePercent && packSize <= settings.MapPackSetting))
                                 {
                                     Bricked = true;
                                 }
