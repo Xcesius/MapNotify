@@ -87,6 +87,8 @@ namespace MapNotify
         public ToggleNode ColorQuantityPercent { get; set; }
         public RangeNode<int> ColorQuantity { get; set; }
         public RangeNode<int> BorderThickness { get; set; }
+        public RangeNode<int> MapQuantSetting { get; set; }
+        public RangeNode<int> MapPackSetting { get; set; }
         public ToggleNode ShowPackSizePercent { get; set; }
         public ToggleNode ShowModWarnings { get; set; }
         public ToggleNode ShowCompletion { get; set; }
