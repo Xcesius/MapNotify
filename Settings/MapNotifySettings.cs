@@ -18,6 +18,8 @@ namespace MapNotify
             ColorQuantity = new RangeNode<int>(100, 0, 220);
             BorderThickness = new RangeNode<int>(1, 1, 6);
             BorderThicknessMap = new RangeNode<int>(2, 1, 6);
+            MapQuantSetting = new RangeNode<int>(100, 0, 220);
+            MapPackSetting = new RangeNode<int>(100, 0, 220);
             ShowPackSizePercent = new ToggleNode(true);
             ShowModWarnings = new ToggleNode(true);
             ShowCompletion = new ToggleNode(true);
