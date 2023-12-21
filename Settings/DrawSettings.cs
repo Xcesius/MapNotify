@@ -215,6 +215,8 @@ namespace MapNotify
                 Settings.Bricked = ColorButton("Bricked Map", Settings.Bricked);
                 Settings.MapBorderWarnings = ColorButton("Show MapWarningBorder", Settings.MapBorderWarnings);
                 Settings.MapBorderBad = ColorButton("Show BadMapBorder", Settings.MapBorderBad);
+                Settings.MapQuantSetting.Value = IntSlider("##MapQuantSetting", Settings.MapQuantSetting);
+                Settings.MapPackSetting.Value = IntSlider("##MapPackSetting", Settings.MapPackSetting);
                 Settings.BorderThicknessMap.Value = IntSlider("Border Thickness for maps##BorderThickness Maps", Settings.BorderThicknessMap);
             }
             
