@@ -1,1 +1,502 @@
-
+[
+    {
+        "Mod type": "HeistContractAdditionalIntelligence",
+        "Effect": "Completing a Heist generates 3 additional RevealsHeist Chests have 25% chance to contain nothing",
+        "Name": "Additional Intelligence"
+    },
+    {
+        "Mod type": "HeistContractBetterTargetValue",
+        "Effect": "200% more Rogue's Marker value of primary Heist TargetRogue Equipment cannot be found",
+        "Name": "Better Target Value"
+    },
+    {
+        "Mod type": "HeistContractBloodlinesModOnMagics",
+        "Effect": "(20-30)% more Magic Monsters",
+        "Name": "Bloodlines Mod On Magics"
+    },
+    {
+        "Mod type": "MapBurningGroundMapWorlds",
+        "Effect": "Area has patches of Burning Ground28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Map Burning Ground Map Worlds"
+    },
+    {
+        "Mod type": "HeistContractBurningGround",
+        "Effect": "Area has patches of Burning Ground28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Burning Ground"
+    },
+    {
+        "Mod type": "HeistContractChestAlertLevel",
+        "Effect": "(27-30)% increased raising of Alert Level from opening Chests",
+        "Name": "Chest Alert Level"
+    },
+    {
+        "Mod type": "HeistContractChestRewardsDuplicated",
+        "Effect": "Heist Chests have a 100% chance to Duplicate their contentsMonsters have 100% more Life",
+        "Name": "Chest Rewards Duplicated"
+    },
+    {
+        "Mod type": "HeistContractChilledGround",
+        "Effect": "Area has patches of Chilled Ground28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Chilled Ground"
+    },
+    {
+        "Mod type": "HeistContractConsecratedGround",
+        "Effect": "Area has patches of Consecrated Ground28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Consecrated Ground"
+    },
+    {
+        "Mod type": "HeistContractDesecratedGround",
+        "Effect": "Area has patches of desecrated ground28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Desecrated Ground"
+    },
+    {
+        "Mod type": "HeistContractGainAlertLevelPassive",
+        "Effect": "Alert Level increases by 0.2% per second",
+        "Name": "Gain Alert Level Passive"
+    },
+    {
+        "Mod type": "HeistContractGangCut",
+        "Effect": "The Ring's Cut reduced by (15-13)%",
+        "Name": "Gang Cut"
+    },
+    {
+        "Mod type": "HeistContractGuardsLoseAlertLevel",
+        "Effect": "Guards remove Alert Level on Death",
+        "Name": "Guards Lose Alert Level"
+    },
+    {
+        "Mod type": "HeistContractGuardsRare",
+        "Effect": "Guards have 5% chance to be Rare",
+        "Name": "Guards Rare"
+    },
+    {
+        "Mod type": "HeistContractHexproof",
+        "Effect": "Monsters are Hexproof",
+        "Name": "Hexproof"
+    },
+    {
+        "Mod type": "HeistContractLockdownInstant",
+        "Effect": "Lockdown occurs immediately when Alert Level is full",
+        "Name": "Lockdown Instant"
+    },
+    {
+        "Mod type": "HeistContractMonsterAccuracyPlayersUnlockyDodge",
+        "Effect": "Players have -20% to amount of Suppressed Spell Damage PreventedMonsters have 50% increased Accuracy Rating",
+        "Name": "Monster Accuracy Players Unlocky Dodge"
+    },
+    {
+        "Mod type": "HeistContractMonsterAlertLevel",
+        "Effect": "(27-30)% increased raising of Alert Level from Killing Monsters",
+        "Name": "Monster Alert Level"
+    },
+    {
+        "Mod type": "HeistContractMonsterAreaOfEffect",
+        "Effect": "Monsters have 100% increased Area of Effect",
+        "Name": "Monster Area Of Effect"
+    },
+    {
+        "Mod type": "HeistContractMonsterCannotBeStunned",
+        "Effect": "Monsters cannot be Stunned(25-30)% more Monster Life",
+        "Name": "Monster Cannot Be Stunned"
+    },
+    {
+        "Mod type": "HeistContractMonsterChain",
+        "Effect": "Monsters' skills Chain 2 additional times",
+        "Name": "Monster Chain"
+    },
+    {
+        "Mod type": "HeistContractMonsterChaosDamage",
+        "Effect": "Monsters deal (31-35)% extra Physical Damage as ChaosMonsters Inflict Withered for 2 seconds on Hit",
+        "Name": "Monster Chaos Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterColdDamage",
+        "Effect": "Monsters deal (90-110)% extra Physical Damage as Cold",
+        "Name": "Monster Cold Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterCriticalStrikesAndDamage",
+        "Effect": "Monsters have (360-400)% increased Critical Strike Chance+(41-45)% to Monster Critical Strike Multiplier",
+        "Name": "Monster Critical Strikes And Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterDamage",
+        "Effect": "(22-25)% increased Monster Damage",
+        "Name": "Monster Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterElementalReflection",
+        "Effect": "Monsters reflect 18% of Elemental Damage",
+        "Name": "Monster Elemental Reflection"
+    },
+    {
+        "Mod type": "HeistContractMonsterFast",
+        "Effect": "(25-30)% increased Monster Movement Speed(35-45)% increased Monster Attack Speed(35-45)% increased Monster Cast Speed",
+        "Name": "Monster Fast"
+    },
+    {
+        "Mod type": "HeistContractMonsterFireDamage",
+        "Effect": "Monsters deal (90-110)% extra Physical Damage as Fire",
+        "Name": "Monster Fire Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterGuardingDamage",
+        "Effect": "Guards deal (27-30)% increased Damage",
+        "Name": "Monster Guarding Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterGuardingDamageReduction",
+        "Effect": "Guards take (30-27)% reduced Damage",
+        "Name": "Monster Guarding Damage Reduction"
+    },
+    {
+        "Mod type": "HeistContractMonsterLife",
+        "Effect": "(40-49)% more Monster Life",
+        "Name": "Monster Life"
+    },
+    {
+        "Mod type": "HeistContractMonsterLifeLeechImmunity",
+        "Effect": "Cannot Leech from Monsters",
+        "Name": "Monster Life Leech Immunity"
+    },
+    {
+        "Mod type": "HeistContractMonsterLightningDamage",
+        "Effect": "Monsters deal (90-110)% extra Physical Damage as Lightning",
+        "Name": "Monster Lightning Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterMultipleProjectiles",
+        "Effect": "Monsters fire 2 additional Projectiles",
+        "Name": "Monster Multiple Projectiles"
+    },
+    {
+        "Mod type": "HeistContractMonsterPatrolAdditionalElite",
+        "Effect": "Patrol Packs have (26-30)% increased chance to be replaced by an Elite Patrol Pack",
+        "Name": "Monster Patrol Additional Elite"
+    },
+    {
+        "Mod type": "HeistContractMonsterPatrolDamage",
+        "Effect": "Patrolling Monsters deal (27-30)% increased Damage",
+        "Name": "Monster Patrol Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterPatrolDamageReduction",
+        "Effect": "Patrol Packs take (30-27)% reduced damage",
+        "Name": "Monster Patrol Damage Reduction"
+    },
+    {
+        "Mod type": "HeistContractMonsterPhysicalReflection",
+        "Effect": "Monsters reflect 18% of Physical Damage",
+        "Name": "Monster Physical Reflection"
+    },
+    {
+        "Mod type": "HeistContractMonsterPhysicalResistance",
+        "Effect": "+40% Monster Physical Damage Reduction",
+        "Name": "Monster Physical Resistance"
+    },
+    {
+        "Mod type": "HeistContractMonsterRewardRoomDamage",
+        "Effect": "Reward Room Monsters deal (27-30)% increased Damage",
+        "Name": "Monster Reward Room Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterRewardRoomDamageReduction",
+        "Effect": "Reward Room Monsters take (30-27)% reduced Damage",
+        "Name": "Monster Reward Room Damage Reduction"
+    },
+    {
+        "Mod type": "HeistContractMonstersAllDamageAlwaysIgnites",
+        "Effect": "All Monster Damage from Hits always Ignites",
+        "Name": "Monsters All Damage Always Ignites"
+    },
+    {
+        "Mod type": "HeistContractMonstersAllResistances",
+        "Effect": "+25% Monster Chaos Resistance+40% Monster Elemental Resistances",
+        "Name": "Monsters All Resistances"
+    },
+    {
+        "Mod type": "HeistContractMonstersAvoidPoisonBleedBlind",
+        "Effect": "Monsters have a 50% chance to avoid Poison, Impale, and Bleeding",
+        "Name": "Monsters Avoid Poison Bleed Blind"
+    },
+    {
+        "Mod type": "HeistContractMonstersBaseSelfCriticalMultiplier",
+        "Effect": "Monsters take (36-40)% reduced Extra Damage from Critical Strikes",
+        "Name": "Monsters Base Self Critical Multiplier"
+    },
+    {
+        "Mod type": "HeistContractMonstersBlindOnHit",
+        "Effect": "Monsters Blind on Hit",
+        "Name": "Monsters Blind On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersCantBeSlowedOrTaunted",
+        "Effect": "Monsters' Action Speed cannot be modified to below base valueMonsters cannot be Taunted",
+        "Name": "Monsters Cant Be Slowed Or Taunted"
+    },
+    {
+        "Mod type": "HeistContractMonstersChanceToInflictStatusAilments",
+        "Effect": "Monsters have a 20% chance to cause Elemental Ailments on Hit",
+        "Name": "Monsters Chance To Inflict Status Ailments"
+    },
+    {
+        "Mod type": "HeistContractMonstersChanceToSuppressSpells",
+        "Effect": "Monsters have +60% chance to Suppress Spell Damage",
+        "Name": "Monsters Chance To Suppress Spells"
+    },
+    {
+        "Mod type": "HeistContractMonstersCurseEffectOnSelfFinal",
+        "Effect": "60% less effect of Curses on Monsters",
+        "Name": "Monsters Curse Effect On Self Final"
+    },
+    {
+        "Mod type": "HeistContractMonstersEnduranceChargeOnHit",
+        "Effect": "Monsters gain an Endurance Charge on Hit",
+        "Name": "Monsters Endurance Charge On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersFrenzyChargeOnHit",
+        "Effect": "Monsters gain a Frenzy Charge on Hit",
+        "Name": "Monsters Frenzy Charge On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersHinderOnHit",
+        "Effect": "Monsters Hinder on Hit with Spells",
+        "Name": "Monsters Hinder On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonsterSideAreaDamage",
+        "Effect": "Reward Room Monsters deal (27-30)% increased Damage",
+        "Name": "Monster Side Area Damage"
+    },
+    {
+        "Mod type": "HeistContractMonsterSideAreaDamageReduction",
+        "Effect": "Reward Room Monsters take (30-27)% reduced Damage",
+        "Name": "Monster Side Area Damage Reduction"
+    },
+    {
+        "Mod type": "HeistContractMonstersImpaleOnHit",
+        "Effect": "Monsters have 60% chance to Impale with Attacks",
+        "Name": "Monsters Impale On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersMaimOnHit",
+        "Effect": "Monsters Maim on Hit with Attacks",
+        "Name": "Monsters Maim On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersMaximumLifeAddedEnergyShield",
+        "Effect": "Monsters gain (40-49)% of Maximum Life as Extra Maximum Energy Shield",
+        "Name": "Monsters Maximum Life Added Energy Shield"
+    },
+    {
+        "Mod type": "HeistContractMonstersPowerChargeOnHit",
+        "Effect": "Monsters gain a Power Charge on Hit",
+        "Name": "Monsters Power Charge On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonstersStealChargesOnHit",
+        "Effect": "Monsters steal Power, Frenzy and Endurance charges on Hit",
+        "Name": "Monsters Steal Charges On Hit"
+    },
+    {
+        "Mod type": "HeistContractMonsterStatusAilmentImmunity",
+        "Effect": "Monsters have 70% chance to Avoid Elemental Ailments",
+        "Name": "Monster Status Ailment Immunity"
+    },
+    {
+        "Mod type": "HeistContractNemesisModOnRares",
+        "Effect": "(20-30)% increased number of Rare Monsters",
+        "Name": "Nemesis Mod On Rares"
+    },
+    {
+        "Mod type": "HeistContractNoGangCut",
+        "Effect": "The Ring takes no Cut",
+        "Name": "No Gang Cut"
+    },
+    {
+        "Mod type": "HeistContractNoTravelCost",
+        "Effect": "No Travel Cost",
+        "Name": "No Travel Cost"
+    },
+    {
+        "Mod type": "HeistContractNPCCost",
+        "Effect": "(15-13)% reduced Hiring Fee",
+        "Name": "N P C Cost"
+    },
+    {
+        "Mod type": "HeistContractNPCPerksDoubled",
+        "Effect": "Rogue Perks are doubled50% reduced time before Lockdown",
+        "Name": "N P C Perks Doubled"
+    },
+    {
+        "Mod type": "HeistContractObjectiveSpeed",
+        "Effect": "(30-27)% reduced Job speed",
+        "Name": "Objective Speed"
+    },
+    {
+        "Mod type": "HeistContractPatrolsMagic",
+        "Effect": "Patrol Pack Members have 100% chance to be Magic",
+        "Name": "Patrols Magic"
+    },
+    {
+        "Mod type": "HeistContractPlayerArmourAlertLevel",
+        "Effect": "Players have 8% less Armour per 25% Alert Level",
+        "Name": "Player Armour Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerColdResistAlertLevel",
+        "Effect": "-5% Player Cold Resistance per 25% Alert Level",
+        "Name": "Player Cold Resist Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerCurseElementalWeakness",
+        "Effect": "Players are Cursed with Elemental Weakness",
+        "Name": "Player Curse Elemental Weakness"
+    },
+    {
+        "Mod type": "HeistContractPlayerCurseEnfeeblement",
+        "Effect": "Players are Cursed with Enfeeble",
+        "Name": "Player Curse Enfeeblement"
+    },
+    {
+        "Mod type": "HeistContractPlayerCurseTemporalChains",
+        "Effect": "Players are Cursed with Temporal Chains",
+        "Name": "Player Curse Temporal Chains"
+    },
+    {
+        "Mod type": "HeistContractPlayerCurseVulnerability",
+        "Effect": "Players are Cursed with Vulnerability",
+        "Name": "Player Curse Vulnerability"
+    },
+    {
+        "Mod type": "HeistContractPlayerElementalEquilibrium",
+        "Effect": "Players cannot inflict Exposure",
+        "Name": "Player Elemental Equilibrium"
+    },
+    {
+        "Mod type": "HeistContractPlayerEnergyShieldReducedRegenAlertLevel",
+        "Effect": "Players have 16% less Energy Shield Recovery Rate per 25% Alert Level",
+        "Name": "Player Energy Shield Reduced Regen Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerEvasionAlertLevel",
+        "Effect": "Players have 8% less Evasion per 25% Alert Level",
+        "Name": "Player Evasion Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerFireResistAlertLevel",
+        "Effect": "-5% Player Fire Resistance per 25% Alert Level",
+        "Name": "Player Fire Resist Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerLifeReducedRegenAlertLevel",
+        "Effect": "Players have 16% less Life Recovery Rate per 25% Alert Level",
+        "Name": "Player Life Reduced Regen Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerLightningResistAlertLevel",
+        "Effect": "-5% Player Lightning Resistance per 25% Alert Level",
+        "Name": "Player Lightning Resist Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerManaReducedRegenAlertLevel",
+        "Effect": "Players have 16% less Mana Recovery Rate per 25% Alert Level",
+        "Name": "Player Mana Reduced Regen Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerMaxResists",
+        "Effect": "-(12-9)% maximum Player Resistances",
+        "Name": "Player Max Resists"
+    },
+    {
+        "Mod type": "HeistContractPlayerMaxResistsAlertLevel",
+        "Effect": "-4% maximum Player Resistances per 25% Alert Level",
+        "Name": "Player Max Resists Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayerNoLifeESRegen",
+        "Effect": "Players cannot Regenerate Life, Mana or Energy Shield",
+        "Name": "Player No Life E S Regen"
+    },
+    {
+        "Mod type": "HeistContractPlayerReducedRegen",
+        "Effect": "Players have 60% less Recovery Rate of Life and Energy Shield",
+        "Name": "Player Reduced Regen"
+    },
+    {
+        "Mod type": "HeistContractPlayersAccuracyRating",
+        "Effect": "Players have 25% less Accuracy Rating",
+        "Name": "Players Accuracy Rating"
+    },
+    {
+        "Mod type": "HeistContractPlayersAoERadius",
+        "Effect": "Players have 25% less Area of Effect",
+        "Name": "Players Ao E Radius"
+    },
+    {
+        "Mod type": "HeistContractPlayersAuraEffect",
+        "Effect": "Players have 60% reduced effect of Non-Curse Auras from Skills",
+        "Name": "Players Aura Effect"
+    },
+    {
+        "Mod type": "HeistContractPlayersBlockAndArmour",
+        "Effect": "Players have 40% reduced Chance to BlockPlayers have 30% less Armour",
+        "Name": "Players Block And Armour"
+    },
+    {
+        "Mod type": "HeistContractPlayersBuffsExpireFaster",
+        "Effect": "Buffs on Players expire 70% faster",
+        "Name": "Players Buffs Expire Faster"
+    },
+    {
+        "Mod type": "HeistContractPlayersCooldownRecovery",
+        "Effect": "Players have 40% less Cooldown Recovery Rate",
+        "Name": "Players Cooldown Recovery"
+    },
+    {
+        "Mod type": "HeistContractPlayersGainReducedFlaskCharges",
+        "Effect": "Players gain 50% reduced Flask Charges",
+        "Name": "Players Gain Reduced Flask Charges"
+    },
+    {
+        "Mod type": "HeistContractPlayersGainReducedFlaskChargesAlertLevel",
+        "Effect": "Players gain 12% reduced Flask Charges per 25% Alert Level",
+        "Name": "Players Gain Reduced Flask Charges Alert Level"
+    },
+    {
+        "Mod type": "HeistContractPlayersPointBlank",
+        "Effect": "Players have Point Blank",
+        "Name": "Players Point Blank"
+    },
+    {
+        "Mod type": "HeistContractPoisoning",
+        "Effect": "Monsters Poison on Hit",
+        "Name": "Poisoning"
+    },
+    {
+        "Mod type": "HeistContractReinforcementsFast",
+        "Effect": "Reinforcements have (25-30)% increased Movement SpeedReinforcements have (35-45)% increased Attack SpeedReinforcements have (35-45)% increased Cast Speed",
+        "Name": "Reinforcements Fast"
+    },
+    {
+        "Mod type": "HeistContractShockedGround",
+        "Effect": "Area has patches of Shocked Ground which increase Damage taken by 50%28 patches with Ground Effect per 100 tiles (Hidden)Ground Effect has a radius of 18 (Hidden)",
+        "Name": "Shocked Ground"
+    },
+    {
+        "Mod type": "HeistContractSideAreaIncreasedMonsters",
+        "Effect": "Reward Rooms have (27-30)% increased Monsters",
+        "Name": "Side Area Increased Monsters"
+    },
+    {
+        "Mod type": "HeistContractTotalCost",
+        "Effect": "(27-30)% increased Total Heist Fee",
+        "Name": "Total Cost"
+    },
+    {
+        "Mod type": "HeistContractTravelCost",
+        "Effect": "(15-13)% reduced Travel Fee",
+        "Name": "Travel Cost"
+    }
+]
