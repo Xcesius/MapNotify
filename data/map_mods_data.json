@@ -1,0 +1,733 @@
+[
+  {
+    "Mod type": "MapBeyondLeague",
+    "Effect": "Slaying Enemies close together can attract monsters from Beyond this realm",
+    "Name": "Beyond Monsters"
+  },
+  {
+    "Mod type": "MapBeyondMonsterIncreasedItemQuantityAndRarity",
+    "Effect": "Monsters from Beyond in next Area will have (30-40)% more Quantity and Rarity of Dropped Items",
+    "Name": "Monster Increased Item Quantity And Rarity"
+  },
+  {
+    "Mod type": "MapLeaguestoneBeyond",
+    "Effect": "Slaying Enemies close together in next Area will attract monsters from Beyond this realm",
+    "Name": "Beyond Monsters"
+  },
+  {
+    "Mod type": "MapBloodlinesModOnMagics",
+    "Effect": "(20-30)% more Magic Monsters",
+    "Name": "More Magic Monsters"
+  },
+  {
+    "Mod type": "MapLeaguestoneBloodlines",
+    "Effect": "Magic Monster Packs in next Area will each have a Bloodline Mod Next Area will contain additional Magic Monsters",
+    "Name": "Map Leaguestone Bloodlines"
+  },
+  {
+    "Mod type": "MapBloodlinesLeagueCrafted",
+    "Effect": "Area contains 3 additional Magic Monster packs",
+    "Name": "League Crafted"
+  },
+  {
+    "Mod type": "MapBossSurroundedByTormentedSpirits",
+    "Effect": "Map Boss is surrounded by Tormented Spirits",
+    "Name": "Surrounded By Tormented Spirits"
+  },
+  {
+    "Mod type": "MapBossPossessed",
+    "Effect": "Unique Bosses are Possessed",
+    "Name": "Possessed"
+  },
+  {
+    "Mod type": "MapBossLife",
+    "Effect": "Unique Boss has 10000% increased Life",
+    "Name": "Boss has 10000% increased Life"
+  },
+  {
+    "Mod type": "MapDeathAndTaxesBossCurrencyDrops",
+    "Effect": "Unique Boss drops (12-20) additional Currency Items",
+    "Name": "Map Death And Taxes Boss Currency Drops"
+  },
+  {
+    "Mod type": "MapBossAreaOfEffect",
+    "Effect": "Unique Boss has 10000% increased Area of Effect",
+    "Name": "Boss has 10000% increased Area of Effect"
+  },
+  {
+    "Mod type": "MapBurningGround",
+    "Effect": "Area has patches of Burning Ground 28 patches with Ground Effect per 100 tiles",
+    "Name": "Burning Ground"
+  },
+  {
+    "Mod type": "MapChilledGround",
+    "Effect": "Area has patches of Chilled Ground 28 patches with Ground Effect per 100 tiles",
+    "Name": "Chilled Ground"
+  },
+  {
+    "Mod type": "MapConsecratedGround",
+    "Effect": "Area has patches of Consecrated Ground 16 patches with Ground Effect per 100 tiles",
+    "Name": "Consecrated Ground"
+  },
+  {
+    "Mod type": "MapDangerousBoss",
+    "Effect": "Unique Boss deals 20% increased Damage Unique Boss has 20% increased Attack and Cast Speed",
+    "Name": "Dangerous Boss"
+  },
+  {
+    "Mod type": "MapDesecratedGround",
+    "Effect": "Area has patches of desecrated ground 28 patches with Ground Effect per 100 tiles",
+    "Name": "Desecrated Ground"
+  },
+
+  {
+    "Mod type": "MapHexproof",
+    "Effect": "Monsters are Hexproof",
+    "Name": "Monsters are Hexproof"
+  },
+
+  {
+    "Mod type": "MapMassiveBoss",
+    "Effect": "Unique Boss has 35% increased Life Unique Boss has 70% increased Area of Effect",
+    "Name": "Boss inc 35% Life and 70% AoE"
+  },
+
+  {
+    "Mod type": "MapMonsterWillSummonBeyondBoss",
+    "Effect": "A Monster in next Area will summon a Unique Monster from Beyond when Slain",
+    "Name": "Will Summon Beyond Boss"
+  },
+  {
+    "Mod type": "MapMonsterWillSummonAbaxoth",
+    "Effect": "A Monster in next Area will summon Abaxoth, the End of All That Is when Slain -4 to Maximum Charges",
+    "Name": "Will Summon Abaxoth"
+  },
+  {
+    "Mod type": "MapMonsterUnwavering",
+    "Effect": "Monsters cannot be Stunned 35% more Monster Life",
+    "Name": "Unwavering"
+  },
+  {
+    "Mod type": "MapMonsterStatusAilmentImmunity",
+    "Effect": "Monsters have 90% chance to Avoid Elemental Ailments",
+    "Name": "Monster Status Ailment Immunity"
+  },
+  {
+    "Mod type": "MapMonstersStealChargesOnHit",
+    "Effect": "Monsters steal Power, Frenzy and Endurance charges on Hit",
+    "Name": "Steal Charges On Hit"
+  },
+  {
+    "Mod type": "MapMonstersRemoveCharges",
+    "Effect": "Monsters have 30% chance to steal Power, Frenzy and Endurance charges on Hit",
+    "Name": "Remove Charges"
+  },
+  {
+    "Mod type": "MapMonstersReflectCurses",
+    "Effect": "Monsters Reflect Hexes",
+    "Name": "Reflect Curses"
+  },
+  {
+    "Mod type": "MapMonstersPowerChargeOnHit",
+    "Effect": "Monsters have (30-60)% chance to gain a Power Charge on Hit",
+    "Name": "Power Charge On Hit"
+  },
+  {
+    "Mod type": "MapMonstersResistPenetration",
+    "Effect": "Monster Damage Penetrates 12% Elemental Resistances",
+    "Name": "Resist Penetration"
+  },
+  {
+    "Mod type": "MapMonstersPackSizeDelve",
+    "Effect": "(21-25)% increased Pack size",
+    "Name": "Pack Size Delve"
+  },
+  {
+    "Mod type": "MapMonstersOnslaughtDelve",
+    "Effect": "Monsters have Onslaught",
+    "Name": "Onslaught Delve"
+  },
+  {
+    "Mod type": "MapMonstersMaximumLifeAddedEnergyShield",
+    "Effect": "Monsters gain (10-19)% of Maximum Life as Extra Maximum Energy Shield",
+    "Name": "Maximum Life Added Energy Shield"
+  },
+  {
+    "Mod type": "MapMonstersMaimOnHit",
+    "Effect": "Monsters Maim on Hit with Attacks",
+    "Name": "Maim On Hit"
+  },
+  {
+    "Mod type": "MapMonstersImpaleOnHit",
+    "Effect": "Monsters have 15% chance to Impale with Attacks",
+    "Name": "Impale On Hit"
+  },
+  {
+    "Mod type": "MapMonstersImmuneRandomStatusAilmentStun",
+    "Effect": "Monsters are Immune to randomly chosen Elemental Ailments or Stun",
+    "Name": "Immune Random Status Ailment Stun"
+  },
+  {
+    "Mod type": "MapMonsterShockAvoidance",
+    "Effect": "Monsters have 10000% chance to Avoid being Shocked",
+    "Name": "Shock Avoidance"
+  },
+  {
+    "Mod type": "MapMonstersHinderOnHit",
+    "Effect": "Monsters Hinder on Hit with Spells",
+    "Name": "Hinder On Hit"
+  },
+  {
+    "Mod type": "MapMonstersFrenzyChargeOnHit",
+    "Effect": "Monsters gain a Frenzy Charge on Hit",
+    "Name": "Frenzy Charge On Hit"
+  },
+  {
+    "Mod type": "MapMonstersEnduranceChargeOnHit",
+    "Effect": "Monsters have (30-60)% chance to gain an Endurance Charge on Hit",
+    "Name": "Endurance Charge On Hit"
+  },
+  {
+    "Mod type": "MapMonstersDropsItemLevel",
+    "Effect": "Monsters drop items (1-3) Levels higher",
+    "Name": "Monsters drop items (1-3) Levels higher"
+  },
+  {
+    "Mod type": "MapMonstersCurseEffectOnSelfFinal",
+    "Effect": "75% less effect of Curses on Monsters",
+    "Name": "75% less effect of Curses"
+  },
+  {
+    "Mod type": "MapMonstersChanceToSuppressSpells",
+    "Effect": "Monsters have +20% chance to Suppress Spell Damage",
+    "Name": "Monsters have +20% Spells Suppress"
+  },
+  {
+    "Mod type": "MapMonstersChanceToInflictStatusAilments",
+    "Effect": "Monsters have a (26-35)% chance to cause Elemental Ailments on Hit",
+    "Name": "Chance To Inflict Status Ailments"
+  },
+  {
+    "Mod type": "MapMonstersCantBeSlowedOrTaunted",
+    "Effect": "Monsters Action Speed cannot be modified to below base value Monsters cannot be Taunted",
+    "Name": "Cant Be Slowed Or Taunted"
+  },
+  {
+    "Mod type": "MapMonstersBlindOnHit",
+    "Effect": "Monsters Blind on Hit",
+    "Name": "Monsters Blind on Hit"
+  },
+  {
+    "Mod type": "MapMonstersBaseSelfCriticalMultiplier",
+    "Effect": "Monsters take (36-40)% reduced Extra Damage from Critical Strikes",
+    "Name": "Monsters take reduced Damage from Critical Strikes"
+  },
+
+  {
+    "Mod type": "MapMonstersAvoidPoisonBleedBlind",
+    "Effect": "Monsters have a 50% chance to avoid Poison, Impale, and Bleeding",
+    "Name": "Monsters Avoid Poison Bleed Blind"
+  },
+
+  {
+    "Mod type": "MapMonstersAvoidAilments",
+    "Effect": "Monsters have 50% chance to Avoid Ailments",
+    "Name": "Monsters Avoid Ailments"
+  },
+  {
+    "Mod type": "MapMonstersAllDamageAlwaysIgnites",
+    "Effect": "All Monster Damage from Hits always Ignites",
+    "Name": "All Monster Damage Always Ignites"
+  },
+  {
+    "Mod type": "MapMonstersAllResistances",
+    "Effect": "+25% Monster Chaos Resistance +40% Monster Elemental Resistances",
+    "Name": "Monster More All Resistances"
+  },
+  {
+    "Mod type": "MapMonsterPower",
+    "Effect": "Monsters gain 3 Power Charges every 20 seconds",
+    "Name": "Monsters gain 3 Power Charges"
+  },
+  {
+    "Mod type": "MapMonsterPhysicalResistance",
+    "Effect": "+20% Monster Physical Damage Reduction",
+    "Name": "Monster Physical Resistance"
+  },
+
+  {
+    "Mod type": "MapMonsterPhysicalReflection",
+    "Effect": "Monsters reflect 13% of Physical Damage",
+    "Name": "Monsters Physical Reflection"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksVaal",
+    "Effect": "Found Items have 10% chance to drop Corrupted in Area Area is inhabited by the Vaal",
+    "Name": "Packs Vaal"
+  },
+  {
+    "Mod type": "MapMonsterPacksUndeadNecromancers",
+    "Effect": "Area is inhabited by Undead",
+    "Name": "Packs Undead Necromancers"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksSpiders",
+    "Effect": "Area is inhabited by Spiders",
+    "Name": "Packs Spiders"
+  },
+  {
+    "Mod type": "MapMonsterPacksSpawnsSeaWitches",
+    "Effect": "Area is inhabited by Sea Witches and their Spawn",
+    "Name": "Packs Spawns Sea Witches"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksSolaris",
+    "Effect": "Area is inhabited by Solaris fanatics",
+    "Name": "Packs Solaris"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksSkeletons",
+    "Effect": "(80-100)% increased Quantity of Items found in this Area Area is inhabited by Skeletons",
+    "Name": "Packs Skeletons"
+  },
+  {
+    "Mod type": "MapMonsterPacksRanged",
+    "Effect": "Area is inhabited by ranged monsters",
+    "Name": "Packs Ranged"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksLunaris",
+    "Effect": "Area is inhabited by Lunaris fanatics",
+    "Name": "Packs Lunaris"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksKitava",
+    "Effect": "Area is inhabited by Cultists of Kitava",
+    "Name": "Packs Kitava"
+  },
+  {
+    "Mod type": "MapMonsterPacksHumanoids",
+    "Effect": "Area is inhabited by Humanoids",
+    "Name": "Packs Humanoids"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksGoatmen",
+    "Effect": "Area is inhabited by Goatmen",
+    "Name": "Packs Goatmen"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksGhosts",
+    "Effect": "Area is inhabited by Ghosts",
+    "Name": "Packs Ghosts"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksDemons",
+    "Effect": "Area is inhabited by Demons",
+    "Name": "Packs Demons"
+  },
+  {
+    "Mod type": "MapMosnterPacksDemons",
+    "Effect": "Area is inhabited by Demons",
+    "Name": "Map Mosnter Packs Demons"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksBlackguards",
+    "Effect": "Area is inhabited by Blackguards",
+    "Name": "Packs Blackguards"
+  },
+  {
+    "Mod type": "MapMonsterPacksBandits",
+    "Effect": "Area is inhabited by Bandits",
+    "Name": "Packs Bandits"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksAnimals",
+    "Effect": "Area is inhabited by Animals",
+    "Name": "Packs Animals"
+  },
+
+  {
+    "Mod type": "MapMonsterPacksAbomination",
+    "Effect": "Area is inhabited by Abominations",
+    "Name": "Packs Abomination"
+  },
+
+  {
+    "Mod type": "MapMonsterPackHasTurbo",
+    "Effect": "Next Area will contain 3 additional Magic Packs which have 40% increased Attack, Cast and Movement Speed, and drop (130-160)% more Items",
+    "Name": "Pack Has Turbo"
+  },
+  {
+    "Mod type": "MapMonsterOnslaughtEffectAndExperience",
+    "Effect": "Monsters in next Area will have 10% increased Attack, Cast and Movement Speed Monsters in next Area will grant (8-10)% increased Experience",
+    "Name": "Monsters Onslaught Effect And Experience"
+  },
+  {
+    "Mod type": "MapMonsterMultipleProjectiles",
+    "Effect": "Monsters fire 2 additional Projectiles",
+    "Name": "Monsters fire 2 Multiple Projectiles"
+  },
+
+  {
+    "Mod type": "MapMonsterManaLeechResistance",
+    "Effect": "Cannot Leech  Mana from Monsters",
+    "Name": "Mana Leech Resistance"
+  },
+  {
+    "Mod type": "MapMonsterLightningResistance",
+    "Effect": "+35% Monster Lightning Resistance",
+    "Name": "Monster Lightning Resistance"
+  },
+
+  {
+    "Mod type": "MapMonsterLightningDamage",
+    "Effect": "Monsters deal 35% extra Physical Damage as Lightning",
+    "Name": "Monsters deal extra Lightning Damage"
+  },
+
+  {
+    "Mod type": "MapMonsterLife",
+    "Effect": "(30-40)% more Monster Life",
+    "Name": "More Monster Life"
+  },
+
+  {
+    "Mod type": "MapMonsterIgniteAvoidance",
+    "Effect": "Monsters have 10000% chance to Avoid being Ignited",
+    "Name": "Monster Ignite Avoidance"
+  },
+  {
+    "Mod type": "MapMonsterFrenzy",
+    "Effect": "Monsters gain 1 Frenzy Charge every 20 seconds",
+    "Name": "Monsters gain Frenzy"
+  },
+
+  {
+    "Mod type": "MapMonsterFreezeAndChillAvoidance",
+    "Effect": "Monsters have 10000% chance to Avoid being Chilled or Frozen",
+    "Name": "Monsters Freeze And Chill Avoidance"
+  },
+  {
+    "Mod type": "MapMonsterFracturing",
+    "Effect": "Monsters Fracture",
+    "Name": "Monsters Fracture"
+  },
+
+  {
+    "Mod type": "MapMonsterFireResistance",
+    "Effect": "+50% Monster Fire Resistance",
+    "Name": "Monster Fire Resistance"
+  },
+  {
+    "Mod type": "MapMonsterFireDamage",
+    "Effect": "Monsters deal (90-110)% extra Physical Damage as Fire",
+    "Name": "Monster Fire Damage"
+  },
+
+  {
+    "Mod type": "MapMonsterFast",
+    "Effect": "(20-25)% increased Monster Movement Speed (20-25)% increased Monster Attack Speed (20-25)% increased Monster Cast Speed",
+    "Name": "Monster Fast"
+  },
+
+  {
+    "Mod type": "MapMonsterEndurance",
+    "Effect": "Monsters gain 3 Endurance Charges every 20 seconds",
+    "Name": "Monsters gain Endurance"
+  },
+  {
+    "Mod type": "MapMonsterElementalReflection",
+    "Effect": "Monsters reflect 13% of Elemental Damage",
+    "Name": "Monsters Elemental Reflection"
+  },
+
+  {
+    "Mod type": "MapMonsterDamage",
+    "Effect": "100% increased Monster Damage",
+    "Name": "Increased Monster Damage"
+  },
+
+  {
+    "Mod type": "MapMonsterCriticalStrikesAndDamage",
+    "Effect": "Monsters have (500-1000)% increased Critical Strike Chance +(60-100)% to Monster Critical Strike Multiplier",
+    "Name": "Monster Critical Strikes And Damage"
+  },
+
+  {
+    "Mod type": "MapMonsterCriticalStrikeMultiplier",
+    "Effect": "+10000% to Monster Critical Strike Multiplier",
+    "Name": "Monster Critical Strike Multiplier"
+  },
+  {
+    "Mod type": "MapMonsterCriticalStrikeChance",
+    "Effect": "Monsters have 10000% increased Critical Strike Chance",
+    "Name": "Monster Critical Strike Chance"
+  },
+  {
+    "Mod type": "MapMonsterColdResistance",
+    "Effect": "+50% Monster Cold Resistance",
+    "Name": "Monster Cold Resistance"
+  },
+  {
+    "Mod type": "MapMonsterColdDamage",
+    "Effect": "Monsters deal (90-110)% extra Physical Damage as Cold",
+    "Name": "Monster Extra Cold Damage"
+  },
+  {
+    "Mod type": "MapMonsterChaosDamage",
+    "Effect": "Monsters deal (31-35)% extra Physical Damage as Chaos Monsters Inflict Withered for 2 seconds on Hit",
+    "Name": "Monster Extra Chaos Damage"
+  },
+  {
+    "Mod type": "MapMonsterChain",
+    "Effect": "Monsters skills Chain 3 additional times",
+    "Name": "Monsters Chain additional times"
+  },
+
+  {
+    "Mod type": "MapMonsterCannotBeStunned",
+    "Effect": "Monsters cannot be Stunned",
+    "Name": "Monsters Cannot Be Stunned"
+  },
+
+  {
+    "Mod type": "MapMonsterAvoidShock",
+    "Effect": "(100-150)% increased Quantity of Items found in this Area (100-150)% increased Rarity of Items found in this Area (30-50)% increased Pack size Monsters are Unaffected by Shock",
+    "Name": "Monsters Avoid Shock"
+  },
+  {
+    "Mod type": "MapMonsterAttacksApplyRandomCurses",
+    "Effect": "Monsters Melee Attacks apply random Hexes on Hit",
+    "Name": "Monsters Attacks Apply Random Curses"
+  },
+  {
+    "Mod type": "MapMonsterAreaOfEffect",
+    "Effect": "Monsters have 10000% increased Area of Effect",
+    "Name": "Monsters have more AoE"
+  },
+  {
+    "Mod type": "MapMonsterAllBossesAtOnceMaven",
+    "Effect": "Maven releases all Bosses at once",
+    "Name": "Monsters All Bosses At Once Maven"
+  },
+  {
+    "Mod type": "MapMonsterAilmentAvoidance",
+    "Effect": "Monsters have 10000% chance to Avoid Ailments",
+    "Name": "Monsters Ailment Avoidance"
+  },
+  {
+    "Mod type": "MapMonsterAccuracyPlayersUnlockyDodge",
+    "Effect": "Monsters have (41-50)% increased Accuracy Rating",
+    "Name": "Monsters Accuracy Players Unlocky Dodge"
+  },
+  {
+    "Mod type": "MapMoreMonsterPackVariety",
+    "Effect": "Area has increased monster variety",
+    "Name": "Variety"
+  },
+  {
+    "Mod type": "MapMultipleExiles",
+    "Effect": "Area is inhabited by 10 additional Rogue Exiles",
+    "Name": "Additional Rogue Exiles"
+  },
+
+  {
+    "Mod type": "MapNemesisModOnRares",
+    "Effect": "(40-50)% increased number of Rare Monsters",
+    "Name": "Nemesis Mod"
+  },
+
+  {
+    "Mod type": "MapPlayersReducedAuraEffect",
+    "Effect": "Players have 15% reduced effect of Non-Curse Auras from Skills",
+    "Name": "Players Reduced Aura Effect"
+  },
+  {
+    "Mod type": "MapPlayersPointBlank",
+    "Effect": "Players have Point Blank",
+    "Name": "Players have Point Blank"
+  },
+
+  {
+    "Mod type": "MapPlayersMovementSkillsCooldownRecovery",
+    "Effect": "Players have 200% increased Cooldown Recovery Rate for Movement Skills",
+    "Name": "Movement Skills Cooldown Recovery"
+  },
+  {
+    "Mod type": "MapPlayersLessCooldownRecovery",
+    "Effect": "Players have 15% less Cooldown Recovery Rate",
+    "Name": "Less Cooldown Recovery"
+  },
+
+  {
+    "Mod type": "MapPlayersAoERadius",
+    "Effect": "Players have (10-25)% less Area of Effect",
+    "Name": "Players less AoE Radius"
+  },
+
+  {
+    "Mod type": "MapPlayersGainReducedFlaskCharges",
+    "Effect": "Players gain (20-50)% reduced Flask Charges",
+    "Name": "Gain Reduced Flask Charges"
+  },
+  {
+    "Mod type": "MapMonsterAccuracyPlayersUnlockyDodge",
+    "Effect": "Players have -10% to amount of Suppressed Spell Damage Prevented Monsters have 50% increased Accuracy Rating",
+    "Name": "Map Monster Accuracy Players Unlocky Dodge"
+  },
+  {
+    "Mod type": "MapPlayersBuffsExpireFaster",
+    "Effect": "Buffs on Players expire 20% faster",
+    "Name": "Buffs Expire Faster"
+  },
+  {
+    "Mod type": "MapPlayersBlockAndArmour",
+    "Effect": "Players have 20% reduced Chance to Block Players have 20% less Armour",
+    "Name": "Players have 20% reduced Block And Armour"
+  },
+  {
+    "Mod type": "MapPlayersAccuracyRating",
+    "Effect": "Players have 15% less Accuracy Rating",
+    "Name": "Players have 15% less Accuracy Rating"
+  },
+  {
+    "Mod type": "MapPlayerReducedRegen",
+    "Effect": "Players have (10-60)% less Recovery Rate of Life and Energy Shield",
+    "Name": "Players Reduced Regen"
+  },
+
+  {
+    "Mod type": "MapPlayerNoRegen",
+    "Effect": "Players have no Life or Mana Regeneration",
+    "Name": "No Life or Mana Regeneration"
+  },
+  {
+    "Mod type": "MapPlayerProjectileDamage",
+    "Effect": "Players deal 100% less Projectile Damage",
+    "Name": "Players deal less Projectile Damage"
+  },
+  {
+    "Mod type": "MapPlayerNoLifeESRegen",
+    "Effect": "Players cannot Regenerate Life, Mana or Energy Shield",
+    "Name": "No Life/ES Regen"
+  },
+
+  {
+    "Mod type": "MapPlayerMaxResists",
+    "Effect": "-(25-15)% maximum Player Resistances",
+    "Name": "less Maximum Player Resistances"
+  },
+  {
+    "Mod type": "MapPlayerElementalEquilibrium",
+    "Effect": "Players cannot inflict Exposure",
+    "Name": "Elemental Equilibrium"
+  },
+
+  {
+    "Mod type": "MapPlayerCurseWarlordsMark",
+    "Effect": "Player Curse Warlords Mark",
+    "Name": "Player Curse Warlords Mark"
+  },
+  {
+    "Mod type": "MapPlayerCurseVulnerability",
+    "Effect": "Players are Cursed with Vulnerability",
+    "Name": "Players Curse Vulnerability2"
+  },
+
+  {
+    "Mod type": "MapPlayerCurseTemporalChains",
+    "Effect": "Players are Cursed with Temporal Chains",
+    "Name": "Players Curse Temporal Chains"
+  },
+  {
+    "Mod type": "MapPlayerCursePunishment",
+    "Effect": "Players are Cursed with Punishment",
+    "Name": "Players Curse Punishment"
+  },
+
+  {
+    "Mod type": "MapPlayerCurseProjectileWeakness",
+    "Effect": "Players are Cursed with Despair",
+    "Name": "Players Curse Projectile Weakness"
+  },
+  {
+    "Mod type": "MapPlayerCurseFrostbite",
+    "Effect": "Players are Cursed with Frostbite",
+    "Name": "Players Curse Frostbite"
+  },
+  {
+    "Mod type": "MapPlayerCurseFlammability",
+    "Effect": "Players are Cursed with Flammability",
+    "Name": "Players Curse Flammability"
+  },
+  {
+    "Mod type": "MapPlayerCurseEnfeeblement",
+    "Effect": "Players are Cursed with Enfeeble",
+    "Name": "Players Curse Enfeeblement"
+  },
+  {
+    "Mod type": "MapPlayerCurseElementalWeakness",
+    "Effect": "Players are Cursed with Elemental Weakness",
+    "Name": "Players Curse Elemental Weakness"
+  },
+  {
+    "Mod type": "MapPlayerCurseConductivity",
+    "Effect": "Players are Cursed with Conductivity",
+    "Name": "Players Curse Conductivity"
+  },
+  {
+    "Mod type": "MapPlayerCorruptingBlood",
+    "Effect": "Players have Corrupting Blood",
+    "Name": "Corrupting Blood"
+  },
+  {
+    "Mod type": "MapPlayerContinuousDamage",
+    "Effect": "Players take 6 Chaos Damage per second",
+    "Name": "Continuous Damage"
+  },
+  {
+    "Mod type": "MapPlayerBloodMagic",
+    "Effect": "Players have Blood Magic",
+    "Name": "Blood Magic"
+  },
+
+  {
+    "Mod type": "MapPoisoning",
+    "Effect": "Monsters Poison on Hit",
+    "Name": "Monsters Poison on Hit"
+  },
+
+  {
+    "Mod type": "MapShockedGround",
+    "Effect": "Area has patches of Shocked Ground which increase Damage taken by 20% 20 patches with Ground Effect per 100 tiles (Hidden) Ground Effect has a radius of 14 (Hidden)",
+    "Name": "Shocked Ground"
+  },
+
+  {
+    "Mod type": "MapTotemsStrMission",
+    "Effect": "Area has Damaging Totems",
+    "Name": "Area has Damaging Totems"
+  },
+  {
+    "Mod type": "MapTotems",
+    "Effect": "Area contains many Totems",
+    "Name": "Contains many Totems"
+  },
+
+  {
+    "Mod type": "MapTwoBosses",
+    "Effect": "Area contains two Unique Bosses",
+    "Name": "Two Bosses"
+  }
+]

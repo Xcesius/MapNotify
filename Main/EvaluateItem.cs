@@ -305,10 +305,9 @@ namespace MapNotify
                     MapName = $"[T{mapComponent.Tier}] {mapTrim}";
 
 
-                    Awakened = AwakenedAreas.Contains(area) ? true : false;
-                    Bonus = BonusAreas.Contains(area) ? true : false;
-                    Completed = CompletedAreas.Contains(area) ? true : false;
-                    mavenDetails.MavenCompletion = MavenAreas.Contains(area) ? true : false;
+                    Bonus = ingameState.ServerData.BonusCompletedAreas.Contains(area) ? true : false;
+                    Completed = ingameState.ServerData.CompletedAreas.Contains(area) ? true : false;
+                    mavenDetails.MavenCompletion = ingameState.ServerData.MavenWitnessedAreas.Contains(area) ? true : false;
 
                     if (AreaRegion.TryGetValue(mapTrim, out string region))
                         MapRegion = region;
@@ -393,7 +392,7 @@ namespace MapNotify
                 
                 if (mavenDetails.MavenInvitation || mavenDetails.MavenArea != string.Empty)
                 {
-                    mavenDetails.MavenUncharted = MavenAreas.Any(x => x.Name == mavenDetails.MavenArea) ? true : false;
+                    mavenDetails.MavenUncharted = ingameState.ServerData.MavenWitnessedAreas.Any(x => x.Name == mavenDetails.MavenArea) ? true : false;
                     mavenDetails.MavenBosses = MavenBosses(Entity.Path, mavenDetails.MavenRegion);
                 }
                 #endregion
@@ -412,7 +411,7 @@ namespace MapNotify
             string activeRegion = region;
 
             Dictionary<string, List<string>> MavenRegionCompletion = new Dictionary<string, List<string>>();
-            foreach (WorldArea worldArea in MavenAreas)
+            foreach (WorldArea worldArea in ingameState.ServerData.MavenWitnessedAreas)
             {
                 if (!AreaRegion.TryGetValue(worldArea.Name, out string regionName))
                     regionName = "Uncharted";

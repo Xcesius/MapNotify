@@ -1,5 +1,4 @@
 ﻿using ExileCore;
-using ExileCore.PoEMemory.MemoryObjects;
 using System.Collections.Generic;
 
 namespace MapNotify
@@ -86,47 +85,7 @@ namespace MapNotify
                 "The Shaper's Realm" }
             },
         };
-
-        public const long AreaStart = 0xAC40;
-        public static List<WorldArea> AwakenedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0xC0));
-        public static List<WorldArea> BonusAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x80));
-        public static List<WorldArea> CompletedAreas => GetAreas(ingameState.ServerData.Address + (AreaStart + 0x40));
-        public static List<WorldArea> MavenAreas => GetAreas(ingameState.ServerData.Address + AreaStart);
         
-        private static List<WorldArea> GetAreas(long address)
-        {
-            if (address == 0)
-                return new List<WorldArea>();
-
-            var res = new List<WorldArea>();
-            var size = ingameState.M.Read<int>(address);
-            var listStart = ingameState.M.Read<long>(address + 0x08);
-            var error = 0;
-
-            if (listStart == 0 || size == 0)
-                return res;
-
-            for (var addr = ingameState.M.Read<long>(listStart); addr != listStart; addr = ingameState.M.Read<long>(addr))
-            {
-                if (addr == 0) return res;
-                var byAddress = gameController.Files.WorldAreas.GetByAddress(ingameState.M.Read<long>(addr + 0x10));
-
-                if (byAddress != null)
-                    res.Add(byAddress);
-
-                if (--size < 0) break;
-                error++;
-
-                //Sometimes wrong offsets and read 10000000+ objects
-                if (error > 2048)
-                {
-                    res = new List<WorldArea>();
-                    break;
-                }
-            }
-
-            return res;
-        }
 
         public static Dictionary<string, string> RegionReadable = new Dictionary<string, string>()
         {
@@ -140,25 +99,5 @@ namespace MapNotify
             { "OutsideBottomRight", "Lira Arthain" },
             { "???", "Unknown" },
         };
-
-        public void BuildRegions()
-        {
-            foreach (var node in gameController.Files.AtlasNodes.EntriesList)
-            {
-                long regionAddr = ingameState.M.Read<long>(node.Address + 0x41);
-                long regionNameAddr = ingameState.M.Read<long>(regionAddr);
-                string regionName = ingameState.M.ReadStringU(regionNameAddr);
-                //long regionReadableAddr = ingameState.M.Read<long>(regionAddr + 0x08);
-                //string regionReadable = ingameState.M.ReadStringU(regionReadableAddr);
-                if (RegionReadable.TryGetValue(regionName, out string regionReadable))
-                {
-                    AreaRegion.Add(node.Area.Name, regionReadable);
-                }
-                else
-                {
-                    LogMessage($"Failed to get readable name for: {regionName}");
-                }
-            }
-        }
     }
 }

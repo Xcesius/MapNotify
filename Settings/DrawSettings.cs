@@ -239,7 +239,7 @@ namespace MapNotify
                     if (maven)
                     {
                         ImGui.Text("Maven Witnessed:");
-                        foreach (var map in MavenAreas)
+                        foreach (var map in ingameState.ServerData.MavenWitnessedAreas)
                         {
                             ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
                         }
@@ -256,13 +256,13 @@ namespace MapNotify
                     
                     if (comp)
                     {
-                        ImGui.Text($"Bonus ({BonusAreas.Count}): ");
-                        foreach (var map in BonusAreas)
+                        ImGui.Text($"Bonus ({ingameState.ServerData.BonusCompletedAreas.Count}): ");
+                        foreach (var map in ingameState.ServerData.BonusCompletedAreas)
                         {
                             ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
                         }
-                        ImGui.Text($"Completion ({CompletedAreas.Count}): ");
-                        foreach (var map in CompletedAreas)
+                        ImGui.Text($"Completion ({ingameState.ServerData.CompletedAreas.Count}): ");
+                        foreach (var map in ingameState.ServerData.CompletedAreas)
                         {
                             ImGui.TextColored(new nuVector4(0.5F, 0.5F, 1.2F, 1F), $"{map.Name}");
                         }

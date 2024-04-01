@@ -36,7 +36,6 @@ namespace MapNotify
             BadModsDictionary = LoadConfigBadMod();
             gameController = GameController;
             ingameState = gameController.IngameState;
-            BuildRegions();
             return true;
         }
 

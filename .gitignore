@@ -13,9 +13,14 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+
+# User-Specific Files
+ExileCore.dll
+GameOffsets.dll
+
 # Mono auto generated files
 mono_crash.*
- 
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
