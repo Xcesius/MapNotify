@@ -182,18 +182,12 @@ namespace MapNotify
                                     {
                                         ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"C");
                                         ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
-                                        ImGui.SameLine(); ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                     }
                                     else
                                     {
                                         if (!ItemDetails.Bonus)
                                         {
                                             ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"B");
-                                        }
-                                        if (!ItemDetails.Awakened)
-                                        {
-                                            if (!ItemDetails.Bonus) ImGui.SameLine();
-                                            ImGui.TextColored(new nuVector4(1f, 0f, 0f, 1f), $"A");
                                         }
                                     }
                                     if (ItemDetails.MavenDetails.MavenCompletion)
