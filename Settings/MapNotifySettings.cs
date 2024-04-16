@@ -25,8 +25,9 @@ namespace MapNotify
         public ToggleNode ShowModCount { get; set; } = new(true);
         public ToggleNode ShowQuantityPercent { get; set; } = new(true);
         public ToggleNode ColorQuantityPercent { get; set; } = new(true);
+        public ToggleNode MapBorderStyle { get; set; } = new(false);
         public RangeNode<int> ColorQuantity { get; set; } = new(100, 0, 220);
-        public RangeNode<int> BorderDeflation { get; set; } = new(0, -100, 100);
+        public RangeNode<int> BorderDeflation { get; set; } = new(4, 0, 50);
         public RangeNode<int> BorderThickness { get; set; } = new(1, 1, 6);
         public RangeNode<int> MapQuantSetting { get; set; } = new(100, 0, 220);
         public RangeNode<int> MapPackSetting { get; set; } = new(100, 0, 220);
