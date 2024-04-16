@@ -7,8 +7,6 @@ using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
-using SharpDX;
-using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
@@ -41,7 +39,7 @@ namespace MapNotify
         public static nuVector4 ColorButton(string labelString, nuVector4 setting)
         {
             var refValue = setting;
-            ImGui.ColorEdit4(labelString, ref refValue);
+            ImGui.ColorEdit4(labelString, ref refValue, ImGuiColorEditFlags.AlphaPreviewHalf | ImGuiColorEditFlags.AlphaBar);
             return refValue;
         }
 
@@ -159,7 +157,7 @@ namespace MapNotify
                 if (Settings.ShowCompletion) Settings.ShowMapName.Value = true;
                 ImGui.SameLine(); HelpMarker("Requires map names.\nDisplays a red letter for each missing completion.\nA for Awakened Completion\nB for Bonus Completion\nC for Completion.");
                 Settings.ShowMapRegion.Value = Checkbox("Show Region Name", Settings.ShowMapRegion);
-                Settings.TargetRegions.Value = Checkbox("Enable Region Targetting ", Settings.TargetRegions);
+                Settings.TargetRegions.Value = Checkbox("Enable Region Targeting ", Settings.TargetRegions);
                 ImGui.SameLine(); HelpMarker("Open the Atlas and tick the regions you want to highlight. Requires Show Region Name.");
                 if (Settings.TargetRegions) Settings.ShowMapRegion.Value = true;
                 Settings.ShowModWarnings.Value = Checkbox("Show Mod Warnings", Settings.ShowModWarnings);
@@ -176,6 +174,10 @@ namespace MapNotify
             if (ImGui.TreeNodeEx("Borders and Colours", ImGuiTreeNodeFlags.CollapsingHeader))
             {
 
+                Settings.MapBorderStyle.Value = Checkbox("Map Item Draw Style", Settings.MapBorderStyle); ImGui.SameLine();
+                ImGui.SameLine(); HelpMarker("Frame = off, Box = on");
+
+                Settings.BorderDeflation.Value = IntSlider("Map Border Deflation##MapBorderDeflation", Settings.BorderDeflation);
                 Settings.BorderThickness.Value = IntSlider("Border Thickness##BorderThickness", Settings.BorderThickness);
                 Settings.BorderThickness.Value = IntSlider("Completion Border Thickness##BorderThickness", Settings.BorderThickness);
 

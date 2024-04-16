@@ -7,68 +7,6 @@ namespace MapNotify
 {
     public class MapNotifySettings : ISettings
     {
-        public MapNotifySettings()
-        {
-            Enable = new ToggleNode(true);
-            ShowMapName = new ToggleNode(true);
-            ShowMapRegion = new ToggleNode(true);
-            ShowModCount = new ToggleNode(true);
-            ShowQuantityPercent = new ToggleNode(true);
-            ColorQuantityPercent = new ToggleNode(true);
-            ColorQuantity = new RangeNode<int>(100, 0, 220);
-            BorderThickness = new RangeNode<int>(1, 1, 6);
-            BorderThicknessMap = new RangeNode<int>(2, 1, 6);
-            MapQuantSetting = new RangeNode<int>(100, 0, 220);
-            MapPackSetting = new RangeNode<int>(100, 0, 220);
-            ShowPackSizePercent = new ToggleNode(true);
-            ShowModWarnings = new ToggleNode(true);
-            ShowCompletion = new ToggleNode(true);
-            HorizontalLines = new ToggleNode(true);
-            PadForNinjaPricer = new ToggleNode(false);
-            PadForAltPricer = new ToggleNode(false);
-            AlwaysShowTooltip = new ToggleNode(true);
-            AlwaysShowCompletionBorder = new ToggleNode(true);
-            StyleTextForBorder = new ToggleNode(false);
-            ShowForZanaMaps = new ToggleNode(true);
-            ShowLineForZanaMaps = new ToggleNode(true);
-            TargetRegions = new ToggleNode(true);
-            ShowForWatchstones = new ToggleNode(true);
-            ShowForHeist = new ToggleNode(true);
-            ShowForInvitations = new ToggleNode(true);
-            NonUnchartedList = new ToggleNode(false);
-            BoxForBricked = new ToggleNode(true);
-            BoxForMapWarnings = new ToggleNode(true);
-            BoxForMapBadWarnings = new ToggleNode(true);
-            BadModWarningsLoader = new ListNode();
-
-            ElderGuardian = new Vector4(0.32f, 0.55f, 0.78f, 1f);
-            ShaperGuardian = new Vector4(0.32f, 0.4f, 0.78f, 1f);
-            Harvest = new Vector4(0f, 1f, 1f, 1f);
-            Delirium = new Vector4(0.94f, 0f, 1f, 1f);
-            Blighted = new Vector4(0.94f, 0.63f, 0.12f, 1f);
-            Metamorph = new Vector4(0.4f, 0.78f, 0.24f, 1f);
-            Legion = new Vector4(0.4f, 0.12f, 0.7f, 1f);
-            BlightEncounter = new Vector4(0.43f, 0.4f, 0.24f, 1f);
-            DefaultBorderTextColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
-
-            ElderGuardianBorder = new ToggleNode(true);
-            ShaperGuardianBorder = new ToggleNode(true);
-            HarvestBorder = new ToggleNode(true);
-            DeliriumBorder = new ToggleNode(true);
-            BlightedBorder = new ToggleNode(true);
-            MetamorphBorder = new ToggleNode(false);
-            LegionBorder = new ToggleNode(false);
-            BlightEncounterBorder = new ToggleNode(false);
-            CompletionBorder = new ToggleNode(true);
-
-            Incomplete = new Vector4(0f, 1f, 0f, 0.3f);
-            BonusIncomplete = new Vector4(1f, 0.47f, 0f, 0.3f);
-            AwakenedIncomplete = new Vector4(1f, 0.9f, 0f, 0.3f);
-
-            Bricked = new Vector4(1f, 0f, 0f, 1f);
-            MapBorderBad = new Vector4(1f, 0f, 0f, 1f);
-            MapBorderWarnings = new Vector4(0f, 1f, 0f, 1f);
-        }
         public bool TargettingHaewarkHamlet = false;
         public bool TargettingTirnsEnd = false;
         public bool TargettingLexProxima= false;
@@ -81,62 +19,64 @@ namespace MapNotify
         public float AtlasX { get; set; }
         public float AtlasY { get; set; }
 
-        public ToggleNode Enable { get; set; }
-        public ToggleNode ShowMapName { get; set; }
-        public ToggleNode ShowMapRegion { get; set; }
-        public ToggleNode ShowModCount { get; set; }
-        public ToggleNode ShowQuantityPercent { get; set; }
-        public ToggleNode ColorQuantityPercent { get; set; }
-        public RangeNode<int> ColorQuantity { get; set; }
-        public RangeNode<int> BorderThickness { get; set; }
-        public RangeNode<int> MapQuantSetting { get; set; }
-        public RangeNode<int> MapPackSetting { get; set; }
-        public ToggleNode ShowPackSizePercent { get; set; }
-        public ToggleNode ShowModWarnings { get; set; }
-        public ToggleNode ShowCompletion { get; set; }
-        public ToggleNode HorizontalLines { get; set; }
-        public ToggleNode PadForNinjaPricer { get; set; }
-        public ToggleNode PadForAltPricer { get; set; }
-        public ToggleNode AlwaysShowTooltip { get; set; }
-        public ToggleNode AlwaysShowCompletionBorder { get; set; }
-        public ToggleNode StyleTextForBorder { get; set; }
-        public ToggleNode ShowForZanaMaps { get; set; }
-        public ToggleNode ShowLineForZanaMaps { get; set; }
-        public ToggleNode TargetRegions { get; set; }
-        public ToggleNode ShowForWatchstones { get; set; }
-        public ToggleNode ShowForHeist { get; set; }
-        public ToggleNode ShowForInvitations { get; set; }
-        public ToggleNode NonUnchartedList { get; set; }
-        public ToggleNode BoxForBricked { get; set; }
-        public ToggleNode BoxForMapWarnings { get; set; }
-        public ToggleNode BoxForMapBadWarnings { get; set; }
+        public ToggleNode Enable { get; set; } = new(true);
+        public ToggleNode ShowMapName { get; set; } = new(true);
+        public ToggleNode ShowMapRegion { get; set; } = new(true);
+        public ToggleNode ShowModCount { get; set; } = new(true);
+        public ToggleNode ShowQuantityPercent { get; set; } = new(true);
+        public ToggleNode ColorQuantityPercent { get; set; } = new(true);
+        public ToggleNode MapBorderStyle { get; set; } = new(false);
+        public RangeNode<int> ColorQuantity { get; set; } = new(100, 0, 220);
+        public RangeNode<int> BorderDeflation { get; set; } = new(4, 0, 50);
+        public RangeNode<int> BorderThickness { get; set; } = new(1, 1, 6);
+        public RangeNode<int> MapQuantSetting { get; set; } = new(100, 0, 220);
+        public RangeNode<int> MapPackSetting { get; set; } = new(100, 0, 220);
+        public ToggleNode ShowPackSizePercent { get; set; } = new(true);
+        public ToggleNode ShowModWarnings { get; set; } = new(true);
+        public ToggleNode ShowCompletion { get; set; } = new(true);
+        public ToggleNode HorizontalLines { get; set; } = new(true);
+        public ToggleNode PadForNinjaPricer { get; set; } = new(false);
+        public ToggleNode PadForAltPricer { get; set; } = new(false);
+        public ToggleNode AlwaysShowTooltip { get; set; } = new(true);
+        public ToggleNode AlwaysShowCompletionBorder { get; set; } = new(true);
+        public ToggleNode StyleTextForBorder { get; set; } = new(false);
+        public ToggleNode ShowForZanaMaps { get; set; } = new(true);
+        public ToggleNode ShowLineForZanaMaps { get; set; } = new(true);
+        public ToggleNode TargetRegions { get; set; } = new(true);
+        public ToggleNode ShowForWatchstones { get; set; } = new(true);
+        public ToggleNode ShowForHeist { get; set; } = new(true);
+        public ToggleNode ShowForInvitations { get; set; } = new(true);
+        public ToggleNode NonUnchartedList { get; set; } = new(false);
+        public ToggleNode BoxForBricked { get; set; } = new(true);
+        public ToggleNode BoxForMapWarnings { get; set; } = new(true);
+        public ToggleNode BoxForMapBadWarnings { get; set; } = new(true);
 
-        public ListNode BadModWarningsLoader { get; set; }
-        public Vector4 ElderGuardian { get; set; }
-        public Vector4 ShaperGuardian { get; set; }
-        public Vector4 Harvest { get; set; }
-        public Vector4 Delirium { get; set; }
-        public Vector4 Blighted { get; set; }
-        public Vector4 Metamorph { get; set; }
-        public Vector4 Legion { get; set; }
-        public Vector4 BlightEncounter { get; set; }
-        public Vector4 DefaultBorderTextColor { get; set; }
-        public ToggleNode ElderGuardianBorder { get; set; }
-        public ToggleNode ShaperGuardianBorder { get; set; }
-        public ToggleNode HarvestBorder { get; set; }
-        public ToggleNode DeliriumBorder { get; set; }
-        public ToggleNode BlightedBorder { get; set; }
-        public ToggleNode MetamorphBorder { get; set; }
-        public ToggleNode LegionBorder { get; set; }
-        public ToggleNode BlightEncounterBorder { get; set; }
-        public ToggleNode CompletionBorder { get; set; }
-        public Vector4 Incomplete { get; set; }
-        public Vector4 BonusIncomplete { get; set; }
-        public Vector4 AwakenedIncomplete { get; set; }
-        public Vector4 Bricked { get; set; }
-        public Vector4 MapBorderWarnings { get; set; }
+        public ListNode BadModWarningsLoader { get; set; } = new();
+        public Vector4 ElderGuardian { get; set; } = new(0.32f, 0.55f, 0.78f, 1f);
+        public Vector4 ShaperGuardian { get; set; } = new(0.32f, 0.4f, 0.78f, 1f);
+        public Vector4 Harvest { get; set; } = new(0f, 1f, 1f, 1f);
+        public Vector4 Delirium { get; set; } = new(0.94f, 0f, 1f, 1f);
+        public Vector4 Blighted { get; set; } = new(0.94f, 0.63f, 0.12f, 1f);
+        public Vector4 Metamorph { get; set; } = new(0.4f, 0.78f, 0.24f, 1f);
+        public Vector4 Legion { get; set; } = new(0.4f, 0.12f, 0.7f, 1f);
+        public Vector4 BlightEncounter { get; set; } = new(0.43f, 0.4f, 0.24f, 1f);
+        public Vector4 DefaultBorderTextColor { get; set; } = new(0.9f, 0.85f, 0.65f, 1f);
+        public ToggleNode ElderGuardianBorder { get; set; } = new(true);
+        public ToggleNode ShaperGuardianBorder { get; set; } = new(true);
+        public ToggleNode HarvestBorder { get; set; } = new(true);
+        public ToggleNode DeliriumBorder { get; set; } = new(true);
+        public ToggleNode BlightedBorder { get; set; } = new(true);
+        public ToggleNode MetamorphBorder { get; set; } = new(false);
+        public ToggleNode LegionBorder { get; set; } = new(false);
+        public ToggleNode BlightEncounterBorder { get; set; } = new(false);
+        public ToggleNode CompletionBorder { get; set; } = new(true);
+        public Vector4 Incomplete { get; set; } = new(0f, 1f, 0f, 0.3f);
+        public Vector4 BonusIncomplete { get; set; } = new(1f, 0.47f, 0f, 0.3f);
+        public Vector4 AwakenedIncomplete { get; set; } = new(1f, 0.9f, 0f, 0.3f);
+        public Vector4 Bricked { get; set; } = new(1f, 0f, 0f, 1f);
+        public Vector4 MapBorderWarnings { get; set; } = new(0f, 1f, 0f, 1f);
 
-        public Vector4 MapBorderBad { get; set; }
-        public RangeNode<int> BorderThicknessMap { get; set; }
+        public Vector4 MapBorderBad { get; set; } = new(1f, 0f, 0f, 1f);
+        public RangeNode<int> BorderThicknessMap { get; set; } = new(2, 1, 6);
     }
 }

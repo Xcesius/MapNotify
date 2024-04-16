@@ -378,6 +378,13 @@ namespace MapNotify
                 {
                     if (!item.Item.HasComponent<ExileCore.PoEMemory.Components.Map>())
                         continue;
+
+                    var rect = item.GetClientRectCache;
+                    double deflatePercent = Settings.BorderDeflation;
+                    var deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
+                    var deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
+                    rect.Inflate(-deflateWidth, -deflateHeight);
+
                     // Get the item's details component or create a new one if it doesn't exist
                     var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
                     item.Item.SetHudComponent(itemDetails);
@@ -391,7 +398,10 @@ namespace MapNotify
                             .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
+                            if (Settings.MapBorderStyle)
+                                Graphics.DrawBox(rect, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
+                            else
+                                Graphics.DrawFrame(rect, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
 
@@ -403,7 +413,10 @@ namespace MapNotify
                             .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
+                            if (Settings.MapBorderStyle)
+                                Graphics.DrawBox(rect, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
+                            else
+                                Graphics.DrawFrame(rect, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
                 }
@@ -419,6 +432,19 @@ namespace MapNotify
                     if (!item.Item.HasComponent<ExileCore.PoEMemory.Components.Map>())
                         continue;
 
+                    // Assuming `item.GetClientRectCache` returns a Rectangle object.
+                    var rect = item.GetClientRectCache;
+
+                    // Percentage by which to deflate (e.g., 5%).
+                    double deflatePercent = Settings.BorderDeflation;
+
+                    // Calculate the deflate values based on the current size.
+                    int deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
+                    int deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
+
+                    // Use negative values to deflate the rectangle.
+                    rect.Inflate(-deflateWidth, -deflateHeight);
+
                     // Get the item's details component or create a new one if it doesn't exist
                     var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
                     item.Item.SetHudComponent(itemDetails);
@@ -432,7 +458,10 @@ namespace MapNotify
                             .Any(mod => WarningDictionary.Where(warning => mod.RawName.Contains(warning.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
+                            if (Settings.MapBorderStyle)
+                                Graphics.DrawBox(rect, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
+                            else
+                                Graphics.DrawFrame(rect, Settings.MapBorderWarnings.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
 
@@ -444,7 +473,10 @@ namespace MapNotify
                             .Any(mod => BadModsDictionary.Where(bad => mod.RawName.Contains(bad.Key)).Any()) == true)
                         {
                             // Draw a red frame around the item's bounding rectangle
-                            Graphics.DrawFrame(item.GetClientRectCache, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
+                            if (Settings.MapBorderStyle)
+                                Graphics.DrawBox(rect, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
+                            else
+                                Graphics.DrawFrame(rect, Settings.MapBorderBad.ToSharpColor(), Settings.BorderThicknessMap);
                         }
                     }
                 }
