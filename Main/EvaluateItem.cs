@@ -215,21 +215,23 @@ namespace MapNotify
                                 continue;
                             }
                             #endregion
-                            quantity += mod.Value1;
-                            packSize += mod.Value3;
 
-                                if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
+                            UpdateValueIfStatExists("map_pack_size_+%", x => packSize += x);
+                            UpdateValueIfStatExists("map_item_drop_quantity_+%", x => quantity += x);
+
+                            if (WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
                             {
-                                StyledText warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
-                                if (warning.Bricking || (settings.ShowQuantityPercent && quantity <= settings.MapQuantSetting) || (settings.ShowPackSizePercent && packSize <= settings.MapPackSetting))
+                                var warning = WarningDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
+                                if (warning.Bricking || settings.ShowQuantityPercent && quantity <= settings.MapQuantSetting || settings.ShowPackSizePercent && packSize <= settings.MapPackSetting)
                                 {
                                     Bricked = true;
                                 }
+
                                 ActiveWarnings.Add(warning);
 
-                               // if (mod.Name.Equals("warningmods"))
-                              //  {
-                               // }
+                                // if (mod.Name.Equals("warningmods"))
+                                //  {
+                                // }
                             }
 
                             if (BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
@@ -244,6 +246,17 @@ namespace MapNotify
                                 // if (mod.Name.Equals("warningmods"))
                                 //  {
                                 // }
+                            }
+                            void UpdateValueIfStatExists(string key, Action<int> updateAction)
+                            {
+                                var index = mod.ModRecord.StatNames
+                                    .Select((value, index) => new { value, index })
+                                    .FirstOrDefault(pair => pair.value.Key == key)?.index ?? -1;
+
+                                if (index != -1)
+                                {
+                                    updateAction(mod.Values[index]);
+                                }
                             }
                         }
                     }

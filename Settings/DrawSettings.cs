@@ -176,6 +176,7 @@ namespace MapNotify
             if (ImGui.TreeNodeEx("Borders and Colours", ImGuiTreeNodeFlags.CollapsingHeader))
             {
 
+                Settings.BorderDeflation.Value = IntSlider("Map Border Deflation##MapBorderDeflation", Settings.BorderDeflation);
                 Settings.BorderThickness.Value = IntSlider("Border Thickness##BorderThickness", Settings.BorderThickness);
                 Settings.BorderThickness.Value = IntSlider("Completion Border Thickness##BorderThickness", Settings.BorderThickness);
 
