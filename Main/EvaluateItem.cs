@@ -2,15 +2,11 @@
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
-using ExileCore.PoEMemory.Models;
 using ExileCore.Shared.Enums;
 using SharpDX;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
@@ -156,14 +152,14 @@ namespace MapNotify
 
             public void Update()
             {
-                BaseItemType BaseItem = gameController.Files.BaseItemTypes.Translate(Entity.Path);
-                string ItemName = BaseItem.BaseName;
+                var BaseItem = gameController.Files.BaseItemTypes.Translate(Entity.Path);
+                var ItemName = BaseItem.BaseName;
                 ClassID = BaseItem.ClassName;
-                MavenDetails mavenDetails = new MavenDetails();
+                var mavenDetails = new MavenDetails();
                 
 
-                int packSize = 0;
-                int quantity = Entity.GetComponent<Quality>()?.ItemQuality ?? 0;
+                var packSize = 0;
+                var quantity = Entity.GetComponent<Quality>()?.ItemQuality ?? 0;
                 var settings = new MapNotifySettings();
                 // get and evaluate mods
                 var mapComponent = Entity.GetComponent<Map>() ?? null;
@@ -236,7 +232,7 @@ namespace MapNotify
 
                             if (BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).Any())
                             {
-                                StyledText bad = BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
+                                var bad = BadModsDictionary.Where(x => mod.RawName.Contains(x.Key)).FirstOrDefault().Value;
                                 if (bad.Bricking)
                                 {
                                     Bricked = true;
@@ -268,9 +264,9 @@ namespace MapNotify
                         ZanaMod = null;
                     }
                     else if (ZanaMods.TryGetValue(modsComponent.ItemMods.
-                        FirstOrDefault(x => x.RawName == "MapZanaSubAreaMissionDetails").Value2, out string modName))
+                        FirstOrDefault(x => x.RawName == "MapZanaSubAreaMissionDetails").Value2, out var modName))
                     {
-                        Vector4 textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
+                        var textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
                         if (modName.Contains("Elder Guardian"))
                             ZanaMissionType = ObjectiveType.ElderGuardian;
                         else if (modName.Contains("Shaper Guardian"))
@@ -291,7 +287,7 @@ namespace MapNotify
                     }
                     else
                     {
-                        Vector4 textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
+                        var textColor = new Vector4(0.9f, 0.85f, 0.65f, 1f);
                         modName = $"Unknown Zana Mission: {modsComponent.ItemMods.FirstOrDefault(x => x.RawName == "MapZanaSubAreaMissionDetails").Value2}";
                         ZanaMod = new StyledText() { Color = textColor, Text = modName };
                     }
@@ -306,12 +302,12 @@ namespace MapNotify
                     !ClassID.Contains("MiscMapItem") &&
                     !ClassID.Contains("MapFragment"))
                 {
-                    WorldArea area = mapComponent.Area;
-                    string mapTrim = Entity.GetComponent<Base>().Name.Replace(" Map", "");
+                    var area = mapComponent.Area;
+                    var mapTrim = Entity.GetComponent<Base>().Name.Replace(" Map", "");
                     if (modsComponent.ItemRarity == ItemRarity.Unique)
                     {
                         // normal map at inner, 0x18, 0x18
-                        long mapUnique = gameController.IngameState.M.Read<long>(mapComponent.Address + 0x10, 0x10, 0x20);
+                        var mapUnique = gameController.IngameState.M.Read<long>(mapComponent.Address + 0x10, 0x10, 0x20);
                         area = gameController.Files.WorldAreas.GetByAddress(mapUnique) ?? area;
                         mapTrim = area.Name;
                     }
@@ -322,7 +318,7 @@ namespace MapNotify
                     Completed = ingameState.ServerData.CompletedAreas.Contains(area) ? true : false;
                     mavenDetails.MavenCompletion = ingameState.ServerData.MavenWitnessedAreas.Contains(area) ? true : false;
 
-                    if (AreaRegion.TryGetValue(mapTrim, out string region))
+                    if (AreaRegion.TryGetValue(mapTrim, out var region))
                         MapRegion = region;
                     else
                         MapRegion = "Unknown Region";
@@ -420,13 +416,13 @@ namespace MapNotify
         }
         public static List<(string, bool)> MavenBosses(string path, string region)//NormalInventoryItem item)
         {
-            List<(string, bool)> MavenBosses = new List<(string, bool)>();
-            string activeRegion = region;
+            var MavenBosses = new List<(string, bool)>();
+            var activeRegion = region;
 
-            Dictionary<string, List<string>> MavenRegionCompletion = new Dictionary<string, List<string>>();
-            foreach (WorldArea worldArea in ingameState.ServerData.MavenWitnessedAreas)
+            var MavenRegionCompletion = new Dictionary<string, List<string>>();
+            foreach (var worldArea in ingameState.ServerData.MavenWitnessedAreas)
             {
-                if (!AreaRegion.TryGetValue(worldArea.Name, out string regionName))
+                if (!AreaRegion.TryGetValue(worldArea.Name, out var regionName))
                     regionName = "Uncharted";
                 if (!MavenRegionCompletion.ContainsKey(regionName)) 
                     MavenRegionCompletion[regionName] = new List<string>() { worldArea.Name };
@@ -446,7 +442,7 @@ namespace MapNotify
                 activeRegion = "The Formed";
 
             if (RegionArea.ContainsKey(activeRegion))
-                foreach (string rArea in RegionArea[activeRegion])
+                foreach (var rArea in RegionArea[activeRegion])
                 {
                     if (MavenRegionCompletion.ContainsKey(activeRegion))
                     {
@@ -459,7 +455,7 @@ namespace MapNotify
                         MavenBosses.Add((rArea, false));
                 }
             else if(MavenRegionCompletion.ContainsKey(activeRegion))
-                foreach (string cArea in MavenRegionCompletion[activeRegion])
+                foreach (var cArea in MavenRegionCompletion[activeRegion])
                     MavenBosses.Add((cArea, true));
 
 

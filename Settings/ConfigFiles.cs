@@ -1,6 +1,4 @@
 ﻿using ExileCore;
-using ImGuiNET;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,7 +22,7 @@ namespace MapNotify
         }
         public Dictionary<string, StyledText> LoadConfigs()
         {
-            Dictionary<string, StyledText> FullDict = new Dictionary<string, StyledText>();
+            var FullDict = new Dictionary<string, StyledText>();
             LoadConfig(Path.Combine(ConfigDirectory, "ModWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LoadConfig(Path.Combine(ConfigDirectory, "SextantWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
             LoadConfig(Path.Combine(ConfigDirectory, "HeistWarnings.txt")).ToList().ForEach(x => FullDict.Add(x.Key, x.Value));
@@ -36,8 +34,8 @@ namespace MapNotify
 
         public Dictionary<string, StyledText> LoadConfigBadMod()
         {
-            Dictionary<string, StyledText> FullDict1 = new Dictionary<string, StyledText>();
-            string selectedFile = Settings.BadModWarningsLoader.Value;
+            var FullDict1 = new Dictionary<string, StyledText>();
+            var selectedFile = Settings.BadModWarningsLoader.Value;
 
             if (selectedFile != null && File.Exists(Path.Combine(ConfigDirectory, selectedFile)))
             {
@@ -82,7 +80,7 @@ namespace MapNotify
 
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
-                bool bricking = false;
+                var bricking = false;
                 if (line.Length > 3)
                     bool.TryParse(line[3] ?? null, out bricking);
                 var preloadAlerConfigLine = new StyledText { Text = line[1], Color = HexToSDXVector4(line[2]), Bricking = bricking };
@@ -92,7 +90,7 @@ namespace MapNotify
 
         public Dictionary<string, StyledText> LoadConfigBad(string path)
         {
-            string CreateDefaultPath1 = Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt");
+            var CreateDefaultPath1 = Path.Combine(ConfigDirectory, "DefaultBadMapMods.txt");
 
             if (!File.Exists(CreateDefaultPath1))
                 if (CreateDefaultPath1.Contains("DefaultBadMapMods"))
@@ -101,7 +99,7 @@ namespace MapNotify
 
             return GenDictionary(path).ToDictionary(line => line[0], line =>
             {
-                bool bricking = false;
+                var bricking = false;
                 if (line.Length > 3)
                     bool.TryParse(line[3] ?? null, out bricking);
                 var preloadAlerConfigLine = new StyledText { Text = line[1], Color = HexToSDXVector4(line[2]), Bricking = bricking };
@@ -121,7 +119,7 @@ namespace MapNotify
         {
             #region Create Default Map ModConfig
             new FileInfo(path).Directory.Create();
-            string outFile =
+            var outFile =
 @"#Contains;Name in tooltip;RGBA colour code
 # REFLECT
 ElementalReflect;Elemental Reflect;FF0000FF
@@ -167,7 +165,7 @@ MapBurningGround;Burning Ground;CCCC00FF";
         {
             #region Create Default Map Bad Config
             new FileInfo(path).Directory.Create();
-            string outFile =
+            var outFile =
 @"#Contains;Name in tooltip;RGBA colour code
 # REFLECT
 ElementalReflect;Elemental Reflect;FF0000FF
@@ -213,7 +211,7 @@ MapBurningGround;Burning Ground;CCCC00FF";
         {
             #region Create Default Heist Config
             new FileInfo(path).Directory.Create();
-            string outFile =
+            var outFile =
 @"# CONTRACT MODS
 HeistContractNemesisModOnRares;Nemesis;FF7F00FF
 HeistContractMonsterPhysicalResistance;Monster Physical Resistance;FF007FFF
@@ -281,7 +279,7 @@ HeistContractMonsterLightningDamage;Extra Lightning Damage;FF007FFF";
         {
             #region Create Default Watchstones Config
             new FileInfo(path).Directory.Create();
-            string outFile =
+            var outFile =
 @"#Contains;Name in tooltip;RGBA colour code
 WatchstoneItemQuantity1_;T3 Item Quantity;00FF00FF# (1 - 2)% increased Quantity of Items found in Areas
 WatchstoneItemQuantity2___;T2 Item Quantity;00FF00FF# (3 - 4)% increased Quantity of Items found in Areas
@@ -706,7 +704,7 @@ WatchstoneAtlasBaseChance3_;T1 Unique Bosses Additional Atlas Base Type;00FF00FF
         {
             #region Create Default Sextant Mods Config
             new FileInfo(path).Directory.Create();
-            string outFile =
+            var outFile =
 @"#Contains;Name in tooltip;RGBA colour code
 # SEXTANTS T1
 MapAtlasBeyondAndExtraBeyondDemonChance;Beyond;FF00FFFF
