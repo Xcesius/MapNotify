@@ -9,14 +9,14 @@ namespace MapNotify
         public nuVector4 HexToVector4(string value)
         {
             uint.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out var abgr);
-            Color color = Color.FromAbgr(abgr);
+            var color = Color.FromAbgr(abgr);
             return new nuVector4((color.R / (float)255), color.G / (float)255, color.B / (float)255, color.A / (float)255);
         }
         public Vector4 HexToSDXVector4(string value)
         {
 
             uint.TryParse(value, System.Globalization.NumberStyles.HexNumber, null, out var abgr);
-            Color color = Color.FromAbgr(abgr);
+            var color = Color.FromAbgr(abgr);
             return new Vector4((color.R / (float)255), color.G / (float)255, color.B / (float)255, color.A / (float)255);
         }
         public Vector4 NuToSharp(nuVector4 value)
@@ -29,7 +29,7 @@ namespace MapNotify
         }
         public uint ColorToUint(nuVector4 value)
         {
-            int rVal = (int)(value.X * 255f);
+            var rVal = (int)(value.X * 255f);
             rVal |= (int)(value.Y * 255f) << 8;
             rVal |= (int)(value.Z * 255f) << 16;
             rVal |= (int)(value.W * 255f) << 24;

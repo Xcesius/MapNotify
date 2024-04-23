@@ -34,7 +34,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
     private List<NormalInventoryItem> GetInventoryItems()
     {
-        List<NormalInventoryItem> result = new List<NormalInventoryItem>();
+        var result = new List<NormalInventoryItem>();
         if (ingameState.IngameUi.InventoryPanel.IsVisible)
         {
             result.AddRange(ingameState.IngameUi.InventoryPanel[InventoryIndex.PlayerInventory].VisibleInventoryItems.Where(item => item.Item.HasComponent<Map>()));
@@ -45,8 +45,8 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
     private (int stashIndex, List<NormalInventoryItem>) GetStashItems()
     {
-        List<NormalInventoryItem> result = new List<NormalInventoryItem>();
-        int stashIndex = -1;
+        var result = new List<NormalInventoryItem>();
+        var stashIndex = -1;
         if (ingameState.IngameUi.StashElement.IsVisible && ingameState.IngameUi.StashElement.VisibleStash != null)
         {
             stashIndex = ingameState.IngameUi.StashElement.IndexVisibleStash;
@@ -129,14 +129,14 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
     public void RenderItem(NormalInventoryItem Item, Entity Entity, bool isInventory = false, int mapNum = 0)
     {
-        int pushedColors = 0;
-        Entity entity = Entity;
-        NormalInventoryItem item = Item;
+        var pushedColors = 0;
+        var entity = Entity;
+        var item = Item;
         if (entity.Address != 0 && entity.IsValid)
         {
             // Base and Class ID
-            BaseItemType baseType = gameController.Files.BaseItemTypes.Translate(entity.Path);
-            string classID = baseType.ClassName ?? string.Empty;
+            var baseType = gameController.Files.BaseItemTypes.Translate(entity.Path);
+            var classID = baseType.ClassName ?? string.Empty;
             // Not map, heist or watchstone or normal rarity heist
             if (!entity.HasComponent<Map>() && !classID.Equals(string.Empty) &&
                 !entity.Path.Contains("BreachFragment") &&
@@ -153,7 +153,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
             if (!Settings.ShowForInvitations && (classID.Contains("MavenMap") || classID.Contains("MiscMapItem"))) return;
 
             // Evaluate
-            ItemDetails ItemDetails = Entity.GetHudComponent<ItemDetails>();
+            var ItemDetails = Entity.GetHudComponent<ItemDetails>();
             if (ItemDetails == null)
             {
                 ItemDetails = new ItemDetails(Item, Entity);
@@ -167,7 +167,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                      classID.Contains("HeistBlueprint")) &&
                     ItemDetails.ActiveWarnings.Count == 0) return;
                 // Get mouse position
-                nuVector2 boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
+                var boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
 
                 // Pad vertically as well if using ninja pricer tooltip
                 if (Settings.PadForNinjaPricer && ItemDetails.NeedsPadding)
@@ -186,7 +186,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                         rowSize += maxSize + 2;
                         maxSize = 0;
                     }
-                    Vector2 framePos = ingameState.UIHover.Parent.GetClientRect().TopRight;
+                    var framePos = ingameState.UIHover.Parent.GetClientRect().TopRight;
                     framePos.X += 10 + boxSize.X;
                     framePos.Y -= 200;
                     boxOrigin = new nuVector2(framePos.X, framePos.Y + rowSize);
@@ -194,7 +194,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                 }
 
                 // create the imgui faux tooltip
-                bool _opened = true;
+                var _opened = true;
                 // Color background
                 pushedColors += 1;
                 ImGui.PushStyleColor(ImGuiCol.WindowBg, 0xFF3F3F3F);
@@ -242,7 +242,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                             }
                             if (Settings.ShowMapRegion)
                             {
-                                nuVector4 regionColor = new nuVector4(1f, 1f, 1f, 1f);
+                                var regionColor = new nuVector4(1f, 1f, 1f, 1f);
                                 if (Settings.TargetRegions && CheckRegionTarget(ItemDetails.MapRegion))
                                     regionColor = new nuVector4(1f, 0f, 1f, 1f);
                                 ImGui.TextColored(regionColor, $"{ItemDetails.MapRegion}");
@@ -258,7 +258,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                             ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{ItemDetails.MavenDetails.MavenBosses.Count} Bosses Witnessed");
                         else
                         {
-                            foreach ((string Boss, bool Complete) boss in ItemDetails.MavenDetails.MavenBosses)
+                            foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
                                 if (boss.Complete)
                                     ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
                                 else
@@ -266,7 +266,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                         }
                     }
                     else if (ItemDetails.MavenDetails.MavenRegion != string.Empty && Input.GetKeyState(System.Windows.Forms.Keys.Menu))
-                        foreach ((string Boss, bool Complete) boss in ItemDetails.MavenDetails.MavenBosses)
+                        foreach (var boss in ItemDetails.MavenDetails.MavenBosses)
                             if (boss.Complete)
                                 ImGui.TextColored(new nuVector4(0f, 1f, 0f, 1f), $"{boss.Boss}");
                             else
@@ -275,7 +275,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                     // Zana Mod
                     if (isInventory)
                     {
-                        nuVector4? bCol = GetObjectiveColor(ItemDetails.ZanaMissionType);
+                        var bCol = GetObjectiveColor(ItemDetails.ZanaMissionType);
                         if (bCol.HasValue)
                             if (Settings.StyleTextForBorder)
                                 ImGui.TextColored(bCol.Value, $"{ItemDetails.ZanaMod?.Text ?? "Zana Mod was null!"}");
@@ -289,7 +289,7 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                     if (!classID.Contains("HeistContract") && !classID.Contains("HeistBlueprint") && !classID.Contains("AtlasRegionUpgradeItem"))
                     {
                         // Quantity and Pack Size
-                        nuVector4 qCol = new nuVector4(1f, 1f, 1f, 1f);
+                        var qCol = new nuVector4(1f, 1f, 1f, 1f);
                         if (Settings.ColorQuantityPercent)
                             if
                                 (ItemDetails.Quantity < Settings.ColorQuantity) qCol = new nuVector4(1f, 0.4f, 0.4f, 1f);
@@ -322,20 +322,20 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
                     // Mod StyledTexts
                     if (Settings.ShowModWarnings)
-                        foreach (StyledText StyledText in ItemDetails.ActiveWarnings.OrderBy(x => x.Color.ToString()).ToList())
+                        foreach (var StyledText in ItemDetails.ActiveWarnings.OrderBy(x => x.Color.ToString()).ToList())
                             ImGui.TextColored(SharpToNu(StyledText.Color), StyledText.Text);
                     ImGui.EndGroup();
 
                     // border for most notable maps in inventory
                     if (ItemDetails.Bricked || entity.HasComponent<Map>() && (isInventory || Settings.AlwaysShowCompletionBorder))
                     {
-                        nuVector2 min = ImGui.GetItemRectMin();
+                        var min = ImGui.GetItemRectMin();
                         min.X -= 8;
                         min.Y -= 8;
-                        nuVector2 max = ImGui.GetItemRectMax();
+                        var max = ImGui.GetItemRectMax();
                         max.X += 8;
                         max.Y += 8;
-                        nuVector4? bcol = GetObjectiveColor(ItemDetails.ZanaMissionType);
+                        var bcol = GetObjectiveColor(ItemDetails.ZanaMissionType);
 
                         if (ItemDetails.Bricked)
                             ImGui.GetForegroundDrawList().AddRect(min, max, ColorToUint(Settings.Bricked), 0f, 0, Settings.BorderThickness.Value);
@@ -353,8 +353,8 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                     }
 
                     // Detect and adjust for edges
-                    nuVector2 size = ImGui.GetWindowSize();
-                    nuVector2 pos = ImGui.GetWindowPos();
+                    var size = ImGui.GetWindowSize();
+                    var pos = ImGui.GetWindowPos();
                     if (boxOrigin.X + size.X > windowArea.Width)
                         ImGui.SetWindowPos(new nuVector2(boxOrigin.X - (boxOrigin.X + size.X - windowArea.Width) - 4, boxOrigin.Y + 24), ImGuiCond.Always);
                     else
@@ -380,30 +380,30 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
         if (ingameState.IngameUi.Atlas.IsVisible)
             AtlasRender();
 
-        Element uiHover = ingameState.UIHover;
+        var uiHover = ingameState.UIHover;
         if (ingameState.UIHover?.IsVisible ?? false)
         {
-            ToolTipType? itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType;
+            var itemType = uiHover.AsObject<HoverItemIcon>()?.ToolTipType;
             // render hovered item
             if (itemType != null && itemType != ToolTipType.ItemInChat && itemType != ToolTipType.None)
             {
-                NormalInventoryItem hoverItem = uiHover.AsObject<NormalInventoryItem>();
+                var hoverItem = uiHover.AsObject<NormalInventoryItem>();
                 if (hoverItem.Item?.Path != null/* && (hoverItem.Tooltip?.IsValid ?? false)*/) // TODO Reenable check when condition is fixed
                     RenderItem(hoverItem, hoverItem.Item);
             }
             // render NPC inventory if relevant
             else if (Settings.ShowForZanaMaps && itemType is ToolTipType.None)
             {
-                IList<InventoryHolder> npcInv = ingameState.ServerData.NPCInventories;
+                var npcInv = ingameState.ServerData.NPCInventories;
                 if (npcInv == null || npcInv.Count == 0) return;
-                foreach (InventoryHolder inv in npcInv)
+                foreach (var inv in npcInv)
                     if (uiHover.Parent.ChildCount == inv.Inventory.InventorySlotItems.Count)
                     {
                         boxSize = new nuVector2(0f, 0f);
                         maxSize = 0;
                         rowSize = 0;
                         lastCol = 0;
-                        foreach (ServerInventory.InventSlotItem item in inv.Inventory.InventorySlotItems.OrderBy(x => x.PosY).ThenBy(x => x.PosX))
+                        foreach (var item in inv.Inventory.InventorySlotItems.OrderBy(x => x.PosY).ThenBy(x => x.PosX))
                         {
                             RenderItem(null, item.Item, true, (int)item.PosY);
                         }
@@ -413,19 +413,19 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
         if (ingameState.IngameUi.InventoryPanel.IsVisible)
         {
-            foreach (NormalInventoryItem item in _inventoryItems.Value)
+            foreach (var item in _inventoryItems.Value)
             {
                 if (!item.Item.HasComponent<Map>())
                     continue;
 
-                RectangleF rect = item.GetClientRectCache;
+                var rect = item.GetClientRectCache;
                 double deflatePercent = Settings.BorderDeflation;
-                int deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
-                int deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
+                var deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
+                var deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
                 rect.Inflate(-deflateWidth, -deflateHeight);
 
                 // Get the item's details component or create a new one if it doesn't exist
-                ItemDetails itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
+                var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
                 item.Item.SetHudComponent(itemDetails);
 
                 // Checking if we have Warning Setting or Bad Mods
@@ -465,27 +465,27 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
         if (ingameState.IngameUi.StashElement.IsVisible && ingameState.IngameUi.StashElement.VisibleStash != null && ingameState.IngameUi.StashElement.IndexVisibleStash == _stashItems.Value.stashIndex)
         {
             // Iterate through each item in the visible stash's inventory
-            foreach (NormalInventoryItem item in _stashItems.Value.Item2)
+            foreach (var item in _stashItems.Value.Item2)
             {
                 // Skip the item if it doesn't have a "Map" component
                 if (!item.Item.HasComponent<Map>())
                     continue;
 
                 // Assuming `item.GetClientRectCache` returns a Rectangle object.
-                RectangleF rect = item.GetClientRectCache;
+                var rect = item.GetClientRectCache;
 
                 // Percentage by which to deflate (e.g., 5%).
                 double deflatePercent = Settings.BorderDeflation;
 
                 // Calculate the deflate values based on the current size.
-                int deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
-                int deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
+                var deflateWidth = (int)(rect.Width * (deflatePercent / 100.0));
+                var deflateHeight = (int)(rect.Height * (deflatePercent / 100.0));
 
                 // Use negative values to deflate the rectangle.
                 rect.Inflate(-deflateWidth, -deflateHeight);
 
                 // Get the item's details component or create a new one if it doesn't exist
-                ItemDetails itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
+                var itemDetails = item.Item.GetHudComponent<ItemDetails>() ?? new ItemDetails(item, item.Item);
                 item.Item.SetHudComponent(itemDetails);
 
                 // Checking if we have Warning Setting or Bad Mods

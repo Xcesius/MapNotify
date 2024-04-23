@@ -54,7 +54,7 @@ namespace MapNotify
         public string SelectFile()
         {
             // Get all .txt files in the directory
-            string[] files = Directory.GetFiles(ConfigDirectory, "*.txt");
+            var files = Directory.GetFiles(ConfigDirectory, "*.txt");
 
             // Filter out the excluded files
             files = files.Where(f => !excludedFiles.Contains(Path.GetFileName(f))).ToArray();
@@ -65,7 +65,7 @@ namespace MapNotify
                 Settings.BadModWarningsLoader.Value = files[0];
             }
 
-            foreach (string file in files)
+            foreach (var file in files)
             {
                 if (ImGui.Selectable(file, Settings.BadModWarningsLoader.Value == file))
                 {
@@ -102,7 +102,7 @@ namespace MapNotify
                 else if (modsComponent != null && modsComponent.ItemMods.Count() > 0) 
                 {
                     hoverMods.Clear();
-                    List<ItemMod> itemMods = modsComponent?.ItemMods ?? null;
+                    var itemMods = modsComponent?.ItemMods ?? null;
                     if (itemMods == null || itemMods.Count == 0)
                     {
                         hoverMods.Clear();
