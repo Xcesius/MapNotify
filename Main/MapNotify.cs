@@ -30,8 +30,8 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
 
     public MapNotify()
     {
-        _inventoryItems = new TimeCache<List<NormalInventoryItem>>(GetInventoryItems, 50);
-        _stashItems = new TimeCache<(int stashIndex, List<NormalInventoryItem>)>(GetStashItems, 500);
+        _inventoryItems = new TimeCache<List<NormalInventoryItem>>(GetInventoryItems, Settings.InventoryCacheInterval);
+        _stashItems = new TimeCache<(int stashIndex, List<NormalInventoryItem>)>(GetStashItems, Settings.StashCacheInterval);
     }
 
     private List<NormalInventoryItem> GetInventoryItems()

@@ -131,6 +131,8 @@ namespace MapNotify
 
             if (ImGui.TreeNodeEx("Core Settings", ImGuiTreeNodeFlags.CollapsingHeader))
             {
+                Settings.InventoryCacheInterval.Value = IntSlider("Inventory Item Caching Interval in ms", Settings.InventoryCacheInterval);
+                Settings.StashCacheInterval.Value = IntSlider("Stash Item Caching Interval in ms", Settings.StashCacheInterval);
                 Settings.AlwaysShowTooltip.Value = Checkbox("Show Tooltip Even Without Warnings", Settings.AlwaysShowTooltip);
                 ImGui.SameLine(); HelpMarker("This will show a tooltip even if there are no mods to warn you about on the map.\nThis means you will always be able to see tier, completion, quantity, mod count, etc.");
                 Settings.HorizontalLines.Value = Checkbox("Show Horizontal Lines", Settings.HorizontalLines);
