@@ -2,15 +2,11 @@
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements.InventoryElements;
 using ExileCore.PoEMemory.MemoryObjects;
-using ExileCore.PoEMemory.Models;
 using ExileCore.Shared.Enums;
 using SharpDX;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
-using nuVector2 = System.Numerics.Vector2;
 using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify

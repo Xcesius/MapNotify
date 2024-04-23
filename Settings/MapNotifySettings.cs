@@ -1,6 +1,5 @@
 ﻿using ExileCore.Shared.Interfaces;
 using ExileCore.Shared.Nodes;
-using Vector2 = System.Numerics.Vector2;
 using Vector4 = System.Numerics.Vector4;
 
 namespace MapNotify

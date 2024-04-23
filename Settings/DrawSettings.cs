@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using ExileCore;
+﻿using ExileCore;
 using ExileCore.PoEMemory.Components;
 using ExileCore.PoEMemory.Elements.InventoryElements;
-using ExileCore.PoEMemory.MemoryObjects;
 using ExileCore.Shared.Nodes;
 using ImGuiNET;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using nuVector4 = System.Numerics.Vector4;
 
 namespace MapNotify
