@@ -25,13 +25,11 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
     private static IngameState ingameState;
     public static Dictionary<string, StyledText> WarningDictionary;
     public static Dictionary<string, StyledText> BadModsDictionary;
-    private readonly CachedValue<List<NormalInventoryItem>> _inventoryItems;
-    private readonly CachedValue<(int stashIndex, List<NormalInventoryItem>)> _stashItems;
+    private CachedValue<List<NormalInventoryItem>> _inventoryItems;
+    private CachedValue<(int stashIndex, List<NormalInventoryItem>)> _stashItems;
 
     public MapNotify()
     {
-        _inventoryItems = new TimeCache<List<NormalInventoryItem>>(GetInventoryItems, Settings.InventoryCacheInterval);
-        _stashItems = new TimeCache<(int stashIndex, List<NormalInventoryItem>)>(GetStashItems, Settings.StashCacheInterval);
     }
 
     private List<NormalInventoryItem> GetInventoryItems()
@@ -67,6 +65,8 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
         BadModsDictionary = LoadConfigBadMod();
         gameController = GameController;
         ingameState = gameController.IngameState;
+        _inventoryItems = new TimeCache<List<NormalInventoryItem>>(GetInventoryItems, Settings.InventoryCacheInterval);
+        _stashItems = new TimeCache<(int stashIndex, List<NormalInventoryItem>)>(GetStashItems, Settings.StashCacheInterval);
         return true;
     }
 
