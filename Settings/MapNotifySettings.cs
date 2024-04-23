@@ -20,6 +20,8 @@ namespace MapNotify
         public float AtlasY { get; set; }
 
         public ToggleNode Enable { get; set; } = new(true);
+        public RangeNode<int> InventoryCacheInterval { get; set; } = new(50, 1, 2000);
+        public RangeNode<int> StashCacheInterval { get; set; } = new(500, 1, 2000);
         public ToggleNode ShowMapName { get; set; } = new(true);
         public ToggleNode ShowMapRegion { get; set; } = new(true);
         public ToggleNode ShowModCount { get; set; } = new(true);
