@@ -37,6 +37,7 @@ namespace MapNotify
         public ToggleNode ShowCompletion { get; set; } = new(true);
         public ToggleNode HorizontalLines { get; set; } = new(true);
         public ToggleNode PadForNinjaPricer { get; set; } = new(false);
+        public ToggleNode PadForNinjaPricer2 { get; set; } = new(false);
         public ToggleNode PadForAltPricer { get; set; } = new(false);
         public ToggleNode AlwaysShowTooltip { get; set; } = new(true);
         public ToggleNode AlwaysShowCompletionBorder { get; set; } = new(true);

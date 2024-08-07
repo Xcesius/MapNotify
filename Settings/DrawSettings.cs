@@ -232,6 +232,8 @@ namespace MapNotify
                 ImGui.SameLine(); HelpMarker("This will irreversibly delete all your existing warnings config files!");
                 Settings.PadForNinjaPricer.Value = Checkbox("Pad for Ninja Pricer", Settings.PadForNinjaPricer);
                 ImGui.SameLine(); HelpMarker("This will move the tooltip down vertically to allow room for the Ninja Pricer tooltip to be rendered. Only needed with that plugin active.");
+                Settings.PadForNinjaPricer2.Value = Checkbox("More Pad for Ninja Pricer", Settings.PadForNinjaPricer2);
+                ImGui.SameLine(); HelpMarker("This will move the tooltip down vertically to allow room for the Ninja Pricer tooltip to be rendered. Only needed with that plugin active.");
                 Settings.PadForAltPricer.Value = Checkbox("Pad for Personal Pricer", Settings.PadForAltPricer);
                 ImGui.SameLine(); HelpMarker("It's unlikely you'll need this.");
                 ImGui.Spacing();

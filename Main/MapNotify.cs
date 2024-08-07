@@ -165,14 +165,17 @@ public partial class MapNotify : BaseSettingsPlugin<MapNotifySettings>
                      classID.Contains("HeistBlueprint")) &&
                     ItemDetails.ActiveWarnings.Count == 0) return;
                 // Get mouse position
-                var boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y);
+                var boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 25, MouseLite.GetCursorPositionVector().Y);
 
                 // Pad vertically as well if using ninja pricer tooltip
                 if (Settings.PadForNinjaPricer && ItemDetails.NeedsPadding)
-                    boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 56);
+                    boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 25, MouseLite.GetCursorPositionVector().Y + 56);
+                // Pad vertically as well if using ninja pricer tooltip 2nd padding
+                if (Settings.PadForNinjaPricer2 && ItemDetails.NeedsPadding)
+                    boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 25, MouseLite.GetCursorPositionVector().Y + 114);
                 // Personal pricer
                 if (Settings.PadForAltPricer && ItemDetails.NeedsPadding)
-                    boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 24, MouseLite.GetCursorPositionVector().Y + 30);
+                    boxOrigin = new nuVector2(MouseLite.GetCursorPositionVector().X + 25, MouseLite.GetCursorPositionVector().Y + 30);
 
                 // Parsing inventory, don't use boxOrigin
                 if (isInventory)
